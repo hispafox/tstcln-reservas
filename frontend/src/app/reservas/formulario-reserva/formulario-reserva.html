@@ -11,8 +11,8 @@
   <label for="fin">Hora de fin</label>
   <input id="fin" type="datetime-local" formControlName="fin" />
 
-  @if (formulario.value.inicio && formulario.value.fin) {
-    <div class="duracion">Duración: {{ duracion }}</div>
+  @if (inicio() && fin()) {
+    <div class="duracion">Duración: {{ duracion() }}</div>
   }
   @if (error(); as mensaje) {
     <p role="alert">{{ mensaje }}</p>

@@ -1,4 +1,5 @@
-import { Component, inject, input, output, signal } from '@angular/core';
+import { Component, computed, inject, input, output, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import {
   FormControl,
   ReactiveFormsModule,
@@ -7,6 +8,7 @@ import {
 } from '@angular/forms';
 import { Sala } from '../../salas/sala';
 import { ApiReservas } from '../api-reservas';
+import { duracionEnMinutos, textoDeDuracion } from '../duracion';
 import { Reserva } from '../reserva';
 
 @Component({
@@ -41,11 +43,16 @@ export class FormularioReserva {
     }),
   });
 
-  get duracion(): string {
-    const inicio = new Date(this.formulario.value.inicio);
-    const fin = new Date(this.formulario.value.fin);
-    return `${fin.getHours() - inicio.getHours()} h`;
-  }
+  protected readonly inicio = toSignal(this.formulario.controls['inicio'].valueChanges, {
+    initialValue: '',
+  });
+  protected readonly fin = toSignal(this.formulario.controls['fin'].valueChanges, {
+    initialValue: '',
+  });
+
+  protected readonly duracion = computed(() =>
+    textoDeDuracion(duracionEnMinutos(this.inicio(), this.fin())),
+  );
 
   protected reservar(): void {
     this.error.set(null);
