@@ -18,3 +18,8 @@ export function filtrarSalasDisponibles(
       ),
   );
 }
+
+export function conNombre(salas: Sala[], texto: string): Sala[] {
+  const buscado = texto.trim().toLowerCase();
+  return salas.filter((sala) => sala.nombre.toLowerCase().includes(buscado));
+}

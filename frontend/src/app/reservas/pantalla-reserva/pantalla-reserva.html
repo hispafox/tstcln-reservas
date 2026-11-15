@@ -1,6 +1,6 @@
 @if (sala(); as sala) {
   <h1>Reservar {{ sala.nombre }}</h1>
-  <app-formulario-reserva [sala]="sala" (reservaCreada)="confirmada.set($event)" />
+  <app-formulario-reserva [sala]="sala" (reservaCreada)="creada($event)" />
   @if (confirmada(); as reserva) {
     <p role="status">Reserva confirmada para {{ reserva.persona }}.</p>
   }
