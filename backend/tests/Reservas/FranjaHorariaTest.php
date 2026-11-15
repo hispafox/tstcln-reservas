@@ -5,47 +5,75 @@ declare(strict_types=1);
 namespace App\Tests\Reservas;
 
 use App\Reservas\FranjaHoraria;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 final class FranjaHorariaTest extends TestCase
 {
-    public function test_dos_franjas_que_comparten_media_hora_se_solapan(): void
-    {
+    #[DataProvider('casosDeSolapamiento')]
+    public function test_una_franja_se_solapa_con_otra_si_comparten_algun_minuto(
+        string $inicioDeLaOtra,
+        string $finDeLaOtra,
+        bool $seSolapan,
+    ): void {
         $deDiezAOnce = self::franja('10:00', '11:00');
 
-        $seSolapan = $deDiezAOnce->seSolapaCon(self::franja('10:30', '11:30'));
+        $resultado = $deDiezAOnce->seSolapaCon(self::franja($inicioDeLaOtra, $finDeLaOtra));
 
-        self::assertTrue($seSolapan);
+        self::assertSame($seSolapan, $resultado);
     }
 
-    public function test_una_franja_que_empieza_cuando_acaba_otra_no_se_solapa_con_ella(): void
+    public static function casosDeSolapamiento(): array
     {
-        $deDiezAOnce = self::franja('10:00', '11:00');
+        return [
+            'acaba antes de que empiece' => ['08:30', '09:30', false],
+            'acaba justo cuando empieza' => ['09:00', '10:00', false],
+            'comparte solo el primer minuto' => ['09:00', '10:01', true],
+            'empieza antes y acaba dentro' => ['09:30', '10:30', true],
+            'empieza antes y acaba a la vez' => ['09:00', '11:00', true],
+            'empieza a la vez y acaba dentro' => ['10:00', '10:30', true],
+            'queda dentro' => ['10:15', '10:45', true],
+            'es idéntica' => ['10:00', '11:00', true],
+            'empieza dentro y acaba a la vez' => ['10:30', '11:00', true],
+            'empieza a la vez y acaba después' => ['10:00', '12:00', true],
+            'la envuelve' => ['09:00', '12:00', true],
+            'empieza dentro y acaba después' => ['10:30', '11:30', true],
+            'comparte solo el último minuto' => ['10:59', '12:00', true],
+            'empieza justo cuando acaba' => ['11:00', '12:00', false],
+            'empieza después de que acabe' => ['11:30', '12:30', false],
+        ];
+    }
 
-        $seSolapan = $deDiezAOnce->seSolapaCon(self::franja('11:00', '12:00'));
+    public function test_la_misma_franja_en_dias_distintos_no_se_solapa(): void
+    {
+        $elJueves = self::franja('10:00', '11:00');
+
+        $seSolapan = $elJueves->seSolapaCon(self::franja('10:00', '11:00', '2027-03-05'));
 
         self::assertFalse($seSolapan);
     }
 
-    public function test_una_franja_no_puede_terminar_antes_de_empezar(): void
+    #[DataProvider('franjasNoValidas')]
+    public function test_una_franja_tiene_que_terminar_despues_de_empezar(string $inicio, string $fin): void
     {
         $this->expectException(\InvalidArgumentException::class);
 
-        self::franja('11:00', '10:00');
+        self::franja($inicio, $fin);
     }
 
-    public function test_una_franja_no_puede_durar_cero_minutos(): void
+    public static function franjasNoValidas(): array
     {
-        $this->expectException(\InvalidArgumentException::class);
-
-        self::franja('10:00', '10:00');
+        return [
+            'termina antes de empezar' => ['11:00', '10:00'],
+            'dura cero minutos' => ['10:00', '10:00'],
+        ];
     }
 
-    private static function franja(string $inicio, string $fin): FranjaHoraria
+    private static function franja(string $inicio, string $fin, string $dia = '2027-03-04'): FranjaHoraria
     {
         return new FranjaHoraria(
-            new \DateTimeImmutable("2027-03-04 $inicio"),
-            new \DateTimeImmutable("2027-03-04 $fin"),
+            new \DateTimeImmutable("$dia $inicio"),
+            new \DateTimeImmutable("$dia $fin"),
         );
     }
 }
