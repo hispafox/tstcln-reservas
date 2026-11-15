@@ -10,6 +10,7 @@ use App\Reservas\Sala;
 use App\Reservas\ServicioCancelacion;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Clock\MockClock;
 
 final class ServicioCancelacionTest extends TestCase
 {
@@ -25,10 +26,11 @@ final class ServicioCancelacionTest extends TestCase
         string $momento,
         string $estadoEsperado,
     ): void {
+        $reloj = new MockClock(new \DateTimeImmutable($momento));
+        $servicio = new ServicioCancelacion(new RepositorioReservasEnMemoria(), $reloj);
         $reserva = new Reserva($this->salaNorte, self::franja('10:00', '11:00'), 'Ana', 4);
-        $servicio = new ServicioCancelacion(new RepositorioReservasEnMemoria());
 
-        $servicio->cancelar($reserva, new \DateTimeImmutable($momento));
+        $servicio->cancelar($reserva);
 
         self::assertSame($estadoEsperado, $reserva->estado());
     }

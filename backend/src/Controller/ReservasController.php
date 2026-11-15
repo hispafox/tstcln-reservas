@@ -78,7 +78,7 @@ final class ReservasController
             return new JsonResponse(['error' => 'La reserva no existe'], 404);
         }
 
-        $servicio->cancelar($reserva, new \DateTimeImmutable());
+        $servicio->cancelar($reserva);
 
         return new JsonResponse(self::comoJson($reserva));
     }

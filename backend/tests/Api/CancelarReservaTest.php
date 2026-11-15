@@ -7,9 +7,12 @@ namespace App\Tests\Api;
 use App\Tests\FabricaDeDatos;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\Clock\Test\ClockSensitiveTrait;
 
 final class CancelarReservaTest extends WebTestCase
 {
+    use ClockSensitiveTrait;
+
     public function test_cancelar_una_reserva_de_manana_la_deja_cancelada_a_tiempo(): void
     {
         $cliente = static::createClient();
@@ -25,11 +28,10 @@ final class CancelarReservaTest extends WebTestCase
 
     public function test_cancelar_con_dos_horas_justas_de_antelacion_es_a_tiempo(): void
     {
-        self::markTestSkipped('No se puede escribir mientras el controlador mire el reloj de verdad');
-
+        static::mockTime('2027-03-04 08:00');
         $cliente = static::createClient();
         $datos = new FabricaDeDatos(static::getContainer()->get(EntityManagerInterface::class));
-        $reserva = $datos->reserva($datos->sala(), '+2 hours', '+3 hours');
+        $reserva = $datos->reserva($datos->sala(), '2027-03-04 10:00', '2027-03-04 11:00');
 
         $cliente->request('DELETE', '/reservas/'.$reserva->id());
 
