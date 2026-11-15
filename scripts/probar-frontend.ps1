@@ -1,7 +1,7 @@
 # Pasa las pruebas del frontend con Vitest, una sola vez y sin vigilar cambios.
 # Cualquier argumento pasa tal cual a "ng test":
 #   .\scripts\probar-frontend.ps1 --coverage
-#   .\scripts\probar-frontend.ps1 --include src/app/logica/filtro-salas.spec.ts
+#   .\scripts\probar-frontend.ps1 --include src/app/salas/filtro-salas.spec.ts
 
 $ErrorActionPreference = 'Stop'
 

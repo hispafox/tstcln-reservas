@@ -1,12 +1,12 @@
 import { Routes } from '@angular/router';
-import { BuscadorSalas } from './componentes/buscador-salas/buscador-salas';
-import { FormularioReserva } from './componentes/formulario-reserva/formulario-reserva';
-import { ListaReservas } from './componentes/lista-reservas/lista-reservas';
-import { PanelOcupacion } from './componentes/panel-ocupacion/panel-ocupacion';
+import { PanelOcupacion } from './ocupacion/panel-ocupacion/panel-ocupacion';
+import { ListaReservas } from './reservas/lista-reservas/lista-reservas';
+import { PantallaReserva } from './reservas/pantalla-reserva/pantalla-reserva';
+import { BuscadorSalas } from './salas/buscador-salas/buscador-salas';
 
 export const routes: Routes = [
   { path: '', component: BuscadorSalas, title: 'Buscar salas' },
-  { path: 'reservar/:sala', component: FormularioReserva, title: 'Reservar' },
+  { path: 'reservar/:sala', component: PantallaReserva, title: 'Reservar' },
   { path: 'mis-reservas', component: ListaReservas, title: 'Mis reservas' },
   { path: 'panel-ocupacion', component: PanelOcupacion, title: 'Ocupación' },
   { path: '**', redirectTo: '' },

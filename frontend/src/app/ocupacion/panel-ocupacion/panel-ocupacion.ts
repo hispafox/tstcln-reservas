@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { OcupacionSala } from '../../modelos/ocupacion';
-import { ServicioOcupacion } from '../../servicios/servicio-ocupacion';
+import { OcupacionSala } from '../ocupacion';
+import { ApiOcupacion } from '../api-ocupacion';
 
 @Component({
   selector: 'app-panel-ocupacion',
@@ -9,7 +9,7 @@ import { ServicioOcupacion } from '../../servicios/servicio-ocupacion';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PanelOcupacion {
-  private readonly ocupacion = inject(ServicioOcupacion);
+  private readonly ocupacion = inject(ApiOcupacion);
 
   protected readonly desde = signal('');
   protected readonly hasta = signal('');

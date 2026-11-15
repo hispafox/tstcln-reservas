@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { Sala } from '../../modelos/sala';
-import { ServicioSalas } from '../../servicios/servicio-salas';
+import { CatalogoSalas } from '../catalogo-salas';
+import { Sala } from '../sala';
 
 @Component({
   selector: 'app-buscador-salas',
@@ -11,18 +11,22 @@ import { ServicioSalas } from '../../servicios/servicio-salas';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BuscadorSalas {
-  private readonly salas = inject(ServicioSalas);
+  private readonly catalogo = inject(CatalogoSalas);
 
   protected readonly equipamientos = ['pantalla', 'videoconferencia'];
-  protected readonly asistentes = signal<number | null>(null);
+  protected readonly asistentes = signal(1);
   protected readonly equipamiento = signal<string[]>([]);
   protected readonly resultados = signal<Sala[]>([]);
   protected readonly buscando = signal(false);
   protected readonly buscado = signal(false);
   protected readonly error = signal(false);
 
+  constructor() {
+    this.buscar();
+  }
+
   protected cambiarAsistentes(valor: string): void {
-    this.asistentes.set(valor === '' ? null : Number(valor));
+    this.asistentes.set(valor === '' ? 1 : Number(valor));
   }
 
   protected alternarEquipamiento(elemento: string, marcado: boolean): void {
@@ -34,16 +38,18 @@ export class BuscadorSalas {
   protected buscar(): void {
     this.buscando.set(true);
     this.error.set(false);
-    this.salas.buscar({ asistentes: this.asistentes(), equipamiento: this.equipamiento() }).subscribe({
-      next: (salas) => {
-        this.resultados.set(salas);
-        this.buscando.set(false);
-        this.buscado.set(true);
-      },
-      error: () => {
-        this.buscando.set(false);
-        this.error.set(true);
-      },
-    });
+    this.catalogo
+      .disponibles({ asistentes: this.asistentes(), equipamiento: this.equipamiento() })
+      .subscribe({
+        next: (salas) => {
+          this.resultados.set(salas);
+          this.buscando.set(false);
+          this.buscado.set(true);
+        },
+        error: () => {
+          this.buscando.set(false);
+          this.error.set(true);
+        },
+      });
   }
 }

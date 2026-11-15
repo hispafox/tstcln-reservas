@@ -1,0 +1,23 @@
+form {
+  display: grid;
+  grid-template-columns: max-content minmax(12rem, 24rem);
+  align-items: center;
+  gap: var(--espacio-3) var(--espacio-5);
+  max-width: 48rem;
+}
+
+form > p,
+form > div,
+form > button {
+  grid-column: 1 / -1;
+}
+
+.duracion {
+  font-weight: 600;
+  color: var(--color-marca);
+}
+
+button {
+  justify-self: start;
+  min-width: 10rem;
+}

@@ -27,6 +27,6 @@ Desde la raíz del repositorio:
 
 ## Frontend
 
-Angular 22 con Vitest, en `frontend/`. Necesita Node.js `^22.22.3`, `^24.15.0` o `^26.0.0`. Las dependencias se instalan con `npm install` dentro de `frontend/`.
+Angular 22 con Vitest, Testing Library y los harnesses de Angular CDK, en `frontend/`. Necesita Node.js `^22.22.3`, `^24.15.0` o `^26.0.0`. Las dependencias se instalan con `npm install` dentro de `frontend/`.
 
 En desarrollo escucha en `http://localhost:5173`, y `proxy.conf.json` reenvía las rutas de la API al backend en `https://localhost:8000`.

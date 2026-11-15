@@ -10,7 +10,7 @@ export interface Reserva {
   estado: EstadoReserva;
 }
 
-export interface NuevaReserva {
+export interface PeticionReserva {
   sala: number;
   inicio: string;
   fin: string;

@@ -1,10 +1,10 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
-import { OcupacionSala } from '../modelos/ocupacion';
+import { OcupacionSala } from './ocupacion';
 
 @Injectable({ providedIn: 'root' })
-export class ServicioOcupacion {
+export class ApiOcupacion {
   private readonly http = inject(HttpClient);
 
   dePeriodo(desde: string, hasta: string): Observable<OcupacionSala[]> {

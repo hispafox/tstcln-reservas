@@ -6,7 +6,7 @@
     <input
       type="number"
       min="1"
-      [value]="asistentes() ?? ''"
+      [value]="asistentes()"
       (input)="cambiarAsistentes($any($event.target).value)"
     />
   </label>
