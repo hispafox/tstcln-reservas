@@ -1,11 +1,9 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
 import { CatalogoSalas } from '../catalogo-salas';
 import { Sala } from '../sala';
 
 @Component({
   selector: 'app-buscador-salas',
-  imports: [RouterLink],
   templateUrl: './buscador-salas.html',
   styleUrl: './buscador-salas.css',
   changeDetection: ChangeDetectionStrategy.OnPush,

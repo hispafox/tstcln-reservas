@@ -41,7 +41,7 @@
         @if (sala.equipamiento.length > 0) {
           <p class="equipamiento">{{ sala.equipamiento.join(' · ') }}</p>
         }
-        <a [routerLink]="['/reservar', sala.id]">Reservar</a>
+        <a href="/reservar/{{ sala.id }}">Reservar</a>
       </li>
     } @empty {
       <li class="vacio">Ninguna sala cumple el filtro.</li>
