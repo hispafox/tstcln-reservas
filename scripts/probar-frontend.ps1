@@ -7,7 +7,9 @@ $ErrorActionPreference = 'Stop'
 
 Push-Location (Join-Path $PSScriptRoot '..\frontend')
 try {
-    npx ng test --watch=false @args
+    # npx.cmd y no npx: el lanzador npx.ps1 vuelve a leer el texto de la orden
+    # y pierde lo que llega en @args, como --coverage o --include.
+    npx.cmd ng test --watch=false @args
     exit $LASTEXITCODE
 }
 finally {
