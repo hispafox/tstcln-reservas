@@ -1,8 +1,11 @@
-<nav>
-  <a routerLink="/" routerLinkActive="activa" [routerLinkActiveOptions]="{ exact: true }">Buscar salas</a>
-  <a routerLink="/mis-reservas" routerLinkActive="activa">Mis reservas</a>
-  <a routerLink="/panel-ocupacion" routerLinkActive="activa">Ocupación</a>
-</nav>
+<header>
+  <a routerLink="/" class="marca">Reservas de salas</a>
+  <nav>
+    <a routerLink="/" routerLinkActive="activa" [routerLinkActiveOptions]="{ exact: true }">Buscar salas</a>
+    <a routerLink="/mis-reservas" routerLinkActive="activa">Mis reservas</a>
+    <a routerLink="/panel-ocupacion" routerLinkActive="activa">Ocupación</a>
+  </nav>
+</header>
 
 <main>
   <router-outlet />

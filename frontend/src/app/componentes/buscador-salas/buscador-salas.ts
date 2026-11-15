@@ -7,6 +7,7 @@ import { ServicioSalas } from '../../servicios/servicio-salas';
   selector: 'app-buscador-salas',
   imports: [RouterLink],
   templateUrl: './buscador-salas.html',
+  styleUrl: './buscador-salas.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BuscadorSalas {
@@ -18,6 +19,7 @@ export class BuscadorSalas {
   protected readonly resultados = signal<Sala[]>([]);
   protected readonly buscando = signal(false);
   protected readonly buscado = signal(false);
+  protected readonly error = signal(false);
 
   protected cambiarAsistentes(valor: string): void {
     this.asistentes.set(valor === '' ? null : Number(valor));
@@ -31,13 +33,17 @@ export class BuscadorSalas {
 
   protected buscar(): void {
     this.buscando.set(true);
+    this.error.set(false);
     this.salas.buscar({ asistentes: this.asistentes(), equipamiento: this.equipamiento() }).subscribe({
       next: (salas) => {
         this.resultados.set(salas);
         this.buscando.set(false);
         this.buscado.set(true);
       },
-      error: () => this.buscando.set(false),
+      error: () => {
+        this.buscando.set(false);
+        this.error.set(true);
+      },
     });
   }
 }

@@ -1,14 +1,65 @@
-nav {
+header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
   display: flex;
-  gap: 1rem;
-  padding: 1rem;
-  border-bottom: 1px solid #ccc;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--espacio-4);
+  padding: var(--espacio-4) max(var(--espacio-5), calc((100% - var(--ancho-contenido)) / 2 + var(--espacio-5)));
+  background: var(--color-marca-oscuro);
+  box-shadow: 0 4px 16px rgb(27 35 51 / 20%);
 }
 
-.activa {
-  font-weight: bold;
+.marca {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-3);
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: #fff;
+  text-decoration: none;
+}
+
+.marca::before {
+  content: '';
+  width: 1.6rem;
+  height: 1.6rem;
+  border-radius: 6px;
+  background:
+    linear-gradient(135deg, transparent 50%, rgb(255 255 255 / 35%) 50%),
+    var(--color-acento);
+}
+
+nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--espacio-2);
+}
+
+nav a {
+  padding: var(--espacio-2) var(--espacio-4);
+  font-weight: 600;
+  color: rgb(255 255 255 / 80%);
+  text-decoration: none;
+  border-radius: 999px;
+  transition: background-color 0.15s, color 0.15s;
+}
+
+nav a:hover {
+  color: #fff;
+  background: rgb(255 255 255 / 12%);
+}
+
+nav a.activa {
+  color: var(--color-marca-oscuro);
+  background: #fff;
 }
 
 main {
-  padding: 1rem;
+  max-width: var(--ancho-contenido);
+  margin: 0 auto;
+  padding: var(--espacio-6) var(--espacio-5) var(--espacio-7);
 }

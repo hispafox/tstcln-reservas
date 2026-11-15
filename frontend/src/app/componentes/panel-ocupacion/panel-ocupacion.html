@@ -9,22 +9,35 @@
     Hasta
     <input type="date" [value]="hasta()" (input)="hasta.set($any($event.target).value)" />
   </label>
-  <button type="submit">Consultar</button>
+  <button type="submit" [disabled]="cargando()">Consultar</button>
 </form>
 
-<table>
-  <thead>
-    <tr>
-      <th scope="col">Sala</th>
-      <th scope="col">Ocupación</th>
-    </tr>
-  </thead>
-  <tbody>
-    @for (sala of salas(); track sala.sala) {
-      <tr>
-        <td>{{ sala.nombre }}</td>
-        <td>{{ sala.porcentaje }} %</td>
-      </tr>
-    }
-  </tbody>
-</table>
+@if (cargando()) {
+  <p class="cargando">Calculando la ocupación…</p>
+} @else if (error()) {
+  <p role="alert">No se ha podido calcular la ocupación.</p>
+} @else if (consultado()) {
+  @if (salas().length > 0) {
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">Sala</th>
+          <th scope="col">Ocupación</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (sala of salas(); track sala.sala) {
+          <tr>
+            <td>{{ sala.nombre }}</td>
+            <td>
+              <meter min="0" max="100" [value]="sala.porcentaje"></meter>
+              {{ sala.porcentaje }} %
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  } @else {
+    <p class="vacio">No hay salas en ese periodo.</p>
+  }
+}

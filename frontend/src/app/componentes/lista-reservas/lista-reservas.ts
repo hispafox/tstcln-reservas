@@ -7,6 +7,7 @@ import { interval } from 'rxjs';
   selector: 'app-lista-reservas',
   imports: [FormsModule],
   templateUrl: './lista-reservas.html',
+  styleUrl: './lista-reservas.css',
 })
 export class ListaReservas implements OnInit {
   http = inject(HttpClient);

@@ -13,6 +13,7 @@ import { ServicioReservas } from '../../servicios/servicio-reservas';
 @Component({
   selector: 'app-formulario-reserva',
   templateUrl: './formulario-reserva.html',
+  styleUrl: './formulario-reserva.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormularioReserva {

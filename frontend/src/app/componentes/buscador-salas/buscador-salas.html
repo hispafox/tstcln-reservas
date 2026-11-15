@@ -29,16 +29,22 @@
 </form>
 
 @if (buscando()) {
-  <p>Buscando salas…</p>
+  <p class="cargando">Buscando salas…</p>
+} @else if (error()) {
+  <p role="alert">No se han podido cargar las salas.</p>
 } @else if (buscado()) {
   <ul>
     @for (sala of resultados(); track sala.id) {
       <li>
-        {{ sala.nombre }}: hasta {{ sala.capacidadMaxima }} personas
+        <h2>{{ sala.nombre }}</h2>
+        <p>Hasta {{ sala.capacidadMaxima }} personas</p>
+        @if (sala.equipamiento.length > 0) {
+          <p class="equipamiento">{{ sala.equipamiento.join(' · ') }}</p>
+        }
         <a [routerLink]="['/reservar', sala.id]">Reservar</a>
       </li>
     } @empty {
-      <li>Ninguna sala cumple el filtro.</li>
+      <li class="vacio">Ninguna sala cumple el filtro.</li>
     }
   </ul>
 }
