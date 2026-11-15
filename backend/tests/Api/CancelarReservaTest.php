@@ -22,4 +22,24 @@ final class CancelarReservaTest extends WebTestCase
         $respuesta = json_decode($cliente->getResponse()->getContent(), true);
         self::assertSame('cancelada_a_tiempo', $respuesta['estado']);
     }
+
+    public function test_cancelar_una_reserva_que_no_existe_responde_404(): void
+    {
+        $cliente = static::createClient();
+
+        $cliente->request('DELETE', '/reservas/999999');
+
+        self::assertResponseStatusCodeSame(404);
+    }
+
+    public function test_la_respuesta_de_la_cancelacion_llega_como_json(): void
+    {
+        $cliente = static::createClient();
+        $datos = new FabricaDeDatos(static::getContainer()->get(EntityManagerInterface::class));
+        $reserva = $datos->reserva($datos->sala(), 'tomorrow 10:00', 'tomorrow 11:00');
+
+        $cliente->request('DELETE', '/reservas/'.$reserva->id());
+
+        self::assertResponseHeaderSame('content-type', 'application/json');
+    }
 }
