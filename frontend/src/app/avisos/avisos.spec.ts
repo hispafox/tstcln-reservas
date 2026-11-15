@@ -24,4 +24,15 @@ describe('Avisos', () => {
     vi.advanceTimersByTime(1);
     expect(avisos.actual()).toBeNull();
   });
+
+  it('cada aviso dura sus cinco segundos aunque llegue otro', () => {
+    const avisos = TestBed.inject(Avisos);
+
+    avisos.mostrar('Reserva creada');
+    vi.advanceTimersByTime(3000);
+    avisos.mostrar('Reserva cancelada');
+    vi.advanceTimersByTime(2000);
+
+    expect(avisos.actual()).toBe('Reserva cancelada');
+  });
 });
