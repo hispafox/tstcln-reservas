@@ -12,6 +12,7 @@ class Sala
         private string $nombre,
         private int $capacidadMaxima,
         private ?int $capacidadMinima = null,
+        private array $equipamiento = [],
     ) {
     }
 
@@ -33,5 +34,13 @@ class Sala
     public function capacidadMinima(): ?int
     {
         return $this->capacidadMinima;
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function equipamiento(): array
+    {
+        return $this->equipamiento;
     }
 }

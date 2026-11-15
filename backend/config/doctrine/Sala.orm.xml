@@ -9,5 +9,6 @@
         <field name="nombre" type="string" length="100"/>
         <field name="capacidadMaxima" type="integer"/>
         <field name="capacidadMinima" type="integer" nullable="true"/>
+        <field name="equipamiento" type="json"/>
     </entity>
 </doctrine-mapping>

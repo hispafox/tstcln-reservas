@@ -47,6 +47,26 @@ final class ReservasController
         return new JsonResponse(self::comoJson($reserva), 201);
     }
 
+    #[Route('/reservas', methods: ['GET'])]
+    public function deUnaPersona(Request $peticion, EntityManagerInterface $em): JsonResponse
+    {
+        $persona = $peticion->query->getString('persona');
+        if ($persona === '') {
+            return new JsonResponse(['error' => 'Indica la persona'], 400);
+        }
+
+        $reservas = $em->createQueryBuilder()
+            ->select('r')
+            ->from(Reserva::class, 'r')
+            ->andWhere('r.persona = :persona')
+            ->orderBy('r.franja.inicio')
+            ->setParameter('persona', $persona)
+            ->getQuery()
+            ->getResult();
+
+        return new JsonResponse(array_map(self::comoJson(...), $reservas));
+    }
+
     #[Route('/reservas/{id}', methods: ['DELETE'])]
     public function cancelar(
         int $id,
