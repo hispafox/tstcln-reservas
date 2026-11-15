@@ -1,0 +1,26 @@
+<form [formGroup]="formulario" (ngSubmit)="reservar()">
+  <label for="persona">Persona</label>
+  <input id="persona" formControlName="persona" />
+
+  <label for="asistentes">Asistentes</label>
+  <input id="asistentes" type="number" formControlName="asistentes" />
+
+  <label for="inicio">Hora de inicio</label>
+  <input id="inicio" type="datetime-local" formControlName="inicio" />
+
+  <label for="fin">Hora de fin</label>
+  <input id="fin" type="datetime-local" formControlName="fin" />
+
+  @if (formulario.hasError('finAntesDeInicio')) {
+    <p role="alert">La hora de fin tiene que ser posterior a la de inicio</p>
+  }
+  @if (error(); as mensaje) {
+    <p role="alert">{{ mensaje }}</p>
+  }
+
+  <button type="submit" [disabled]="formulario.invalid">Reservar</button>
+
+  @if (inicio() && fin() && !formulario.hasError('finAntesDeInicio')) {
+    <div class="duracion">Duración: {{ duracion() }}</div>
+  }
+</form>
