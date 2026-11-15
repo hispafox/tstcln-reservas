@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Reservas\CrearReservasRecurrentes;
 use App\Reservas\FranjaHoraria;
 use App\Reservas\Reserva;
 use App\Reservas\Sala;
@@ -81,6 +82,28 @@ final class ReservasController
         $servicio->cancelar($reserva);
 
         return new JsonResponse(self::comoJson($reserva));
+    }
+
+    #[Route('/reservas/recurrentes', methods: ['POST'])]
+    public function crearRecurrentes(
+        Request $peticion,
+        EntityManagerInterface $em,
+        CrearReservasRecurrentes $crear,
+    ): JsonResponse {
+        $datos = $peticion->toArray();
+
+        $resultado = $crear->ejecutar(
+            $em->find(Sala::class, $datos['sala']),
+            new FranjaHoraria(new \DateTimeImmutable($datos['inicio']), new \DateTimeImmutable($datos['fin'])),
+            new \DateTimeImmutable($datos['hasta']),
+            $datos['persona'],
+            $datos['asistentes'],
+        );
+
+        return new JsonResponse([
+            'creadas' => array_map(fn (FranjaHoraria $franja) => $franja->inicio()->format('Y-m-d'), $resultado->libres()),
+            'descartadas' => array_map(fn (FranjaHoraria $franja) => $franja->inicio()->format('Y-m-d'), $resultado->descartadas()),
+        ], 201);
     }
 
     private static function comoJson(Reserva $reserva): array
