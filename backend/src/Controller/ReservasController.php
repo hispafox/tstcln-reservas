@@ -92,13 +92,17 @@ final class ReservasController
     ): JsonResponse {
         $datos = $peticion->toArray();
 
-        $resultado = $crear->ejecutar(
-            $em->find(Sala::class, $datos['sala']),
-            new FranjaHoraria(new \DateTimeImmutable($datos['inicio']), new \DateTimeImmutable($datos['fin'])),
-            new \DateTimeImmutable($datos['hasta']),
-            $datos['persona'],
-            $datos['asistentes'],
-        );
+        try {
+            $resultado = $crear->ejecutar(
+                $em->find(Sala::class, $datos['sala']),
+                new FranjaHoraria(new \DateTimeImmutable($datos['inicio']), new \DateTimeImmutable($datos['fin'])),
+                new \DateTimeImmutable($datos['hasta']),
+                $datos['persona'],
+                $datos['asistentes'],
+            );
+        } catch (\DomainException $e) {
+            return new JsonResponse(['error' => $e->getMessage()], 409);
+        }
 
         return new JsonResponse([
             'creadas' => array_map(fn (FranjaHoraria $franja) => $franja->inicio()->format('Y-m-d'), $resultado->libres()),
