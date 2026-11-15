@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Reservas;
 
 use App\Reservas\FranjaHoraria;
+use App\Reservas\LectorDeFechas;
 use App\Reservas\SerieSemanal;
 use PHPUnit\Framework\TestCase;
 
@@ -51,6 +52,17 @@ final class SerieSemanalTest extends TestCase
 
         self::assertSame(['2027-03-04'], self::dias($resultado->libres()));
         self::assertSame([], $resultado->descartadas());
+    }
+
+    public function test_una_serie_que_cruza_el_cambio_de_hora_sigue_a_las_diez(): void
+    {
+        $lector = new LectorDeFechas(new \DateTimeZone('Europe/Madrid'));
+        $primera = new FranjaHoraria($lector->leer('2027-03-25T10:00:00+01:00'), $lector->leer('2027-03-25T11:00:00+01:00'));
+        $serie = new SerieSemanal($primera, new \DateTimeImmutable('2027-04-01'));
+
+        $semanaDelCambio = $serie->franjas()[1]->inicio()->setTimezone(new \DateTimeZone('Europe/Madrid'));
+
+        self::assertSame('2027-04-01 10:00', $semanaDelCambio->format('Y-m-d H:i'));
     }
 
     private static function franja(string $inicio, string $fin): FranjaHoraria

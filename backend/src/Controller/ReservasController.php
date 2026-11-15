@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\Reservas\CrearReservasRecurrentes;
 use App\Reservas\FranjaHoraria;
+use App\Reservas\LectorDeFechas;
 use App\Reservas\Reserva;
 use App\Reservas\Sala;
 use App\Reservas\ServicioCancelacion;
@@ -89,14 +90,15 @@ final class ReservasController
         Request $peticion,
         EntityManagerInterface $em,
         CrearReservasRecurrentes $crear,
+        LectorDeFechas $lector,
     ): JsonResponse {
         $datos = $peticion->toArray();
 
         try {
             $resultado = $crear->ejecutar(
                 $em->find(Sala::class, $datos['sala']),
-                new FranjaHoraria(new \DateTimeImmutable($datos['inicio']), new \DateTimeImmutable($datos['fin'])),
-                new \DateTimeImmutable($datos['hasta']),
+                new FranjaHoraria($lector->leer($datos['inicio']), $lector->leer($datos['fin'])),
+                $lector->leer($datos['hasta']),
                 $datos['persona'],
                 $datos['asistentes'],
             );

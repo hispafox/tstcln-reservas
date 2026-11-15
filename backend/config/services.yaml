@@ -19,5 +19,10 @@ services:
     App\:
         resource: '../src/'
 
+    # La zona horaria de la aplicación, para LectorDeFechas
+    DateTimeZone:
+        class: DateTimeZone
+        arguments: ['Europe/Madrid']
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
