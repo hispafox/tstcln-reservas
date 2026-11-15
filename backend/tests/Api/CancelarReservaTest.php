@@ -23,6 +23,20 @@ final class CancelarReservaTest extends WebTestCase
         self::assertSame('cancelada_a_tiempo', $respuesta['estado']);
     }
 
+    public function test_cancelar_con_dos_horas_justas_de_antelacion_es_a_tiempo(): void
+    {
+        self::markTestSkipped('No se puede escribir mientras el controlador mire el reloj de verdad');
+
+        $cliente = static::createClient();
+        $datos = new FabricaDeDatos(static::getContainer()->get(EntityManagerInterface::class));
+        $reserva = $datos->reserva($datos->sala(), '+2 hours', '+3 hours');
+
+        $cliente->request('DELETE', '/reservas/'.$reserva->id());
+
+        $respuesta = json_decode($cliente->getResponse()->getContent(), true);
+        self::assertSame('cancelada_a_tiempo', $respuesta['estado']);
+    }
+
     public function test_cancelar_una_reserva_que_no_existe_responde_404(): void
     {
         $cliente = static::createClient();
