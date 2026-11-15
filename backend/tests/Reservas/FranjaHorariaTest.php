@@ -53,6 +53,30 @@ final class FranjaHorariaTest extends TestCase
         self::assertFalse($seSolapan);
     }
 
+    #[DataProvider('casosDeContencion')]
+    public function test_una_franja_contiene_a_otra_si_la_otra_no_se_sale_por_ningun_extremo(
+        string $inicioDeLaOtra,
+        string $finDeLaOtra,
+        bool $laContiene,
+    ): void {
+        $deOchoAVeinte = self::franja('08:00', '20:00');
+
+        $resultado = $deOchoAVeinte->contiene(self::franja($inicioDeLaOtra, $finDeLaOtra));
+
+        self::assertSame($laContiene, $resultado);
+    }
+
+    public static function casosDeContencion(): array
+    {
+        return [
+            'empieza justo cuando empieza' => ['08:00', '09:00', true],
+            'queda dentro' => ['10:00', '11:00', true],
+            'acaba justo cuando acaba' => ['19:00', '20:00', true],
+            'empieza antes' => ['07:30', '08:30', false],
+            'acaba después' => ['19:30', '20:30', false],
+        ];
+    }
+
     #[DataProvider('franjasNoValidas')]
     public function test_una_franja_tiene_que_terminar_despues_de_empezar(string $inicio, string $fin): void
     {

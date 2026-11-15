@@ -29,4 +29,9 @@ final class FranjaHoraria
     {
         return $this->inicio < $otra->fin && $otra->inicio < $this->fin;
     }
+
+    public function contiene(self $otra): bool
+    {
+        return $this->inicio <= $otra->inicio && $otra->fin <= $this->fin;
+    }
 }

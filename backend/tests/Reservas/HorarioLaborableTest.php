@@ -46,6 +46,15 @@ final class HorarioLaborableTest extends TestCase
         self::assertFalse($admitida);
     }
 
+    public function test_no_admite_una_franja_que_va_del_viernes_al_lunes(): void
+    {
+        $horario = new HorarioLaborable();
+
+        $admitida = $horario->admite(self::franja('2027-03-05 10:00', '2027-03-08 11:00'));
+
+        self::assertFalse($admitida);
+    }
+
     private static function franja(string $inicio, string $fin): FranjaHoraria
     {
         return new FranjaHoraria(new \DateTimeImmutable($inicio), new \DateTimeImmutable($fin));
