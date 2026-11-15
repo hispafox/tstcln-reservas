@@ -1,0 +1,78 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Controller;
+
+use App\Reservas\FranjaHoraria;
+use App\Reservas\Reserva;
+use App\Reservas\Sala;
+use App\Reservas\ServicioCancelacion;
+use App\Reservas\ServicioReservas;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Attribute\AsController;
+use Symfony\Component\Routing\Attribute\Route;
+
+#[AsController]
+final class ReservasController
+{
+    #[Route('/reservas', methods: ['POST'])]
+    public function reservar(
+        Request $peticion,
+        EntityManagerInterface $em,
+        ServicioReservas $servicio,
+    ): JsonResponse {
+        $datos = $peticion->toArray();
+
+        $sala = $em->find(Sala::class, $datos['sala']);
+        if ($sala === null) {
+            return new JsonResponse(['error' => 'La sala no existe'], 404);
+        }
+
+        try {
+            $reserva = $servicio->reservar(
+                $sala,
+                new FranjaHoraria(new \DateTimeImmutable($datos['inicio']), new \DateTimeImmutable($datos['fin'])),
+                $datos['persona'],
+                $datos['asistentes'],
+            );
+        } catch (\InvalidArgumentException $e) {
+            return new JsonResponse(['error' => $e->getMessage()], 400);
+        } catch (\DomainException $e) {
+            return new JsonResponse(['error' => $e->getMessage()], 409);
+        }
+
+        return new JsonResponse(self::comoJson($reserva), 201);
+    }
+
+    #[Route('/reservas/{id}', methods: ['DELETE'])]
+    public function cancelar(
+        int $id,
+        EntityManagerInterface $em,
+        ServicioCancelacion $servicio,
+    ): JsonResponse {
+        $reserva = $em->find(Reserva::class, $id);
+        if ($reserva === null) {
+            return new JsonResponse(['error' => 'La reserva no existe'], 404);
+        }
+
+        $servicio->cancelar($reserva, new \DateTimeImmutable());
+
+        return new JsonResponse(self::comoJson($reserva));
+    }
+
+    private static function comoJson(Reserva $reserva): array
+    {
+        return [
+            'id' => $reserva->id(),
+            'sala' => $reserva->sala()->id(),
+            'inicio' => $reserva->franja()->inicio()->format(\DATE_ATOM),
+            'fin' => $reserva->franja()->fin()->format(\DATE_ATOM),
+            'persona' => $reserva->persona(),
+            'asistentes' => $reserva->asistentes(),
+            'estado' => $reserva->estado(),
+        ];
+    }
+}

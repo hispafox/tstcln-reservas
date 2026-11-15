@@ -9,6 +9,13 @@ class Kernel extends BaseKernel
 {
     use MicroKernelTrait;
 
+    public function boot(): void
+    {
+        date_default_timezone_set('Europe/Madrid');
+
+        parent::boot();
+    }
+
     /**
      * @return list<string> An array of allowed values for APP_ENV
      */

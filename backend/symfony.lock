@@ -99,6 +99,18 @@
             "./AGENTS.md"
         ]
     },
+    "symfony/mailer": {
+        "version": "8.1",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "4.3",
+            "ref": "710cae90ab3e5d3f4a747e9ce6ae33299d7ae83b"
+        },
+        "files": [
+            "./config/packages/mailer.yaml"
+        ]
+    },
     "symfony/maker-bundle": {
         "version": "1.68",
         "recipe": {
@@ -107,18 +119,6 @@
             "version": "1.0",
             "ref": "fadbfe33303a76e25cb63401050439aa9b1a9c7f"
         }
-    },
-    "symfony/property-info": {
-        "version": "8.1",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "main",
-            "version": "7.3",
-            "ref": "dae70df71978ae9226ae915ffd5fad817f5ca1f7"
-        },
-        "files": [
-            "./config/packages/property_info.yaml"
-        ]
     },
     "symfony/routing": {
         "version": "8.1",
@@ -143,19 +143,6 @@
         },
         "files": [
             "./config/packages/validator.yaml"
-        ]
-    },
-    "zenstruck/foundry": {
-        "version": "2.16",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "main",
-            "version": "2.15",
-            "ref": "ce0c9d62f1d5192dcd958c2f2f21fd8d9c23dcaa"
-        },
-        "files": [
-            "./config/packages/zenstruck_foundry.yaml",
-            "./src/Story/AppStory.php"
         ]
     }
 }
