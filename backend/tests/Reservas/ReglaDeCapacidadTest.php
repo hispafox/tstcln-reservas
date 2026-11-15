@@ -76,6 +76,34 @@ final class ReglaDeCapacidadTest extends TestCase
         self::assertTrue($this->regla->admite($sala, self::franja('10:00', '11:00'), 1));
     }
 
+    public function test_una_sala_grande_admite_una_franja_de_diez_a_once(): void
+    {
+        $sala = new Sala('Auditorio', capacidadMaxima: 40);
+
+        self::assertTrue($this->regla->admite($sala, self::franja('10:00', '11:00'), 25));
+    }
+
+    public function test_una_sala_grande_no_admite_una_franja_de_cuarenta_y_cinco_minutos(): void
+    {
+        $sala = new Sala('Auditorio', capacidadMaxima: 40);
+
+        self::assertFalse($this->regla->admite($sala, self::franja('10:00', '10:45'), 25));
+    }
+
+    public function test_una_sala_grande_no_admite_una_franja_que_empieza_a_y_cuarto(): void
+    {
+        $sala = new Sala('Auditorio', capacidadMaxima: 40);
+
+        self::assertFalse($this->regla->admite($sala, self::franja('10:15', '10:45'), 25));
+    }
+
+    public function test_una_sala_pequena_admite_una_franja_que_empieza_a_y_cuarto(): void
+    {
+        $sala = new Sala('Sala Norte', capacidadMaxima: 10);
+
+        self::assertTrue($this->regla->admite($sala, self::franja('10:15', '11:15'), 4));
+    }
+
     private static function franja(string $inicio, string $fin): FranjaHoraria
     {
         return new FranjaHoraria(

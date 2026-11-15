@@ -64,6 +64,20 @@ final class ServicioReservasTest extends TestCase
         self::assertCount(1, $reservas->guardadas());
     }
 
+    public function test_no_permite_reservar_con_mas_asistentes_que_plazas_y_no_guarda_nada(): void
+    {
+        $reservas = new RepositorioReservasEnMemoria();
+        $servicio = new ServicioReservas($reservas, $this->createStub(NotificadorReservas::class));
+
+        try {
+            $servicio->reservar($this->salaNorte, self::franja('10:00', '11:00'), 'Ana', 11);
+            self::fail('Se esperaba que la reserva se rechazara');
+        } catch (\DomainException) {
+        }
+
+        self::assertSame([], $reservas->guardadas());
+    }
+
     public function test_no_permite_reservar_una_sala_ya_ocupada(): void
     {
         $reservaDeLasDiez = new Reserva($this->salaNorte, self::franja('10:00', '11:00'), 'Ana', 4);

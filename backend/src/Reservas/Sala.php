@@ -6,6 +6,8 @@ namespace App\Reservas;
 
 class Sala
 {
+    private const PLAZAS_DE_UNA_SALA_GRANDE = 20;
+
     private ?int $id = null;
 
     public function __construct(
@@ -42,5 +44,10 @@ class Sala
     public function equipamiento(): array
     {
         return $this->equipamiento;
+    }
+
+    public function esGrande(): bool
+    {
+        return $this->capacidadMaxima >= self::PLAZAS_DE_UNA_SALA_GRANDE;
     }
 }

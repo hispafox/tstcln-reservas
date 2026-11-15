@@ -9,11 +9,16 @@ final class ServicioReservas
     public function __construct(
         private RepositorioReservas $reservas,
         private NotificadorReservas $notificador,
+        private ReglaDeCapacidad $capacidad = new ReglaDeCapacidad(),
     ) {
     }
 
     public function reservar(Sala $sala, FranjaHoraria $franja, string $persona, int $asistentes): Reserva
     {
+        if (!$this->capacidad->admite($sala, $franja, $asistentes)) {
+            throw new \DomainException('La sala no admite esa reserva: revisa los asistentes y la franja');
+        }
+
         $this->comprobarDisponibilidad($sala, $franja);
 
         $reserva = new Reserva($sala, $franja, $persona, $asistentes);
