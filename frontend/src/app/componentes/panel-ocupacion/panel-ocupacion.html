@@ -1,0 +1,30 @@
+<h1>Ocupación de las salas</h1>
+
+<form (submit)="$event.preventDefault(); consultar()">
+  <label>
+    Desde
+    <input type="date" [value]="desde()" (input)="desde.set($any($event.target).value)" />
+  </label>
+  <label>
+    Hasta
+    <input type="date" [value]="hasta()" (input)="hasta.set($any($event.target).value)" />
+  </label>
+  <button type="submit">Consultar</button>
+</form>
+
+<table>
+  <thead>
+    <tr>
+      <th scope="col">Sala</th>
+      <th scope="col">Ocupación</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (sala of salas(); track sala.sala) {
+      <tr>
+        <td>{{ sala.nombre }}</td>
+        <td>{{ sala.porcentaje }} %</td>
+      </tr>
+    }
+  </tbody>
+</table>

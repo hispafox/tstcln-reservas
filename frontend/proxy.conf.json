@@ -1,0 +1,6 @@
+{
+  "/salas": { "target": "https://localhost:8000", "secure": false },
+  "/reservas": { "target": "https://localhost:8000", "secure": false },
+  "/ocupacion": { "target": "https://localhost:8000", "secure": false },
+  "/lista-espera": { "target": "https://localhost:8000", "secure": false }
+}

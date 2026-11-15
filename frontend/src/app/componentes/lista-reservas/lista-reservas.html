@@ -1,0 +1,49 @@
+<h1>Mis reservas</h1>
+
+<div>
+  Persona: <input [(ngModel)]="persona" (change)="cargar()" />
+  <label><input type="checkbox" [(ngModel)]="soloConfirmadas" (change)="aplicarFiltros()" /> Solo las próximas confirmadas</label>
+  Ordenar por:
+  <select [(ngModel)]="orden" (change)="aplicarFiltros()">
+    <option value="fecha">fecha</option>
+    <option value="sala">sala</option>
+    <option value="duracion">duración</option>
+  </select>
+</div>
+
+@if (aviso) {
+  <div class="aviso">{{ aviso }}</div>
+}
+@if (cargando) {
+  <div>Cargando...</div>
+}
+@if (error) {
+  <div class="error">{{ error }}</div>
+}
+
+<table>
+  <tr>
+    <th>Sala</th>
+    <th>Inicio</th>
+    <th>Fin</th>
+    <th>Duración</th>
+    <th>Asistentes</th>
+    <th>Estado</th>
+    <th></th>
+  </tr>
+  @for (r of reservasFiltradas; track r.id) {
+    <tr>
+      <td>{{ r.nombreSala }}</td>
+      <td>{{ r.inicio.substring(0, 16).replace('T', ' ') }}</td>
+      <td>{{ r.fin.substring(11, 16) }}</td>
+      <td>{{ r.duracion }} min</td>
+      <td>{{ r.asistentes }}</td>
+      <td>{{ r.estado == 'confirmada' ? 'Confirmada' : r.estado == 'cancelada_tarde' ? 'Cancelada (tarde)' : 'Cancelada' }}</td>
+      <td>
+        @if (r.estado == 'confirmada' && !r.pasada) {
+          <button (click)="cancelar(r)">Cancelar</button>
+        }
+      </td>
+    </tr>
+  }
+</table>

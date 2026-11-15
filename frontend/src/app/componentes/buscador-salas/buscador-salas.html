@@ -1,0 +1,44 @@
+<h1>Buscar salas libres</h1>
+
+<form (submit)="$event.preventDefault(); buscar()">
+  <label>
+    Asistentes
+    <input
+      type="number"
+      min="1"
+      [value]="asistentes() ?? ''"
+      (input)="cambiarAsistentes($any($event.target).value)"
+    />
+  </label>
+
+  <fieldset>
+    <legend>Equipamiento</legend>
+    @for (elemento of equipamientos; track elemento) {
+      <label>
+        <input
+          type="checkbox"
+          [checked]="equipamiento().includes(elemento)"
+          (change)="alternarEquipamiento(elemento, $any($event.target).checked)"
+        />
+        {{ elemento }}
+      </label>
+    }
+  </fieldset>
+
+  <button type="submit" [disabled]="buscando()">Buscar</button>
+</form>
+
+@if (buscando()) {
+  <p>Buscando salas…</p>
+} @else if (buscado()) {
+  <ul>
+    @for (sala of resultados(); track sala.id) {
+      <li>
+        {{ sala.nombre }}: hasta {{ sala.capacidadMaxima }} personas
+        <a [routerLink]="['/reservar', sala.id]">Reservar</a>
+      </li>
+    } @empty {
+      <li>Ninguna sala cumple el filtro.</li>
+    }
+  </ul>
+}

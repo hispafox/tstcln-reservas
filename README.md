@@ -22,4 +22,11 @@ Desde la raíz del repositorio:
 
 ```powershell
 .\scripts\probar-backend.ps1
+.\scripts\probar-frontend.ps1
 ```
+
+## Frontend
+
+Angular 22 con Vitest, en `frontend/`. Necesita Node.js `^22.22.3`, `^24.15.0` o `^26.0.0`. Las dependencias se instalan con `npm install` dentro de `frontend/`.
+
+En desarrollo escucha en `http://localhost:5173`, y `proxy.conf.json` reenvía las rutas de la API al backend en `https://localhost:8000`.
