@@ -19,8 +19,10 @@ final class RepositorioReservasEnMemoria implements RepositorioReservas
 
     public function confirmadasDeLaSala(Sala $sala): array
     {
-        // Por completar en el laboratorio: las reservas de esta sala que estén confirmadas.
-        return [];
+        return array_values(array_filter(
+            $this->reservas,
+            fn (Reserva $reserva) => $reserva->sala() === $sala && $reserva->estado() === 'confirmada',
+        ));
     }
 
     public function guardadas(): array

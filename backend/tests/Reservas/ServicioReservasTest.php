@@ -33,6 +33,37 @@ final class ServicioReservasTest extends TestCase
         self::assertSame($this->salaNorte, $reserva->sala());
     }
 
+    public function test_una_reserva_valida_queda_guardada_y_se_notifica_una_vez(): void
+    {
+        $reservas = new RepositorioReservasEnMemoria();
+        $notificador = $this->createMock(NotificadorReservas::class);
+        $notificador->expects($this->once())
+            ->method('reservaConfirmada')
+            ->with($this->callback(fn (Reserva $reserva) => $reserva->sala() === $this->salaNorte));
+        $servicio = new ServicioReservas($reservas, $notificador);
+
+        $reserva = $servicio->reservar($this->salaNorte, self::franja('10:00', '11:00'), 'Ana', 4);
+
+        self::assertSame([$reserva], $reservas->guardadas());
+    }
+
+    public function test_una_reserva_que_choca_con_otra_no_se_guarda_ni_se_notifica(): void
+    {
+        $reservas = new RepositorioReservasEnMemoria();
+        $reservas->guardar(new Reserva($this->salaNorte, self::franja('10:00', '11:00'), 'Ana', 4));
+        $notificador = $this->createMock(NotificadorReservas::class);
+        $notificador->expects($this->never())->method('reservaConfirmada');
+        $servicio = new ServicioReservas($reservas, $notificador);
+
+        try {
+            $servicio->reservar($this->salaNorte, self::franja('10:30', '11:30'), 'Luis', 3);
+            self::fail('Se esperaba que la segunda reserva se rechazara');
+        } catch (\DomainException) {
+        }
+
+        self::assertCount(1, $reservas->guardadas());
+    }
+
     public function test_no_permite_reservar_una_sala_ya_ocupada(): void
     {
         $reservaDeLasDiez = new Reserva($this->salaNorte, self::franja('10:00', '11:00'), 'Ana', 4);
