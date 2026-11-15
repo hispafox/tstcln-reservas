@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Reservas;
 
-class ServicioReservas
+final class ServicioReservas
 {
     public function __construct(
         private RepositorioReservas $reservas,
@@ -23,7 +23,7 @@ class ServicioReservas
         return $reserva;
     }
 
-    protected function comprobarDisponibilidad(Sala $sala, FranjaHoraria $franja): void
+    private function comprobarDisponibilidad(Sala $sala, FranjaHoraria $franja): void
     {
         foreach ($this->reservas->confirmadasDeLaSala($sala) as $existente) {
             if ($existente->franja()->seSolapaCon($franja)) {

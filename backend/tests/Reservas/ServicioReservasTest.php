@@ -6,34 +6,24 @@ namespace App\Tests\Reservas;
 
 use App\Reservas\FranjaHoraria;
 use App\Reservas\NotificadorReservas;
-use App\Reservas\RepositorioReservas;
 use App\Reservas\Sala;
 use App\Reservas\ServicioReservas;
 use PHPUnit\Framework\TestCase;
 
 final class ServicioReservasTest extends TestCase
 {
-    public function test_comprueba_la_disponibilidad_antes_de_reservar(): void
+    public function test_una_reserva_en_una_franja_libre_queda_guardada(): void
     {
         $sala = new Sala('Sala Norte', capacidadMaxima: 10);
-        $franja = new FranjaHoraria(
+        $reservas = new RepositorioReservasEnMemoria();
+        $servicio = new ServicioReservas($reservas, $this->createStub(NotificadorReservas::class));
+
+        $reserva = $servicio->reservar($sala, new FranjaHoraria(
             new \DateTimeImmutable('2027-03-04 10:00'),
             new \DateTimeImmutable('2027-03-04 11:00'),
-        );
+        ), 'Ana', 4);
 
-        $servicio = $this->getMockBuilder(ServicioReservas::class)
-            ->setConstructorArgs([
-                $this->createStub(RepositorioReservas::class),
-                $this->createStub(NotificadorReservas::class),
-            ])
-            ->onlyMethods(['comprobarDisponibilidad'])
-            ->getMock();
-
-        $servicio->expects($this->once())
-            ->method('comprobarDisponibilidad')
-            ->with($sala, $franja);
-
-        $servicio->reservar($sala, $franja, 'Ana', 4);
+        self::assertSame([$reserva], $reservas->guardadas());
     }
 
     public function test_no_permite_reservar_una_sala_ya_ocupada(): void
