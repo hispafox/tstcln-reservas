@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Reservas;
 
-final class FranjaHoraria
+final readonly class FranjaHoraria
 {
     public function __construct(
         private \DateTimeImmutable $inicio,

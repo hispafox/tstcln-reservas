@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Reservas;
 
+use App\Reservas\Capacidad;
 use App\Reservas\FranjaHoraria;
 use App\Reservas\Reserva;
 use App\Reservas\Sala;
@@ -28,7 +29,7 @@ final class ServicioCancelacionTest extends TestCase
     ): void {
         $reloj = new MockClock(new \DateTimeImmutable($momento));
         $servicio = new ServicioCancelacion(new RepositorioReservasEnMemoria(), $reloj);
-        $reserva = new Reserva($this->salaNorte, self::franja('10:00', '11:00'), 'Ana', 4);
+        $reserva = new Reserva($this->salaNorte, self::franja('10:00', '11:00'), 'Ana', new Capacidad(4));
 
         $servicio->cancelar($reserva);
 

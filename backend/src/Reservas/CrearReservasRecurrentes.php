@@ -13,7 +13,7 @@ final class CrearReservasRecurrentes
     ) {
     }
 
-    public function ejecutar(Sala $sala, FranjaHoraria $primera, \DateTimeImmutable $hasta, string $persona, int $asistentes): ResultadoSerie
+    public function ejecutar(Sala $sala, FranjaHoraria $primera, \DateTimeImmutable $hasta, string $persona, Capacidad $asistentes): ResultadoSerie
     {
         if (!$this->capacidad->admite($sala, $primera, $asistentes)) {
             throw new \DomainException('La sala no admite esa reserva: revisa los asistentes y la franja');

@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { Capacidad } from '../capacidad';
 import { CatalogoSalas } from '../catalogo-salas';
 import { Sala } from '../sala';
 
@@ -24,7 +25,8 @@ export class BuscadorSalas {
   }
 
   protected cambiarAsistentes(valor: string): void {
-    this.asistentes.set(valor === '' ? 1 : Number(valor));
+    const capacidad = Capacidad.leer(valor);
+    if (capacidad) this.asistentes.set(capacidad.valor);
   }
 
   protected alternarEquipamiento(elemento: string, marcado: boolean): void {

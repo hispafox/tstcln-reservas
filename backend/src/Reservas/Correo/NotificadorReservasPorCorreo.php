@@ -33,7 +33,7 @@ final class NotificadorReservasPorCorreo implements NotificadorReservas
                 $franja->inicio()->format('d/m/Y H:i'),
                 $franja->fin()->format('H:i'),
                 $reserva->persona(),
-                $reserva->asistentes(),
+                $reserva->asistentes()->valor(),
             )));
     }
 
@@ -56,7 +56,7 @@ final class NotificadorReservasPorCorreo implements NotificadorReservas
                 $primera->franja()->inicio()->format('H:i'),
                 $primera->franja()->fin()->format('H:i'),
                 $primera->persona(),
-                $primera->asistentes(),
+                $primera->asistentes()->valor(),
                 implode(', ', $fechas),
             )));
     }

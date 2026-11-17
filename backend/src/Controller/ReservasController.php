@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Reservas\Capacidad;
 use App\Reservas\CrearReservasRecurrentes;
 use App\Reservas\FranjaHoraria;
 use App\Reservas\LectorDeFechas;
@@ -38,7 +39,7 @@ final class ReservasController
                 $sala,
                 new FranjaHoraria(new \DateTimeImmutable($cuerpo['inicio']), new \DateTimeImmutable($cuerpo['fin'])),
                 $cuerpo['persona'],
-                $cuerpo['asistentes'],
+                new Capacidad($cuerpo['asistentes']),
             );
         } catch (\InvalidArgumentException $e) {
             return new JsonResponse(['error' => $e->getMessage()], 400);
@@ -100,7 +101,7 @@ final class ReservasController
                 new FranjaHoraria($lector->leer($cuerpo['inicio']), $lector->leer($cuerpo['fin'])),
                 $lector->leer($cuerpo['hasta']),
                 $cuerpo['persona'],
-                $cuerpo['asistentes'],
+                new Capacidad($cuerpo['asistentes']),
             );
         } catch (\DomainException $e) {
             return new JsonResponse(['error' => $e->getMessage()], 409);
@@ -120,7 +121,7 @@ final class ReservasController
             'inicio' => $reserva->franja()->inicio()->format(\DATE_ATOM),
             'fin' => $reserva->franja()->fin()->format(\DATE_ATOM),
             'persona' => $reserva->persona(),
-            'asistentes' => $reserva->asistentes(),
+            'asistentes' => $reserva->asistentes()->valor(),
             'estado' => $reserva->estado()->value,
         ];
     }

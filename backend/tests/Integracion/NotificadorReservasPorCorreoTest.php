@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Integracion;
 
+use App\Reservas\Capacidad;
 use App\Reservas\Correo\NotificadorReservasPorCorreo;
 use App\Reservas\FranjaHoraria;
 use App\Reservas\Reserva;
@@ -19,9 +20,9 @@ final class NotificadorReservasPorCorreoTest extends KernelTestCase
         $sala = new Sala('Sala Norte', capacidadMaxima: 10);
 
         $notificador->serieConfirmada([
-            new Reserva($sala, self::franja('2027-03-04 10:00', '2027-03-04 11:00'), 'Ana', 4),
-            new Reserva($sala, self::franja('2027-03-11 10:00', '2027-03-11 11:00'), 'Ana', 4),
-            new Reserva($sala, self::franja('2027-03-25 10:00', '2027-03-25 11:00'), 'Ana', 4),
+            new Reserva($sala, self::franja('2027-03-04 10:00', '2027-03-04 11:00'), 'Ana', new Capacidad(4)),
+            new Reserva($sala, self::franja('2027-03-11 10:00', '2027-03-11 11:00'), 'Ana', new Capacidad(4)),
+            new Reserva($sala, self::franja('2027-03-25 10:00', '2027-03-25 11:00'), 'Ana', new Capacidad(4)),
         ]);
 
         self::assertEmailCount(1);

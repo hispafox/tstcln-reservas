@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { interval } from 'rxjs';
-import { duracionEnMinutos } from '../duracion';
+import { FranjaHoraria } from '../franja-horaria';
 import { EstadoReserva, textoDeEstado } from '../reserva';
 
 @Component({
@@ -64,11 +64,12 @@ export class ListaReservas implements OnInit {
 
   private paraLaTabla(reserva: any) {
     const sala = this.salas.find((s) => s.id == reserva.sala);
+    const franja = FranjaHoraria.desde(reserva.inicio, reserva.fin);
     return {
       ...reserva,
       nombreSala: sala ? sala.nombre : '¿?',
-      duracion: duracionEnMinutos(reserva.inicio, reserva.fin),
-      yaHaEmpezado: new Date(reserva.inicio) < new Date(),
+      duracion: franja.minutos(),
+      yaHaEmpezado: franja.haEmpezado(new Date()),
     };
   }
 

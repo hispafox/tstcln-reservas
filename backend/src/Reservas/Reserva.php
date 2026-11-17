@@ -13,7 +13,7 @@ class Reserva
         private Sala $sala,
         private FranjaHoraria $franja,
         private string $persona,
-        private int $asistentes,
+        private Capacidad $asistentes,
     ) {
     }
 
@@ -37,7 +37,7 @@ class Reserva
         return $this->persona;
     }
 
-    public function asistentes(): int
+    public function asistentes(): Capacidad
     {
         return $this->asistentes;
     }

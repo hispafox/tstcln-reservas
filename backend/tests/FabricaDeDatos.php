@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests;
 
+use App\Reservas\Capacidad;
 use App\Reservas\FranjaHoraria;
 use App\Reservas\Reserva;
 use App\Reservas\Sala;
@@ -31,7 +32,7 @@ final class FabricaDeDatos
             $sala,
             new FranjaHoraria(new \DateTimeImmutable($inicio), new \DateTimeImmutable($fin)),
             $persona,
-            $asistentes,
+            new Capacidad($asistentes),
         );
         $this->entityManager->persist($reserva);
         $this->entityManager->flush();

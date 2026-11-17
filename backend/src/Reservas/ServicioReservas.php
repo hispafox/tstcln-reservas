@@ -13,7 +13,7 @@ final class ServicioReservas
     ) {
     }
 
-    public function reservar(Sala $sala, FranjaHoraria $franja, string $persona, int $asistentes): Reserva
+    public function reservar(Sala $sala, FranjaHoraria $franja, string $persona, Capacidad $asistentes): Reserva
     {
         if (!$this->capacidad->admite($sala, $franja, $asistentes)) {
             throw new \DomainException('La sala no admite esa reserva: revisa los asistentes y la franja');

@@ -6,10 +6,9 @@ namespace App\Reservas;
 
 final class ReglaDeCapacidad
 {
-    public function admite(Sala $sala, FranjaHoraria $franja, int $asistentes): bool
+    public function admite(Sala $sala, FranjaHoraria $franja, Capacidad $asistentes): bool
     {
-        $minimo = $sala->capacidadMinima() ?? 1;
-        $cabe = $asistentes >= $minimo && $asistentes <= $sala->capacidadMaxima();
+        $cabe = $asistentes->cabeEntre($sala->capacidadMinima() ?? 1, $sala->capacidadMaxima());
 
         if (!$sala->esGrande()) {
             return $cabe;
