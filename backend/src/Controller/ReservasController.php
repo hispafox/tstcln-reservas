@@ -26,9 +26,9 @@ final class ReservasController
         EntityManagerInterface $em,
         ServicioReservas $servicio,
     ): JsonResponse {
-        $datos = $peticion->toArray();
+        $cuerpo = $peticion->toArray();
 
-        $sala = $em->find(Sala::class, $datos['sala']);
+        $sala = $em->find(Sala::class, $cuerpo['sala']);
         if ($sala === null) {
             return new JsonResponse(['error' => 'La sala no existe'], 404);
         }
@@ -36,9 +36,9 @@ final class ReservasController
         try {
             $reserva = $servicio->reservar(
                 $sala,
-                new FranjaHoraria(new \DateTimeImmutable($datos['inicio']), new \DateTimeImmutable($datos['fin'])),
-                $datos['persona'],
-                $datos['asistentes'],
+                new FranjaHoraria(new \DateTimeImmutable($cuerpo['inicio']), new \DateTimeImmutable($cuerpo['fin'])),
+                $cuerpo['persona'],
+                $cuerpo['asistentes'],
             );
         } catch (\InvalidArgumentException $e) {
             return new JsonResponse(['error' => $e->getMessage()], 400);
@@ -92,15 +92,15 @@ final class ReservasController
         CrearReservasRecurrentes $crear,
         LectorDeFechas $lector,
     ): JsonResponse {
-        $datos = $peticion->toArray();
+        $cuerpo = $peticion->toArray();
 
         try {
             $resultado = $crear->ejecutar(
-                $em->find(Sala::class, $datos['sala']),
-                new FranjaHoraria($lector->leer($datos['inicio']), $lector->leer($datos['fin'])),
-                $lector->leer($datos['hasta']),
-                $datos['persona'],
-                $datos['asistentes'],
+                $em->find(Sala::class, $cuerpo['sala']),
+                new FranjaHoraria($lector->leer($cuerpo['inicio']), $lector->leer($cuerpo['fin'])),
+                $lector->leer($cuerpo['hasta']),
+                $cuerpo['persona'],
+                $cuerpo['asistentes'],
             );
         } catch (\DomainException $e) {
             return new JsonResponse(['error' => $e->getMessage()], 409);

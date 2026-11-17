@@ -31,17 +31,17 @@
     <th>Estado</th>
     <th></th>
   </tr>
-  @for (r of reservasFiltradas; track r.id) {
+  @for (reserva of reservasVisibles; track reserva.id) {
     <tr>
-      <td>{{ r.nombreSala }}</td>
-      <td>{{ r.inicio.substring(0, 16).replace('T', ' ') }}</td>
-      <td>{{ r.fin.substring(11, 16) }}</td>
-      <td>{{ r.duracion }} min</td>
-      <td>{{ r.asistentes }}</td>
-      <td>{{ r.estado == 'confirmada' ? 'Confirmada' : r.estado == 'cancelada_tarde' ? 'Cancelada (tarde)' : 'Cancelada' }}</td>
+      <td>{{ reserva.nombreSala }}</td>
+      <td>{{ reserva.inicio.substring(0, 16).replace('T', ' ') }}</td>
+      <td>{{ reserva.fin.substring(11, 16) }}</td>
+      <td>{{ reserva.duracion }} min</td>
+      <td>{{ reserva.asistentes }}</td>
+      <td>{{ reserva.estado == 'confirmada' ? 'Confirmada' : reserva.estado == 'cancelada_tarde' ? 'Cancelada (tarde)' : 'Cancelada' }}</td>
       <td>
-        @if (r.estado == 'confirmada' && !r.pasada) {
-          <button (click)="cancelar(r)">Cancelar</button>
+        @if (reserva.estado == 'confirmada' && !reserva.yaHaEmpezado) {
+          <button (click)="cancelar(reserva)">Cancelar</button>
         }
       </td>
     </tr>

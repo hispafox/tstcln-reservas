@@ -15,7 +15,7 @@ export class ListaReservas implements OnInit {
 
   persona = 'Ana';
   reservas: any[] = [];
-  reservasFiltradas: any[] = [];
+  reservasVisibles: any[] = [];
   salas: any[] = [];
   soloConfirmadas = true;
   orden = 'fecha';
@@ -37,21 +37,21 @@ export class ListaReservas implements OnInit {
     this.http.get<any[]>('/salas').subscribe((salas) => {
       this.salas = salas;
       this.http.get<any[]>('/reservas?persona=' + this.persona).subscribe(
-        (res) => {
-          this.reservas = res.map((r) => {
-            const sala = this.salas.find((s) => s.id == r.sala);
+        (recibidas) => {
+          this.reservas = recibidas.map((reserva) => {
+            const sala = this.salas.find((s) => s.id == reserva.sala);
             return {
-              ...r,
+              ...reserva,
               nombreSala: sala ? sala.nombre : '¿?',
-              duracion: (new Date(r.fin).getTime() - new Date(r.inicio).getTime()) / 60000,
-              pasada: new Date(r.inicio) < new Date(),
+              duracion: (new Date(reserva.fin).getTime() - new Date(reserva.inicio).getTime()) / 60000,
+              yaHaEmpezado: new Date(reserva.inicio) < new Date(),
             };
           });
           this.aplicarFiltros();
           this.cargando = false;
           this.cdr.detectChanges();
         },
-        (err) => {
+        () => {
           this.error = 'Error al cargar las reservas';
           this.cargando = false;
           this.cdr.detectChanges();
@@ -63,7 +63,7 @@ export class ListaReservas implements OnInit {
   aplicarFiltros() {
     let lista = this.reservas;
     if (this.soloConfirmadas) {
-      lista = lista.filter((r) => r.estado == 'confirmada' && !r.pasada);
+      lista = lista.filter((reserva) => reserva.estado == 'confirmada' && !reserva.yaHaEmpezado);
     }
     if (this.orden == 'fecha') {
       lista = lista.sort((a, b) => (a.inicio < b.inicio ? -1 : 1));
@@ -72,13 +72,13 @@ export class ListaReservas implements OnInit {
     } else if (this.orden == 'duracion') {
       lista = lista.sort((a, b) => b.duracion - a.duracion);
     }
-    this.reservasFiltradas = lista;
+    this.reservasVisibles = lista;
   }
 
-  cancelar(r: any) {
-    if (!confirm('¿Cancelar la reserva de ' + r.nombreSala + '?')) return;
-    this.http.delete('/reservas/' + r.id).subscribe((res: any) => {
-      r.estado = res.estado;
+  cancelar(reserva: any) {
+    if (!confirm('¿Cancelar la reserva de ' + reserva.nombreSala + '?')) return;
+    this.http.delete('/reservas/' + reserva.id).subscribe((res: any) => {
+      reserva.estado = res.estado;
       if (res.estado == 'cancelada_tarde') {
         this.aviso = 'Cancelación tardía: quedan menos de dos horas';
         setTimeout(() => {

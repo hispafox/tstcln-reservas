@@ -13,8 +13,8 @@ export function filtrarSalasDisponibles(
     (sala) =>
       criterio.asistentes >= (sala.capacidadMinima ?? 1) &&
       criterio.asistentes <= sala.capacidadMaxima &&
-      criterio.equipamiento.every((cosa) =>
-        sala.equipamiento.includes(cosa),
+      criterio.equipamiento.every((elemento) =>
+        sala.equipamiento.includes(elemento),
       ),
   );
 }
