@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { interval } from 'rxjs';
+import { duracionEnMinutos } from '../duracion';
 
 @Component({
   selector: 'app-lista-reservas',
@@ -25,10 +26,11 @@ export class ListaReservas implements OnInit {
 
   ngOnInit() {
     this.cargar();
-    // refresca cada minuto
-    interval(60000).subscribe(() => {
-      this.cargar();
-    });
+    this.refrescarCadaMinuto();
+  }
+
+  private refrescarCadaMinuto() {
+    interval(60_000).subscribe(() => this.cargar());
   }
 
   cargar() {
@@ -37,42 +39,59 @@ export class ListaReservas implements OnInit {
     this.http.get<any[]>('/salas').subscribe((salas) => {
       this.salas = salas;
       this.http.get<any[]>('/reservas?persona=' + this.persona).subscribe(
-        (recibidas) => {
-          this.reservas = recibidas.map((reserva) => {
-            const sala = this.salas.find((s) => s.id == reserva.sala);
-            return {
-              ...reserva,
-              nombreSala: sala ? sala.nombre : '¿?',
-              duracion: (new Date(reserva.fin).getTime() - new Date(reserva.inicio).getTime()) / 60000,
-              yaHaEmpezado: new Date(reserva.inicio) < new Date(),
-            };
-          });
-          this.aplicarFiltros();
-          this.cargando = false;
-          this.cdr.detectChanges();
-        },
-        () => {
-          this.error = 'Error al cargar las reservas';
-          this.cargando = false;
-          this.cdr.detectChanges();
-        },
+        (recibidas) => this.mostrar(recibidas),
+        () => this.mostrarError(),
       );
     });
   }
 
-  aplicarFiltros() {
+  private mostrar(recibidas: any[]) {
+    this.reservas = recibidas.map((reserva) => this.paraLaTabla(reserva));
+    this.actualizarLista();
+    this.terminarCarga();
+  }
+
+  private mostrarError() {
+    this.error = 'Error al cargar las reservas';
+    this.terminarCarga();
+  }
+
+  private terminarCarga() {
+    this.cargando = false;
+    this.cdr.detectChanges();
+  }
+
+  private paraLaTabla(reserva: any) {
+    const sala = this.salas.find((s) => s.id == reserva.sala);
+    return {
+      ...reserva,
+      nombreSala: sala ? sala.nombre : '¿?',
+      duracion: duracionEnMinutos(reserva.inicio, reserva.fin),
+      yaHaEmpezado: new Date(reserva.inicio) < new Date(),
+    };
+  }
+
+  actualizarLista() {
     let lista = this.reservas;
     if (this.soloConfirmadas) {
-      lista = lista.filter((reserva) => reserva.estado == 'confirmada' && !reserva.yaHaEmpezado);
+      lista = this.soloLasProximas(lista);
     }
+    this.reservasVisibles = this.ordenar(lista);
+  }
+
+  private soloLasProximas(reservas: any[]): any[] {
+    return reservas.filter((reserva) => reserva.estado == 'confirmada' && !reserva.yaHaEmpezado);
+  }
+
+  private ordenar(reservas: any[]): any[] {
     if (this.orden == 'fecha') {
-      lista = lista.sort((a, b) => (a.inicio < b.inicio ? -1 : 1));
+      return reservas.sort((a, b) => (a.inicio < b.inicio ? -1 : 1));
     } else if (this.orden == 'sala') {
-      lista = lista.sort((a, b) => a.nombreSala.localeCompare(b.nombreSala));
+      return reservas.sort((a, b) => a.nombreSala.localeCompare(b.nombreSala));
     } else if (this.orden == 'duracion') {
-      lista = lista.sort((a, b) => b.duracion - a.duracion);
+      return reservas.sort((a, b) => b.duracion - a.duracion);
     }
-    this.reservasVisibles = lista;
+    return reservas;
   }
 
   cancelar(reserva: any) {
@@ -86,7 +105,7 @@ export class ListaReservas implements OnInit {
           this.cdr.detectChanges();
         }, 5000);
       }
-      this.aplicarFiltros();
+      this.actualizarLista();
       this.cdr.detectChanges();
     });
   }

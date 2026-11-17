@@ -2,9 +2,9 @@
 
 <div>
   Persona: <input [(ngModel)]="persona" (change)="cargar()" />
-  <label><input type="checkbox" [(ngModel)]="soloConfirmadas" (change)="aplicarFiltros()" /> Solo las próximas confirmadas</label>
+  <label><input type="checkbox" [(ngModel)]="soloConfirmadas" (change)="actualizarLista()" /> Solo las próximas confirmadas</label>
   Ordenar por:
-  <select [(ngModel)]="orden" (change)="aplicarFiltros()">
+  <select [(ngModel)]="orden" (change)="actualizarLista()">
     <option value="fecha">fecha</option>
     <option value="sala">sala</option>
     <option value="duracion">duración</option>

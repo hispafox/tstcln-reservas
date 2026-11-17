@@ -19,7 +19,7 @@ final class RepositorioReservasDoctrineTest extends KernelTestCase
         $sala = $datos->sala();
         $confirmada = $datos->reserva($sala, '2027-03-04 10:00', '2027-03-04 11:00');
         $cancelada = $datos->reserva($sala, '2027-03-04 12:00', '2027-03-04 13:00');
-        $cancelada->cancelar(tardia: false);
+        $cancelada->cancelarATiempo();
         $repositorio->guardar($cancelada);
 
         $resultado = $repositorio->confirmadasDeLaSala($sala);

@@ -47,8 +47,13 @@ class Reserva
         return $this->estado;
     }
 
-    public function cancelar(bool $tardia): void
+    public function cancelarATiempo(): void
     {
-        $this->estado = $tardia ? 'cancelada_tarde' : 'cancelada_a_tiempo';
+        $this->estado = 'cancelada_a_tiempo';
+    }
+
+    public function cancelarTarde(): void
+    {
+        $this->estado = 'cancelada_tarde';
     }
 }

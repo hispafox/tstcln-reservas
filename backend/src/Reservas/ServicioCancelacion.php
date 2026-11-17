@@ -18,7 +18,12 @@ final class ServicioCancelacion
     {
         $limite = $reserva->franja()->inicio()->modify('-2 hours');
 
-        $reserva->cancelar(tardia: $this->reloj->now() > $limite);
+        if ($this->reloj->now() > $limite) {
+            $reserva->cancelarTarde();
+        } else {
+            $reserva->cancelarATiempo();
+        }
+
         $this->reservas->guardar($reserva);
     }
 }
