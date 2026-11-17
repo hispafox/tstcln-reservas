@@ -32,7 +32,7 @@ final class ServicioCancelacionTest extends TestCase
 
         $servicio->cancelar($reserva);
 
-        self::assertSame($estadoEsperado, $reserva->estado());
+        self::assertSame($estadoEsperado, $reserva->estado()->value);
     }
 
     public static function momentosDeCancelacion(): array

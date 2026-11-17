@@ -8,5 +8,8 @@ interface RepositorioReservas
 {
     public function guardar(Reserva $reserva): void;
 
+    /**
+     * @return list<Reserva>
+     */
     public function confirmadasDeLaSala(Sala $sala): array;
 }

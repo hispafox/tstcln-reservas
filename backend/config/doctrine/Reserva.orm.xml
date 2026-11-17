@@ -12,6 +12,6 @@
         <embedded name="franja" class="App\Reservas\FranjaHoraria"/>
         <field name="persona" type="string" length="120"/>
         <field name="asistentes" type="integer"/>
-        <field name="estado" type="string" length="30"/>
+        <field name="estado" type="string" length="30" enum-type="App\Reservas\EstadoReserva"/>
     </entity>
 </doctrine-mapping>

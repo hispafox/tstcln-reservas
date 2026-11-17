@@ -121,7 +121,7 @@ final class ReservasController
             'fin' => $reserva->franja()->fin()->format(\DATE_ATOM),
             'persona' => $reserva->persona(),
             'asistentes' => $reserva->asistentes(),
-            'estado' => $reserva->estado(),
+            'estado' => $reserva->estado()->value,
         ];
     }
 }

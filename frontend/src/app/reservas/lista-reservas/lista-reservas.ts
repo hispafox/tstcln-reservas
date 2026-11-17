@@ -3,6 +3,7 @@ import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { interval } from 'rxjs';
 import { duracionEnMinutos } from '../duracion';
+import { EstadoReserva, textoDeEstado } from '../reserva';
 
 @Component({
   selector: 'app-lista-reservas',
@@ -92,6 +93,10 @@ export class ListaReservas implements OnInit {
       return reservas.sort((a, b) => b.duracion - a.duracion);
     }
     return reservas;
+  }
+
+  protected textoDelEstado(estado: EstadoReserva) {
+    return textoDeEstado(estado);
   }
 
   cancelar(reserva: any) {

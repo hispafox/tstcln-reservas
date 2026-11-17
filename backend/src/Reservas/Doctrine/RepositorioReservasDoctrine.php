@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Reservas\Doctrine;
 
+use App\Reservas\EstadoReserva;
 use App\Reservas\RepositorioReservas;
 use App\Reservas\Reserva;
 use App\Reservas\Sala;
@@ -32,7 +33,7 @@ final class RepositorioReservasDoctrine extends ServiceEntityRepository implemen
             ->andWhere('r.sala = :sala')
             ->andWhere('r.estado = :estado')
             ->setParameter('sala', $sala)
-            ->setParameter('estado', 'confirmada')
+            ->setParameter('estado', EstadoReserva::Confirmada)
             ->getQuery()
             ->getResult();
     }

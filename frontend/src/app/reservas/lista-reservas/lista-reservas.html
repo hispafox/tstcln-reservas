@@ -38,7 +38,7 @@
       <td>{{ reserva.fin.substring(11, 16) }}</td>
       <td>{{ reserva.duracion }} min</td>
       <td>{{ reserva.asistentes }}</td>
-      <td>{{ reserva.estado == 'confirmada' ? 'Confirmada' : reserva.estado == 'cancelada_tarde' ? 'Cancelada (tarde)' : 'Cancelada' }}</td>
+      <td>{{ textoDelEstado(reserva.estado) }}</td>
       <td>
         @if (reserva.estado == 'confirmada' && !reserva.yaHaEmpezado) {
           <button (click)="cancelar(reserva)">Cancelar</button>

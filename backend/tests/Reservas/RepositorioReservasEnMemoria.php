@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Reservas;
 
+use App\Reservas\EstadoReserva;
 use App\Reservas\RepositorioReservas;
 use App\Reservas\Reserva;
 use App\Reservas\Sala;
@@ -21,7 +22,7 @@ final class RepositorioReservasEnMemoria implements RepositorioReservas
     {
         return array_values(array_filter(
             $this->reservas,
-            fn (Reserva $reserva) => $reserva->sala() === $sala && $reserva->estado() === 'confirmada',
+            fn (Reserva $reserva) => $reserva->sala() === $sala && $reserva->estado() === EstadoReserva::Confirmada,
         ));
     }
 

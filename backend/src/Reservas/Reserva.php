@@ -7,7 +7,7 @@ namespace App\Reservas;
 class Reserva
 {
     private ?int $id = null;
-    private string $estado = 'confirmada';
+    private EstadoReserva $estado = EstadoReserva::Confirmada;
 
     public function __construct(
         private Sala $sala,
@@ -42,18 +42,18 @@ class Reserva
         return $this->asistentes;
     }
 
-    public function estado(): string
+    public function estado(): EstadoReserva
     {
         return $this->estado;
     }
 
     public function cancelarATiempo(): void
     {
-        $this->estado = 'cancelada_a_tiempo';
+        $this->estado = EstadoReserva::CanceladaATiempo;
     }
 
     public function cancelarTarde(): void
     {
-        $this->estado = 'cancelada_tarde';
+        $this->estado = EstadoReserva::CanceladaTarde;
     }
 }
