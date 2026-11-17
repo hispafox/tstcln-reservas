@@ -11,7 +11,7 @@ final readonly class FranjaHoraria
         private \DateTimeImmutable $fin,
     ) {
         if ($fin <= $inicio) {
-            throw new \InvalidArgumentException('Una franja tiene que terminar después de empezar');
+            throw new DatoNoValido('Una franja tiene que terminar después de empezar');
         }
     }
 

@@ -9,7 +9,7 @@ final readonly class Capacidad
     public function __construct(private int $valor)
     {
         if ($valor < 1) {
-            throw new \InvalidArgumentException('Una reserva necesita al menos un asistente');
+            throw new DatoNoValido('Una reserva necesita al menos un asistente');
         }
     }
 

@@ -16,7 +16,7 @@ final class ServicioReservas
     public function reservar(Sala $sala, FranjaHoraria $franja, string $persona, Capacidad $asistentes): Reserva
     {
         if (!$this->capacidad->admite($sala, $franja, $asistentes)) {
-            throw new \DomainException('La sala no admite esa reserva: revisa los asistentes y la franja');
+            throw new ReservaNoAdmitida($sala, $asistentes);
         }
 
         $this->comprobarDisponibilidad($sala, $franja);
@@ -32,7 +32,7 @@ final class ServicioReservas
     {
         foreach ($this->reservas->confirmadasDeLaSala($sala) as $existente) {
             if ($existente->franja()->seSolapaCon($franja)) {
-                throw new \DomainException('La sala ya está reservada en esa franja');
+                throw new SalaNoDisponible($sala, $franja);
             }
         }
     }

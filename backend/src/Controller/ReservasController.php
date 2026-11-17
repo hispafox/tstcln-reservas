@@ -9,7 +9,9 @@ use App\Reservas\CrearReservasRecurrentes;
 use App\Reservas\FranjaHoraria;
 use App\Reservas\LectorDeFechas;
 use App\Reservas\Reserva;
+use App\Reservas\ReservaNoEncontrada;
 use App\Reservas\Sala;
+use App\Reservas\SalaNoEncontrada;
 use App\Reservas\ServicioCancelacion;
 use App\Reservas\ServicioReservas;
 use Doctrine\ORM\EntityManagerInterface;
@@ -28,24 +30,14 @@ final class ReservasController
         ServicioReservas $servicio,
     ): JsonResponse {
         $cuerpo = $peticion->toArray();
+        $sala = $em->find(Sala::class, $cuerpo['sala']) ?? throw new SalaNoEncontrada($cuerpo['sala']);
 
-        $sala = $em->find(Sala::class, $cuerpo['sala']);
-        if ($sala === null) {
-            return new JsonResponse(['error' => 'La sala no existe'], 404);
-        }
-
-        try {
-            $reserva = $servicio->reservar(
-                $sala,
-                new FranjaHoraria(new \DateTimeImmutable($cuerpo['inicio']), new \DateTimeImmutable($cuerpo['fin'])),
-                $cuerpo['persona'],
-                new Capacidad($cuerpo['asistentes']),
-            );
-        } catch (\InvalidArgumentException $e) {
-            return new JsonResponse(['error' => $e->getMessage()], 400);
-        } catch (\DomainException $e) {
-            return new JsonResponse(['error' => $e->getMessage()], 409);
-        }
+        $reserva = $servicio->reservar(
+            $sala,
+            new FranjaHoraria(new \DateTimeImmutable($cuerpo['inicio']), new \DateTimeImmutable($cuerpo['fin'])),
+            $cuerpo['persona'],
+            new Capacidad($cuerpo['asistentes']),
+        );
 
         return new JsonResponse(self::comoJson($reserva), 201);
     }
@@ -76,10 +68,7 @@ final class ReservasController
         EntityManagerInterface $em,
         ServicioCancelacion $servicio,
     ): JsonResponse {
-        $reserva = $em->find(Reserva::class, $id);
-        if ($reserva === null) {
-            return new JsonResponse(['error' => 'La reserva no existe'], 404);
-        }
+        $reserva = $em->find(Reserva::class, $id) ?? throw new ReservaNoEncontrada($id);
 
         $servicio->cancelar($reserva);
 
@@ -94,18 +83,15 @@ final class ReservasController
         LectorDeFechas $lector,
     ): JsonResponse {
         $cuerpo = $peticion->toArray();
+        $sala = $em->find(Sala::class, $cuerpo['sala']) ?? throw new SalaNoEncontrada($cuerpo['sala']);
 
-        try {
-            $resultado = $crear->ejecutar(
-                $em->find(Sala::class, $cuerpo['sala']),
-                new FranjaHoraria($lector->leer($cuerpo['inicio']), $lector->leer($cuerpo['fin'])),
-                $lector->leer($cuerpo['hasta']),
-                $cuerpo['persona'],
-                new Capacidad($cuerpo['asistentes']),
-            );
-        } catch (\DomainException $e) {
-            return new JsonResponse(['error' => $e->getMessage()], 409);
-        }
+        $resultado = $crear->ejecutar(
+            $sala,
+            new FranjaHoraria($lector->leer($cuerpo['inicio']), $lector->leer($cuerpo['fin'])),
+            $lector->leer($cuerpo['hasta']),
+            $cuerpo['persona'],
+            new Capacidad($cuerpo['asistentes']),
+        );
 
         return new JsonResponse([
             'creadas' => array_map(fn (FranjaHoraria $franja) => $franja->inicio()->format('Y-m-d'), $resultado->libres()),

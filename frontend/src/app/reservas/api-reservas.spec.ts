@@ -3,7 +3,7 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { TestBed } from '@angular/core/testing';
 import { firstValueFrom } from 'rxjs';
 import { ApiReservas } from './api-reservas';
-import { ReservaRechazadaError, SinConexionError } from './errores';
+import { DatosNoValidosError, ReservaRechazadaError, SinConexionError } from './errores';
 import { PeticionReserva, Reserva } from './reserva';
 
 // Copiadas de lo que lee y responde el controlador de reservas del backend.
@@ -78,6 +78,22 @@ describe('ApiReservas', () => {
     await expect(respuesta).rejects.toThrow(ReservaRechazadaError);
     await expect(respuesta).rejects.toThrow(
       'La sala ya está reservada en esa franja',
+    );
+  });
+
+  it('convierte el 400 en un error de datos con el mensaje de la API', async () => {
+    const respuesta = firstValueFrom(api.crear(peticion));
+
+    centralita
+      .expectOne('/reservas')
+      .flush(
+        { error: 'Una reserva necesita al menos un asistente' },
+        { status: 400, statusText: 'Bad Request' },
+      );
+
+    await expect(respuesta).rejects.toThrow(DatosNoValidosError);
+    await expect(respuesta).rejects.toThrow(
+      'Una reserva necesita al menos un asistente',
     );
   });
 

@@ -16,14 +16,14 @@ final class CrearReservasRecurrentes
     public function ejecutar(Sala $sala, FranjaHoraria $primera, \DateTimeImmutable $hasta, string $persona, Capacidad $asistentes): ResultadoSerie
     {
         if (!$this->capacidad->admite($sala, $primera, $asistentes)) {
-            throw new \DomainException('La sala no admite esa reserva: revisa los asistentes y la franja');
+            throw new ReservaNoAdmitida($sala, $asistentes);
         }
 
         $ocupadas = array_map(fn (Reserva $reserva) => $reserva->franja(), $this->reservas->confirmadasDeLaSala($sala));
         $resultado = (new SerieSemanal($primera, $hasta))->repartir($ocupadas);
 
         if ($resultado->libres() === []) {
-            throw new \DomainException('Ninguna semana de la serie está libre');
+            throw new SerieSinSemanasLibres();
         }
 
         $creadas = [];

@@ -10,6 +10,7 @@ use App\Reservas\NotificadorReservas;
 use App\Reservas\RepositorioReservas;
 use App\Reservas\Reserva;
 use App\Reservas\Sala;
+use App\Reservas\SalaNoDisponible;
 use App\Reservas\ServicioReservas;
 use PHPUnit\Framework\TestCase;
 
@@ -86,7 +87,7 @@ final class ServicioReservasTest extends TestCase
         $reservas->method('confirmadasDeLaSala')->willReturn([$reservaDeLasDiez]);
         $servicio = new ServicioReservas($reservas, $this->createStub(NotificadorReservas::class));
 
-        $this->expectException(\DomainException::class);
+        $this->expectException(SalaNoDisponible::class);
 
         $servicio->reservar($this->salaNorte, self::franja('10:30', '11:30'), 'Luis', new Capacidad(3));
     }

@@ -70,4 +70,38 @@ final class ReservasRecurrentesTest extends WebTestCase
 
         self::assertResponseStatusCodeSame(409);
     }
+
+    public function test_una_serie_con_cero_asistentes_responde_400(): void
+    {
+        $cliente = static::createClient();
+        $datos = new FabricaDeDatos(static::getContainer()->get(EntityManagerInterface::class));
+        $sala = $datos->sala();
+
+        $cliente->jsonRequest('POST', '/reservas/recurrentes', [
+            'sala' => $sala->id(),
+            'inicio' => (new \DateTimeImmutable('2027-03-04 10:00'))->format(\DATE_ATOM),
+            'fin' => (new \DateTimeImmutable('2027-03-04 11:00'))->format(\DATE_ATOM),
+            'hasta' => '2027-03-31',
+            'persona' => 'Ana',
+            'asistentes' => 0,
+        ]);
+
+        self::assertResponseStatusCodeSame(400);
+    }
+
+    public function test_una_serie_para_una_sala_que_no_existe_responde_404(): void
+    {
+        $cliente = static::createClient();
+
+        $cliente->jsonRequest('POST', '/reservas/recurrentes', [
+            'sala' => 999,
+            'inicio' => (new \DateTimeImmutable('2027-03-04 10:00'))->format(\DATE_ATOM),
+            'fin' => (new \DateTimeImmutable('2027-03-04 11:00'))->format(\DATE_ATOM),
+            'hasta' => '2027-03-31',
+            'persona' => 'Ana',
+            'asistentes' => 4,
+        ]);
+
+        self::assertResponseStatusCodeSame(404);
+    }
 }
