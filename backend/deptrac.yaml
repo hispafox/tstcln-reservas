@@ -14,6 +14,14 @@ deptrac:
       collectors:
         - type: classLike
           value: '^App\\(Reservas|Salas)\\Infraestructura\\.*'
+    - name: Symfony
+      collectors:
+        - type: classLike
+          value: '^Symfony\\.*'
+    - name: Doctrine
+      collectors:
+        - type: classLike
+          value: '^Doctrine\\.*'
   ruleset:
     Dominio: ~
     Aplicacion:
@@ -21,3 +29,5 @@ deptrac:
     Infraestructura:
       - Aplicacion
       - Dominio
+      - Symfony
+      - Doctrine
