@@ -77,6 +77,13 @@ final class ReglaDeCapacidadTest extends TestCase
         self::assertTrue($this->regla->admite($sala, self::franja('10:00', '11:00'), new Capacidad(25)));
     }
 
+    public function test_una_sala_grande_admite_una_franja_de_diez_y_media_a_once_y_media(): void
+    {
+        $sala = new Sala('Auditorio', capacidadMaxima: 40);
+
+        self::assertTrue($this->regla->admite($sala, self::franja('10:30', '11:30'), new Capacidad(25)));
+    }
+
     public function test_una_sala_grande_no_admite_una_franja_de_cuarenta_y_cinco_minutos(): void
     {
         $sala = new Sala('Auditorio', capacidadMaxima: 40);

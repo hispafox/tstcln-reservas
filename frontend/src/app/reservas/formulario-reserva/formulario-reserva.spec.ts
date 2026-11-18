@@ -84,6 +84,22 @@ describe('FormularioReserva', () => {
     ).toBeTruthy();
   });
 
+  it('enseña el mensaje general si la reserva falla por otro motivo', async () => {
+    const crear = vi.fn(() => throwError(() => new Error('Http failure response: 500')));
+    await render(FormularioReserva, {
+      inputs: { sala: salaNorte },
+      providers: [{ provide: ApiReservas, useValue: { crear } }],
+    });
+    const usuario = userEvent.setup();
+
+    await usuario.type(screen.getByLabelText('Persona'), 'Ana');
+    fireEvent.input(screen.getByLabelText('Hora de inicio'), { target: { value: '2027-03-04T10:00' } });
+    fireEvent.input(screen.getByLabelText('Hora de fin'), { target: { value: '2027-03-04T11:00' } });
+    await usuario.click(screen.getByRole('button', { name: 'Reservar' }));
+
+    expect(await screen.findByText('No se ha podido hacer la reserva')).toBeTruthy();
+  });
+
   it('quita el motivo del rechazo cuando la siguiente reserva sale bien', async () => {
     const crear = vi
       .fn()
