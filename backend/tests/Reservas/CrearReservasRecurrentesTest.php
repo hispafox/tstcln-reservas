@@ -37,7 +37,7 @@ final class CrearReservasRecurrentesTest extends TestCase
         $notificador->expects($this->once())
             ->method('serieConfirmada')
             ->with($this->callback(fn (array $creadas) => count($creadas) === 3));
-        $crear = new CrearReservasRecurrentes($this->salas, $reservas, $notificador, new ReglaDePenalizacion($reservas, new MockClock(new \DateTimeImmutable())));
+        $crear = new CrearReservasRecurrentes($this->salas, $reservas, $notificador, new ReglaDePenalizacion($reservas, new MockClock(new \DateTimeImmutable('2027-03-01 09:00'))));
 
         $resultado = $crear->ejecutar(
             new PeticionReserva($this->idSalaNorte, self::franja('2027-03-04 10:00', '2027-03-04 11:00'), 'Ana', new Capacidad(4)),
@@ -55,7 +55,7 @@ final class CrearReservasRecurrentesTest extends TestCase
         $reservas->guardar(new Reserva($this->salaNorte, self::franja('2027-03-04 10:00', '2027-03-04 11:00'), 'Luis', new Capacidad(3)));
         $notificador = $this->createMock(NotificadorReservas::class);
         $notificador->expects($this->never())->method('serieConfirmada');
-        $crear = new CrearReservasRecurrentes($this->salas, $reservas, $notificador, new ReglaDePenalizacion($reservas, new MockClock(new \DateTimeImmutable())));
+        $crear = new CrearReservasRecurrentes($this->salas, $reservas, $notificador, new ReglaDePenalizacion($reservas, new MockClock(new \DateTimeImmutable('2027-03-01 09:00'))));
 
         try {
             $crear->ejecutar(
@@ -74,7 +74,7 @@ final class CrearReservasRecurrentesTest extends TestCase
         $reservas = new RepositorioReservasEnMemoria();
         $notificador = $this->createMock(NotificadorReservas::class);
         $notificador->expects($this->never())->method('serieConfirmada');
-        $crear = new CrearReservasRecurrentes($this->salas, $reservas, $notificador, new ReglaDePenalizacion($reservas, new MockClock(new \DateTimeImmutable())));
+        $crear = new CrearReservasRecurrentes($this->salas, $reservas, $notificador, new ReglaDePenalizacion($reservas, new MockClock(new \DateTimeImmutable('2027-03-01 09:00'))));
 
         try {
             $crear->ejecutar(
@@ -93,7 +93,7 @@ final class CrearReservasRecurrentesTest extends TestCase
         $reservas = new RepositorioReservasEnMemoria();
         $notificador = $this->createMock(NotificadorReservas::class);
         $notificador->expects($this->never())->method('serieConfirmada');
-        $crear = new CrearReservasRecurrentes($this->salas, $reservas, $notificador, new ReglaDePenalizacion($reservas, new MockClock(new \DateTimeImmutable())));
+        $crear = new CrearReservasRecurrentes($this->salas, $reservas, $notificador, new ReglaDePenalizacion($reservas, new MockClock(new \DateTimeImmutable('2027-03-01 09:00'))));
 
         try {
             $crear->ejecutar(

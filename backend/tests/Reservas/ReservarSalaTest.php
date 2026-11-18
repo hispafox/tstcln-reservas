@@ -39,7 +39,7 @@ final class ReservarSalaTest extends TestCase
             $this->salas,
             $reservas,
             $this->createStub(NotificadorReservas::class),
-            new ReglaDePenalizacion($reservas, new MockClock(new \DateTimeImmutable())),
+            new ReglaDePenalizacion($reservas, new MockClock(new \DateTimeImmutable('2027-03-01 09:00'))),
         );
 
         $reserva = $reservar->ejecutar(new PeticionReserva($this->idSalaNorte, self::franja('10:00', '11:00'), 'Ana', new Capacidad(4)));
@@ -72,7 +72,7 @@ final class ReservarSalaTest extends TestCase
         $reservas = new RepositorioReservasEnMemoria();
         $notificador = $this->createMock(NotificadorReservas::class);
         $notificador->expects($this->never())->method('reservaConfirmada');
-        $reservar = new ReservarSala($this->salas, $reservas, $notificador, new ReglaDePenalizacion($reservas, new MockClock(new \DateTimeImmutable())));
+        $reservar = new ReservarSala($this->salas, $reservas, $notificador, new ReglaDePenalizacion($reservas, new MockClock(new \DateTimeImmutable('2027-03-01 09:00'))));
 
         try {
             $reservar->ejecutar(new PeticionReserva(99, self::franja('10:00', '11:00'), 'Ana', new Capacidad(4)));
@@ -112,7 +112,7 @@ final class ReservarSalaTest extends TestCase
         $reservas->guardar(new Reserva($this->salaNorte, self::franja('10:00', '11:00'), 'Ana', new Capacidad(4)));
         $notificador = $this->createMock(NotificadorReservas::class);
         $notificador->expects($this->never())->method('reservaConfirmada');
-        $reservar = new ReservarSala($this->salas, $reservas, $notificador, new ReglaDePenalizacion($reservas, new MockClock(new \DateTimeImmutable())));
+        $reservar = new ReservarSala($this->salas, $reservas, $notificador, new ReglaDePenalizacion($reservas, new MockClock(new \DateTimeImmutable('2027-03-01 09:00'))));
 
         try {
             $reservar->ejecutar(new PeticionReserva($this->idSalaNorte, self::franja('10:30', '11:30'), 'Luis', new Capacidad(3)));
@@ -126,7 +126,7 @@ final class ReservarSalaTest extends TestCase
     public function test_no_permite_reservar_con_mas_asistentes_que_plazas_y_no_guarda_nada(): void
     {
         $reservas = new RepositorioReservasEnMemoria();
-        $reservar = new ReservarSala($this->salas, $reservas, $this->createStub(NotificadorReservas::class), new ReglaDePenalizacion($reservas, new MockClock(new \DateTimeImmutable())));
+        $reservar = new ReservarSala($this->salas, $reservas, $this->createStub(NotificadorReservas::class), new ReglaDePenalizacion($reservas, new MockClock(new \DateTimeImmutable('2027-03-01 09:00'))));
 
         try {
             $reservar->ejecutar(new PeticionReserva($this->idSalaNorte, self::franja('10:00', '11:00'), 'Ana', new Capacidad(11)));
@@ -142,7 +142,7 @@ final class ReservarSalaTest extends TestCase
         $reservaDeLasDiez = new Reserva($this->salaNorte, self::franja('10:00', '11:00'), 'Ana', new Capacidad(4));
         $reservas = $this->createStub(RepositorioReservas::class);
         $reservas->method('confirmadasDeLaSala')->willReturn([$reservaDeLasDiez]);
-        $reservar = new ReservarSala($this->salas, $reservas, $this->createStub(NotificadorReservas::class), new ReglaDePenalizacion($reservas, new MockClock(new \DateTimeImmutable())));
+        $reservar = new ReservarSala($this->salas, $reservas, $this->createStub(NotificadorReservas::class), new ReglaDePenalizacion($reservas, new MockClock(new \DateTimeImmutable('2027-03-01 09:00'))));
 
         $this->expectException(SalaNoDisponible::class);
 
