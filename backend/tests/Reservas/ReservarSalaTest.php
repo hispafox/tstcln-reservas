@@ -9,6 +9,7 @@ use App\Reservas\Aplicacion\ReservarSala;
 use App\Reservas\Dominio\Capacidad;
 use App\Reservas\Dominio\FranjaHoraria;
 use App\Reservas\Dominio\NotificadorReservas;
+use App\Reservas\Dominio\PersonaPenalizada;
 use App\Reservas\Dominio\ReglaDePenalizacion;
 use App\Reservas\Dominio\RepositorioReservas;
 use App\Reservas\Dominio\Reserva;
@@ -80,6 +81,29 @@ final class ReservarSalaTest extends TestCase
         }
 
         self::assertSame([], $reservas->guardadas());
+    }
+
+    public function test_una_persona_penalizada_no_reserva_ni_se_guarda_ni_se_avisa(): void
+    {
+        $auditorio = new Sala('Auditorio', capacidadMaxima: 40);
+        $idAuditorio = $this->salas->registrar($auditorio);
+        $reservas = new RepositorioReservasEnMemoria();
+        foreach (['2027-03-07', '2027-03-08', '2027-03-09'] as $dia) {
+            $tardia = new Reserva($auditorio, new FranjaHoraria(new \DateTimeImmutable("$dia 10:00"), new \DateTimeImmutable("$dia 11:00")), 'Ana', new Capacidad(4));
+            $tardia->cancelarTarde();
+            $reservas->guardar($tardia);
+        }
+        $notificador = $this->createMock(NotificadorReservas::class);
+        $notificador->expects($this->never())->method('reservaConfirmada');
+        $reservar = new ReservarSala($this->salas, $reservas, $notificador, new ReglaDePenalizacion($reservas, new MockClock(new \DateTimeImmutable('2027-03-10 12:00'))));
+
+        try {
+            $reservar->ejecutar(new PeticionReserva($idAuditorio, self::franja('10:00', '11:00'), 'Ana', new Capacidad(4)));
+            self::fail('Se esperaba que la reserva se rechazara');
+        } catch (PersonaPenalizada) {
+        }
+
+        self::assertCount(3, $reservas->guardadas());
     }
 
     public function test_una_reserva_que_choca_con_otra_no_se_guarda_ni_se_notifica(): void

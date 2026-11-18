@@ -5,26 +5,26 @@ declare(strict_types=1);
 namespace App\Tests\Integracion;
 
 use App\Reservas\Dominio\RepositorioReservas;
+use App\Reservas\Dominio\Sala;
+use App\Tests\Contrato\ContratoRepositorioReservas;
 use App\Tests\FabricaDeDatos;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
-final class RepositorioReservasDoctrineTest extends KernelTestCase
+final class RepositorioReservasDoctrineTest extends ContratoRepositorioReservas
 {
-    public function test_las_reservas_canceladas_no_cuentan_como_confirmadas(): void
+    protected function repositorio(): RepositorioReservas
     {
-        self::bootKernel();
-        $datos = new FabricaDeDatos(static::getContainer()->get(EntityManagerInterface::class));
-        $repositorio = static::getContainer()->get(RepositorioReservas::class);
-        $sala = $datos->sala();
-        $confirmada = $datos->reserva($sala, '2027-03-04 10:00', '2027-03-04 11:00');
-        $cancelada = $datos->reserva($sala, '2027-03-04 12:00', '2027-03-04 13:00');
-        $cancelada->cancelarATiempo();
-        $repositorio->guardar($cancelada);
+        return static::getContainer()->get(RepositorioReservas::class);
+    }
 
-        $resultado = $repositorio->confirmadasDeLaSala($sala);
+    protected function salaGuardada(string $nombre, int $capacidadMaxima): Sala
+    {
+        $sala = new Sala($nombre, capacidadMaxima: $capacidadMaxima);
+        $em = static::getContainer()->get(EntityManagerInterface::class);
+        $em->persist($sala);
+        $em->flush();
 
-        self::assertSame([$confirmada], $resultado);
+        return $sala;
     }
 
     public function test_las_reservas_de_otra_sala_no_cuentan_como_confirmadas_de_esta(): void

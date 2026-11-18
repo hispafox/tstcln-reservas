@@ -64,4 +64,19 @@ final class ReservarSalaTest extends WebTestCase
 
         self::assertResponseStatusCodeSame(400);
     }
+
+    public function test_reservar_una_sala_que_no_existe_responde_404(): void
+    {
+        $cliente = static::createClient();
+
+        $cliente->jsonRequest('POST', '/reservas', [
+            'sala' => 999,
+            'inicio' => (new \DateTimeImmutable('tomorrow 10:00'))->format(\DATE_ATOM),
+            'fin' => (new \DateTimeImmutable('tomorrow 11:00'))->format(\DATE_ATOM),
+            'persona' => 'Ana',
+            'asistentes' => 4,
+        ]);
+
+        self::assertResponseStatusCodeSame(404);
+    }
 }
