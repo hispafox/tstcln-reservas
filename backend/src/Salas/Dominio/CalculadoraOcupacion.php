@@ -24,9 +24,9 @@ final class CalculadoraOcupacion
         $ocupada = 0;
 
         foreach ($this->jornadas($periodo) as $jornada) {
-            $abierta += self::minutos($jornada->inicio(), $jornada->fin());
+            $abierta += $jornada->minutos();
             foreach ($reservadas as $reserva) {
-                $ocupada += self::minutosEnComun($jornada, $reserva);
+                $ocupada += $jornada->minutosEnComunCon($reserva);
             }
         }
 
@@ -57,19 +57,5 @@ final class CalculadoraOcupacion
         }
 
         return $jornadas;
-    }
-
-    private static function minutosEnComun(FranjaHoraria $una, FranjaHoraria $otra): int
-    {
-        if (!$una->seSolapaCon($otra)) {
-            return 0;
-        }
-
-        return self::minutos(max($una->inicio(), $otra->inicio()), min($una->fin(), $otra->fin()));
-    }
-
-    private static function minutos(\DateTimeImmutable $desde, \DateTimeImmutable $hasta): int
-    {
-        return intdiv($hasta->getTimestamp() - $desde->getTimestamp(), 60);
     }
 }

@@ -77,6 +77,36 @@ final class FranjaHorariaTest extends TestCase
         ];
     }
 
+    public function test_una_franja_de_diez_a_once_y_media_dura_noventa_minutos(): void
+    {
+        self::assertSame(90, self::franja('10:00', '11:30')->minutos());
+    }
+
+    #[DataProvider('casosDeMinutosEnComun')]
+    public function test_los_minutos_en_comun_son_los_del_trozo_que_comparten(
+        string $inicioDeLaOtra,
+        string $finDeLaOtra,
+        int $minutos,
+    ): void {
+        $deDiezAOnce = self::franja('10:00', '11:00');
+
+        $resultado = $deDiezAOnce->minutosEnComunCon(self::franja($inicioDeLaOtra, $finDeLaOtra));
+
+        self::assertSame($minutos, $resultado);
+    }
+
+    public static function casosDeMinutosEnComun(): array
+    {
+        return [
+            'acaba justo cuando empieza' => ['09:00', '10:00', 0],
+            'empieza antes y acaba dentro' => ['09:30', '10:30', 30],
+            'queda dentro' => ['10:15', '10:45', 30],
+            'la envuelve' => ['09:00', '12:00', 60],
+            'empieza dentro y acaba después' => ['10:30', '11:30', 30],
+            'empieza después de que acabe' => ['11:30', '12:30', 0],
+        ];
+    }
+
     #[DataProvider('franjasNoValidas')]
     public function test_una_franja_tiene_que_terminar_despues_de_empezar(string $inicio, string $fin): void
     {
