@@ -25,6 +25,16 @@ Desde la raíz del repositorio:
 .\scripts\probar-frontend.ps1
 ```
 
+## Datos de ejemplo
+
+La base de datos de desarrollo empieza vacía. Para ver la aplicación con datos:
+
+```powershell
+.\scripts\cargar-datos.ps1
+```
+
+Vacía la base de datos de desarrollo y carga cinco salas y doce reservas, con fechas a partir del día en que se lanza. Las reservas de «Mis reservas» son de Ana.
+
 ## Frontend
 
 Angular 22 con Vitest, en `frontend/`. Necesita Node.js `^22.22.3`, `^24.15.0` o `^26.0.0`. Las dependencias se instalan con `npm install` dentro de `frontend/`.
