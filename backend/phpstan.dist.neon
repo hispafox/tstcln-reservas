@@ -6,3 +6,6 @@ parameters:
     paths:
         - src
         - tests
+
+rules:
+    - App\Tests\PHPStan\ReglaHoraDelReloj

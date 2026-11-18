@@ -27,7 +27,7 @@ final class ReglaHoraDelReloj implements Rule
             return [];
         }
 
-        if ($scope->resolveName($node->class) !== \DateTimeImmutable::class) {
+        if (!in_array($scope->resolveName($node->class), [\DateTimeImmutable::class, \DateTime::class], true)) {
             return [];
         }
 
