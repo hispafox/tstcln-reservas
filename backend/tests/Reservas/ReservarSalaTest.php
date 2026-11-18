@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Reservas;
 
 use App\Reservas\Aplicacion\PeticionReserva;
-use App\Reservas\Aplicacion\ServicioReservas;
+use App\Reservas\Aplicacion\ReservarSala;
 use App\Reservas\Dominio\Capacidad;
 use App\Reservas\Dominio\FranjaHoraria;
 use App\Reservas\Dominio\NotificadorReservas;
@@ -17,7 +17,7 @@ use App\Reservas\Dominio\SalaNoDisponible;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Clock\MockClock;
 
-final class ServicioReservasTest extends TestCase
+final class ReservarSalaTest extends TestCase
 {
     private Sala $salaNorte;
 
@@ -29,13 +29,13 @@ final class ServicioReservasTest extends TestCase
     public function test_reservar_una_sala_libre_devuelve_la_reserva(): void
     {
         $reservas = $this->createStub(RepositorioReservas::class);
-        $servicio = new ServicioReservas(
+        $servicio = new ReservarSala(
             $reservas,
             $this->createStub(NotificadorReservas::class),
             new ReglaDePenalizacion($reservas, new MockClock(new \DateTimeImmutable())),
         );
 
-        $reserva = $servicio->reservar(new PeticionReserva($this->salaNorte, self::franja('10:00', '11:00'), 'Ana', new Capacidad(4)));
+        $reserva = $servicio->ejecutar(new PeticionReserva($this->salaNorte, self::franja('10:00', '11:00'), 'Ana', new Capacidad(4)));
 
         self::assertSame($this->salaNorte, $reserva->sala());
     }
@@ -47,9 +47,9 @@ final class ServicioReservasTest extends TestCase
         $notificador->expects($this->once())
             ->method('reservaConfirmada')
             ->with($this->callback(fn (Reserva $reserva) => $reserva->sala() === $this->salaNorte));
-        $servicio = new ServicioReservas($reservas, $notificador, new ReglaDePenalizacion($reservas, new MockClock(new \DateTimeImmutable())));
+        $servicio = new ReservarSala($reservas, $notificador, new ReglaDePenalizacion($reservas, new MockClock(new \DateTimeImmutable())));
 
-        $reserva = $servicio->reservar(new PeticionReserva($this->salaNorte, self::franja('10:00', '11:00'), 'Ana', new Capacidad(4)));
+        $reserva = $servicio->ejecutar(new PeticionReserva($this->salaNorte, self::franja('10:00', '11:00'), 'Ana', new Capacidad(4)));
 
         self::assertSame([$reserva], $reservas->guardadas());
     }
@@ -60,10 +60,10 @@ final class ServicioReservasTest extends TestCase
         $reservas->guardar(new Reserva($this->salaNorte, self::franja('10:00', '11:00'), 'Ana', new Capacidad(4)));
         $notificador = $this->createMock(NotificadorReservas::class);
         $notificador->expects($this->never())->method('reservaConfirmada');
-        $servicio = new ServicioReservas($reservas, $notificador, new ReglaDePenalizacion($reservas, new MockClock(new \DateTimeImmutable())));
+        $servicio = new ReservarSala($reservas, $notificador, new ReglaDePenalizacion($reservas, new MockClock(new \DateTimeImmutable())));
 
         try {
-            $servicio->reservar(new PeticionReserva($this->salaNorte, self::franja('10:30', '11:30'), 'Luis', new Capacidad(3)));
+            $servicio->ejecutar(new PeticionReserva($this->salaNorte, self::franja('10:30', '11:30'), 'Luis', new Capacidad(3)));
             self::fail('Se esperaba que la segunda reserva se rechazara');
         } catch (\DomainException) {
         }
@@ -74,10 +74,10 @@ final class ServicioReservasTest extends TestCase
     public function test_no_permite_reservar_con_mas_asistentes_que_plazas_y_no_guarda_nada(): void
     {
         $reservas = new RepositorioReservasEnMemoria();
-        $servicio = new ServicioReservas($reservas, $this->createStub(NotificadorReservas::class), new ReglaDePenalizacion($reservas, new MockClock(new \DateTimeImmutable())));
+        $servicio = new ReservarSala($reservas, $this->createStub(NotificadorReservas::class), new ReglaDePenalizacion($reservas, new MockClock(new \DateTimeImmutable())));
 
         try {
-            $servicio->reservar(new PeticionReserva($this->salaNorte, self::franja('10:00', '11:00'), 'Ana', new Capacidad(11)));
+            $servicio->ejecutar(new PeticionReserva($this->salaNorte, self::franja('10:00', '11:00'), 'Ana', new Capacidad(11)));
             self::fail('Se esperaba que la reserva se rechazara');
         } catch (\DomainException) {
         }
@@ -90,11 +90,11 @@ final class ServicioReservasTest extends TestCase
         $reservaDeLasDiez = new Reserva($this->salaNorte, self::franja('10:00', '11:00'), 'Ana', new Capacidad(4));
         $reservas = $this->createStub(RepositorioReservas::class);
         $reservas->method('confirmadasDeLaSala')->willReturn([$reservaDeLasDiez]);
-        $servicio = new ServicioReservas($reservas, $this->createStub(NotificadorReservas::class), new ReglaDePenalizacion($reservas, new MockClock(new \DateTimeImmutable())));
+        $servicio = new ReservarSala($reservas, $this->createStub(NotificadorReservas::class), new ReglaDePenalizacion($reservas, new MockClock(new \DateTimeImmutable())));
 
         $this->expectException(SalaNoDisponible::class);
 
-        $servicio->reservar(new PeticionReserva($this->salaNorte, self::franja('10:30', '11:30'), 'Luis', new Capacidad(3)));
+        $servicio->ejecutar(new PeticionReserva($this->salaNorte, self::franja('10:30', '11:30'), 'Luis', new Capacidad(3)));
     }
 
     private static function franja(string $inicio, string $fin): FranjaHoraria

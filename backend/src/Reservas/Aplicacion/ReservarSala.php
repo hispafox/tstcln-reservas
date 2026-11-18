@@ -15,7 +15,7 @@ use App\Reservas\Dominio\ReservaNoAdmitida;
 use App\Reservas\Dominio\Sala;
 use App\Reservas\Dominio\SalaNoDisponible;
 
-final class ServicioReservas
+final class ReservarSala
 {
     public function __construct(
         private RepositorioReservas $reservas,
@@ -25,7 +25,7 @@ final class ServicioReservas
     ) {
     }
 
-    public function reservar(PeticionReserva $peticion): Reserva
+    public function ejecutar(PeticionReserva $peticion): Reserva
     {
         if ($this->penalizacion->penaliza($peticion->persona, $peticion->sala)) {
             throw new PersonaPenalizada($peticion->persona);

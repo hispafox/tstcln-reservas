@@ -6,8 +6,8 @@ namespace App\Reservas\Infraestructura;
 
 use App\Reservas\Aplicacion\CrearReservasRecurrentes;
 use App\Reservas\Aplicacion\PeticionReserva;
+use App\Reservas\Aplicacion\ReservarSala;
 use App\Reservas\Aplicacion\ServicioCancelacion;
-use App\Reservas\Aplicacion\ServicioReservas;
 use App\Reservas\Dominio\Capacidad;
 use App\Reservas\Dominio\FranjaHoraria;
 use App\Reservas\Dominio\Reserva;
@@ -27,13 +27,13 @@ final class ReservasController
     public function reservar(
         Request $peticion,
         EntityManagerInterface $em,
-        ServicioReservas $servicio,
+        ReservarSala $reservar,
     ): JsonResponse {
         $cuerpo = $peticion->toArray();
 
         $sala = $em->find(Sala::class, $cuerpo['sala']) ?? throw new SalaNoEncontrada($cuerpo['sala']);
 
-        $reserva = $servicio->reservar(new PeticionReserva(
+        $reserva = $reservar->ejecutar(new PeticionReserva(
             $sala,
             new FranjaHoraria(new \DateTimeImmutable($cuerpo['inicio']), new \DateTimeImmutable($cuerpo['fin'])),
             $cuerpo['persona'],
