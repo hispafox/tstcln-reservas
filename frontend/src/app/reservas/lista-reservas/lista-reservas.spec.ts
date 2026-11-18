@@ -4,12 +4,11 @@ import userEvent from '@testing-library/user-event';
 import { of } from 'rxjs';
 import { ApiReservasEnMemoria } from '../../../testing/api-reservas-en-memoria';
 import { ApiSalasEnMemoria } from '../../../testing/api-salas-en-memoria';
-import { sala } from '../../../testing/datos-de-prueba';
+import { reserva, sala } from '../../../testing/datos-de-prueba';
 import { filas } from '../../../testing/filas';
 import { Avisos } from '../../avisos/avisos';
 import { ApiSalas } from '../../salas/api-salas';
 import { ApiReservas } from '../api-reservas';
-import { EstadoReserva, Reserva } from '../reserva';
 import { ListaReservas } from './lista-reservas';
 
 describe('ListaReservas', () => {
@@ -140,10 +139,6 @@ describe('ListaReservas', () => {
     });
   });
 });
-
-function reserva(id: number, sala: number, inicio: string, estado: EstadoReserva): Reserva {
-  return { id, sala, inicio, fin: inicio.replace('T10', 'T11').replace('T12', 'T13'), persona: 'Ana', asistentes: 4, estado };
-}
 
 function salasEnLaTabla(): string[] {
   return screen.getAllByRole('row').slice(1).map((fila) => fila.querySelector('td')!.textContent!.trim());

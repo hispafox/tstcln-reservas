@@ -1,3 +1,4 @@
+import { EstadoReserva, Reserva } from '../app/reservas/reserva';
 import { Sala } from '../app/salas/sala';
 
 let siguienteId = 1;
@@ -20,4 +21,9 @@ export const salaSur = sala({ nombre: 'Sur', capacidadMaxima: 10, equipamiento: 
 /** Los nombres de una lista de salas, para que la aserción se lea de un vistazo. */
 export function nombres(salas: Sala[]): string[] {
   return salas.map((s) => s.nombre);
+}
+
+/** Una reserva de Ana, de una hora, para cuatro personas. */
+export function reserva(id: number, sala: number, inicio: string, estado: EstadoReserva): Reserva {
+  return { id, sala, inicio, fin: inicio.replace('T10', 'T11').replace('T12', 'T13'), persona: 'Ana', asistentes: 4, estado };
 }
