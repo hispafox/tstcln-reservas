@@ -65,6 +65,25 @@ final class ReservarSalaTest extends WebTestCase
         self::assertResponseStatusCodeSame(400);
     }
 
+    public function test_reservar_cinco_horas_responde_400(): void
+    {
+        $cliente = static::createClient();
+        $datos = new FabricaDeDatos(static::getContainer()->get(EntityManagerInterface::class));
+        $sala = $datos->sala();
+
+        $cliente->jsonRequest('POST', '/reservas', [
+            'sala' => $sala->id(),
+            'inicio' => (new \DateTimeImmutable('tomorrow 09:00'))->format(\DATE_ATOM),
+            'fin' => (new \DateTimeImmutable('tomorrow 14:00'))->format(\DATE_ATOM),
+            'persona' => 'Ana',
+            'asistentes' => 4,
+        ]);
+
+        self::assertResponseStatusCodeSame(400);
+        $respuesta = json_decode($cliente->getResponse()->getContent(), true);
+        self::assertSame('La reserva es demasiado larga', $respuesta['error']);
+    }
+
     public function test_reservar_una_sala_que_no_existe_responde_404(): void
     {
         $cliente = static::createClient();

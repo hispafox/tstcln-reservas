@@ -99,7 +99,13 @@ parameters:
 		-
 			message: '#^Parameter \#1 \$entityManager of class App\\Tests\\FabricaDeDatos constructor expects Doctrine\\ORM\\EntityManagerInterface, object given\.$#'
 			identifier: argument.type
-			count: 3
+			count: 4
+			path: tests/Api/ReservarSalaTest.php
+
+		-
+			message: '#^Parameter \#1 \$json of function json_decode expects string, string\|false given\.$#'
+			identifier: argument.type
+			count: 1
 			path: tests/Api/ReservarSalaTest.php
 
 		-

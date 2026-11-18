@@ -63,7 +63,7 @@ final class ReservasController
     ): JsonResponse {
         $cuerpo = $peticion->toArray();
 
-        $resultado = $crear->ejecutar(self::peticionDe($cuerpo, $lector), $lector->leer($cuerpo['hasta']));
+        $resultado = $crear->ejecutar(self::peticionDe($cuerpo, $lector), self::hastaDe($cuerpo, $lector));
 
         return new JsonResponse([
             'creadas' => array_map(fn(FranjaHoraria $franja) => $franja->inicio()->format('Y-m-d'), $resultado->libres()),
@@ -89,12 +89,26 @@ final class ReservasController
 
         $fecha = fn(string $texto) => $lector?->leer($texto) ?? new \DateTimeImmutable($texto);
 
+        $franja = new FranjaHoraria($fecha($cuerpo['inicio']), $fecha($cuerpo['fin']));
+
+        if ($franja->fin()->getTimestamp() - $franja->inicio()->getTimestamp() > 14400) {
+            throw new DatoNoValido('La reserva es demasiado larga');
+        }
+
         return new PeticionReserva(
             $cuerpo['sala'],
-            new FranjaHoraria($fecha($cuerpo['inicio']), $fecha($cuerpo['fin'])),
+            $franja,
             $cuerpo['persona'],
             new Capacidad($cuerpo['asistentes']),
         );
+    }
+
+    /**
+     * @param array<string, mixed> $cuerpo
+     */
+    private static function hastaDe(array $cuerpo, LectorDeFechas $lector): \DateTimeImmutable
+    {
+        return $lector->leer($cuerpo['hasta']);
     }
 
     private static function comoJson(Reserva $reserva): array
