@@ -6,7 +6,7 @@ namespace App\Reservas\Infraestructura;
 
 use App\Reservas\Aplicacion\CancelarReserva;
 use App\Reservas\Aplicacion\CrearReservasRecurrentes;
-use App\Reservas\Aplicacion\PeticionReserva;
+use App\Reservas\Dominio\PeticionReserva;
 use App\Reservas\Aplicacion\ReservarSala;
 use App\Reservas\Dominio\Capacidad;
 use App\Reservas\Dominio\DatoNoValido;

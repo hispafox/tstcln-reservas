@@ -7,6 +7,7 @@ namespace App\Reservas\Aplicacion;
 use App\Reservas\Dominio\FranjaHoraria;
 use App\Reservas\Dominio\NotificadorReservas;
 use App\Reservas\Dominio\PersonaPenalizada;
+use App\Reservas\Dominio\PeticionReserva;
 use App\Reservas\Dominio\ReglaDeCapacidad;
 use App\Reservas\Dominio\ReglaDePenalizacion;
 use App\Reservas\Dominio\RepositorioReservas;

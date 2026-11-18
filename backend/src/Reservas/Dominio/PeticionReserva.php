@@ -2,10 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Reservas\Aplicacion;
-
-use App\Reservas\Dominio\Capacidad;
-use App\Reservas\Dominio\FranjaHoraria;
+namespace App\Reservas\Dominio;
 
 final readonly class PeticionReserva
 {

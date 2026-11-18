@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Reservas;
 
 use App\Reservas\Aplicacion\CrearReservasRecurrentes;
-use App\Reservas\Aplicacion\PeticionReserva;
+use App\Reservas\Dominio\PeticionReserva;
 use App\Reservas\Dominio\Capacidad;
 use App\Reservas\Dominio\FranjaHoraria;
 use App\Reservas\Dominio\NotificadorReservas;
