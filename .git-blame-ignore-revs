@@ -1,0 +1,6 @@
+# Commits que git blame se salta: solo cambian el formato.
+# Se activa en cada copia del repositorio con:
+#   git config blame.ignoreRevsFile .git-blame-ignore-revs
+
+# 8.2 · Formato: PHP-CS-Fixer y Prettier sobre toda la aplicación
+16f81ca488b65384809dfdee34a75d1c1de54ab2
