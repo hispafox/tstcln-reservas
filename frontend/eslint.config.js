@@ -1,18 +1,47 @@
 // @ts-check
+const eslint = require('@eslint/js');
 const { defineConfig } = require('eslint/config');
 const tseslint = require('typescript-eslint');
 const angular = require('angular-eslint');
 
-// Solo los límites entre funcionalidades y la regla del dominio.
-// Los conjuntos de reglas recomendadas de ESLint, typescript-eslint y Angular llegan más adelante.
+// Primero, los conjuntos de reglas recomendadas de ESLint, typescript-eslint y Angular.
+// Detrás, los límites entre funcionalidades y la regla del dominio.
 module.exports = defineConfig([
   {
     files: ['**/*.ts'],
-    extends: [tseslint.configs.base],
+    extends: [
+      eslint.configs.recommended,
+      tseslint.configs.recommended,
+      tseslint.configs.stylistic,
+      angular.configs.tsRecommended,
+    ],
+    processor: angular.processInlineTemplates,
+    rules: {
+      '@angular-eslint/directive-selector': [
+        'error',
+        {
+          type: 'attribute',
+          prefix: 'app',
+          style: 'camelCase',
+        },
+      ],
+      '@angular-eslint/component-selector': [
+        'error',
+        {
+          type: 'element',
+          prefix: 'app',
+          style: 'kebab-case',
+        },
+      ],
+    },
   },
   {
     files: ['**/*.html'],
-    languageOptions: { parser: angular.templateParser },
+    extends: [
+      angular.configs.templateRecommended,
+      angular.configs.templateAccessibility,
+    ],
+    rules: {},
   },
   {
     files: ['src/app/salas/**/*.ts'],
@@ -67,6 +96,16 @@ module.exports = defineConfig([
           message: 'El dominio es TypeScript sin Angular: aquí no entran Angular ni RxJS.',
         }],
       }],
+    },
+  },
+  // Las reglas recomendadas que el código de hoy aún no cumple, de error a aviso.
+  // Va el último porque, cuando dos bloques dan valor a la misma regla, manda el último.
+  // Cuando una regla deja de dar avisos, sale de aquí y vuelve a ser un error.
+  {
+    files: ['src/**/*.ts'],
+    rules: {
+      '@angular-eslint/no-input-rename': 'warn',
+      '@typescript-eslint/no-explicit-any': 'warn',
     },
   },
 ]);
