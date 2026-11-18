@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Reservas\Infraestructura;
 
+use App\Reservas\Aplicacion\ApuntarEnListaDeEspera;
 use App\Reservas\Aplicacion\CancelarReserva;
 use App\Reservas\Aplicacion\CrearReservasRecurrentes;
 use App\Reservas\Dominio\PeticionReserva;
@@ -27,6 +28,14 @@ final class ReservasController
         $reserva = $reservar->ejecutar(self::peticionDe($peticion->toArray()));
 
         return new JsonResponse(self::comoJson($reserva), 201);
+    }
+
+    #[Route('/lista-espera', methods: ['POST'])]
+    public function apuntarEnListaDeEspera(Request $peticion, ApuntarEnListaDeEspera $apuntar): JsonResponse
+    {
+        $posicion = $apuntar->ejecutar(self::peticionDe($peticion->toArray()));
+
+        return new JsonResponse(['posicion' => $posicion], 201);
     }
 
     #[Route('/reservas', methods: ['GET'])]

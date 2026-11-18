@@ -26,7 +26,22 @@ final class TraductorDeErrores
         };
 
         if ($estado !== null) {
-            $evento->setResponse(new JsonResponse(['error' => $error->getMessage()], $estado));
+            $cuerpo = ['error' => $error->getMessage()];
+            if ($error instanceof ReservaRechazada) {
+                $cuerpo['codigo'] = self::codigoDe($error);
+            }
+
+            $evento->setResponse(new JsonResponse($cuerpo, $estado));
         }
+    }
+
+    /**
+     * El nombre de la clase del rechazo en snake_case: SalaNoDisponible da sala_no_disponible.
+     */
+    private static function codigoDe(ReservaRechazada $rechazo): string
+    {
+        $clase = (new \ReflectionClass($rechazo))->getShortName();
+
+        return strtolower(preg_replace('/(?<!^)[A-Z]/', '_$0', $clase) ?? $clase);
     }
 }
