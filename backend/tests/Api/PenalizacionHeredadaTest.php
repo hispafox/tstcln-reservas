@@ -79,7 +79,7 @@ final class PenalizacionHeredadaTest extends WebTestCase
         self::assertResponseStatusCodeSame(201);
     }
 
-    public function test_las_reservas_recurrentes_no_aplican_la_penalizacion(): void
+    public function test_las_reservas_recurrentes_aplican_la_penalizacion(): void
     {
         $cliente = static::createClient();
         $sala = $this->salaGrandeConTardias('-1 day 10:00', '-2 days 10:00', '-3 days 10:00');
@@ -93,7 +93,7 @@ final class PenalizacionHeredadaTest extends WebTestCase
             'asistentes' => 4,
         ]);
 
-        self::assertResponseStatusCodeSame(201);
+        self::assertResponseStatusCodeSame(409);
     }
 
     public function test_una_franja_que_termina_antes_de_empezar_responde_400(): void

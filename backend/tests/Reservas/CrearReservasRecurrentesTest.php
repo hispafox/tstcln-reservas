@@ -8,9 +8,11 @@ use App\Reservas\Capacidad;
 use App\Reservas\CrearReservasRecurrentes;
 use App\Reservas\FranjaHoraria;
 use App\Reservas\NotificadorReservas;
+use App\Reservas\ReglaDePenalizacion;
 use App\Reservas\Reserva;
 use App\Reservas\Sala;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Clock\MockClock;
 
 final class CrearReservasRecurrentesTest extends TestCase
 {
@@ -29,7 +31,7 @@ final class CrearReservasRecurrentesTest extends TestCase
         $notificador->expects($this->once())
             ->method('serieConfirmada')
             ->with($this->callback(fn (array $creadas) => count($creadas) === 3));
-        $crear = new CrearReservasRecurrentes($reservas, $notificador);
+        $crear = new CrearReservasRecurrentes($reservas, $notificador, new ReglaDePenalizacion($reservas, new MockClock(new \DateTimeImmutable())));
 
         $resultado = $crear->ejecutar(
             $this->salaNorte,
@@ -50,7 +52,7 @@ final class CrearReservasRecurrentesTest extends TestCase
         $reservas->guardar(new Reserva($this->salaNorte, self::franja('2027-03-04 10:00', '2027-03-04 11:00'), 'Luis', new Capacidad(3)));
         $notificador = $this->createMock(NotificadorReservas::class);
         $notificador->expects($this->never())->method('serieConfirmada');
-        $crear = new CrearReservasRecurrentes($reservas, $notificador);
+        $crear = new CrearReservasRecurrentes($reservas, $notificador, new ReglaDePenalizacion($reservas, new MockClock(new \DateTimeImmutable())));
 
         try {
             $crear->ejecutar($this->salaNorte, self::franja('2027-03-04 10:00', '2027-03-04 11:00'), new \DateTimeImmutable('2027-03-04'), 'Ana', new Capacidad(4));
@@ -66,7 +68,7 @@ final class CrearReservasRecurrentesTest extends TestCase
         $reservas = new RepositorioReservasEnMemoria();
         $notificador = $this->createMock(NotificadorReservas::class);
         $notificador->expects($this->never())->method('serieConfirmada');
-        $crear = new CrearReservasRecurrentes($reservas, $notificador);
+        $crear = new CrearReservasRecurrentes($reservas, $notificador, new ReglaDePenalizacion($reservas, new MockClock(new \DateTimeImmutable())));
 
         try {
             $crear->ejecutar($this->salaNorte, self::franja('2027-03-04 10:00', '2027-03-04 11:00'), new \DateTimeImmutable('2027-03-31'), 'Ana', new Capacidad(11));

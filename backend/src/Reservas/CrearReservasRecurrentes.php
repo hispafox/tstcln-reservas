@@ -9,12 +9,17 @@ final class CrearReservasRecurrentes
     public function __construct(
         private RepositorioReservas $reservas,
         private NotificadorReservas $notificador,
+        private ReglaDePenalizacion $penalizacion,
         private ReglaDeCapacidad $capacidad = new ReglaDeCapacidad(),
     ) {
     }
 
     public function ejecutar(Sala $sala, FranjaHoraria $primera, \DateTimeImmutable $hasta, string $persona, Capacidad $asistentes): ResultadoSerie
     {
+        if ($this->penalizacion->penaliza($persona, $sala)) {
+            throw new PersonaPenalizada($persona);
+        }
+
         if (!$this->capacidad->admite($sala, $primera, $asistentes)) {
             throw new ReservaNoAdmitida($sala, $asistentes);
         }
