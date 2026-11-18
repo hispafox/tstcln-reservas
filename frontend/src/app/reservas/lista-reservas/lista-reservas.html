@@ -5,11 +5,11 @@
   <app-filtros-reservas [(soloConfirmadas)]="soloConfirmadas" [(orden)]="orden" />
 </div>
 
-@if (cargando()) {
+@if (estado.cargando()) {
   <div>Cargando...</div>
 }
-@if (error()) {
-  <div class="error">{{ error() }}</div>
+@if (estado.hayError()) {
+  <div class="error">Error al cargar las reservas</div>
 }
 
 <app-tabla-reservas [reservas]="visibles()" (cancelacionPedida)="cancelar($event)" />

@@ -123,19 +123,19 @@ describe('ListaReservas', () => {
     afterEach(() => vi.useRealTimers());
 
     it('al salir de la pantalla deja de pedir las reservas cada minuto', async () => {
-      const salas = new ApiSalasEnMemoria();
-      const listar = vi.spyOn(salas, 'listar');
+      const api = new ApiReservasEnMemoria();
+      const deUnaPersona = vi.spyOn(api, 'deUnaPersona');
       const { fixture } = await render(ListaReservas, {
         providers: [
-          { provide: ApiSalas, useValue: salas },
-          { provide: ApiReservas, useValue: new ApiReservasEnMemoria() },
+          { provide: ApiSalas, useValue: new ApiSalasEnMemoria() },
+          { provide: ApiReservas, useValue: api },
         ],
       });
 
       fixture.destroy();
       vi.advanceTimersByTime(60_000);
 
-      expect(listar).toHaveBeenCalledTimes(1);
+      expect(deUnaPersona).toHaveBeenCalledTimes(1);
     });
   });
 });
