@@ -47,6 +47,15 @@ class Reserva
         return $this->estado;
     }
 
+    public function cancelar(\DateTimeImmutable $ahora): void
+    {
+        if ($ahora > $this->franja->inicio()->modify('-2 hours')) {
+            $this->cancelarTarde();
+        } else {
+            $this->cancelarATiempo();
+        }
+    }
+
     public function cancelarATiempo(): void
     {
         $this->estado = EstadoReserva::CanceladaATiempo;
