@@ -3,6 +3,7 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { TestBed } from '@angular/core/testing';
 import { render, screen } from '@testing-library/angular';
 import userEvent from '@testing-library/user-event';
+import { filas } from '../../../testing/filas';
 import { ListaReservas } from './lista-reservas';
 
 describe('ListaReservas', () => {
@@ -99,8 +100,4 @@ describe('ListaReservas', () => {
 
 function reserva(id: number, sala: number, inicio: string, estado: string) {
   return { id, sala, inicio, fin: inicio.replace('T10', 'T11').replace('T12', 'T13'), persona: 'Ana', asistentes: 4, estado };
-}
-
-function filas(): string[] {
-  return screen.getAllByRole('row').slice(1).map((fila) => fila.textContent!.replace(/\s+/g, ' ').trim());
 }
