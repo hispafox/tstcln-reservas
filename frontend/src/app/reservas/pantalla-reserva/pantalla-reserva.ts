@@ -11,6 +11,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { Avisos } from '../../avisos/avisos';
 import { ApiSalas } from '../../salas/api-salas';
 import { TarjetaSala } from '../../salas/tarjeta-sala/tarjeta-sala';
+import { EstadoReservas } from '../estado-reservas';
 import { FormularioReserva } from '../formulario-reserva/formulario-reserva';
 import { Reserva } from '../reserva';
 
@@ -27,9 +28,11 @@ export class PantallaReserva {
   protected readonly sala = computed(() => this.salas()?.find((sala) => sala.id === this.idSala()));
   protected readonly confirmada = signal<Reserva | null>(null);
   private readonly avisos = inject(Avisos);
+  private readonly estado = inject(EstadoReservas);
 
   protected creada(reserva: Reserva): void {
     this.confirmada.set(reserva);
+    this.estado.anadir(reserva);
     this.avisos.mostrar('Reserva creada');
   }
 }

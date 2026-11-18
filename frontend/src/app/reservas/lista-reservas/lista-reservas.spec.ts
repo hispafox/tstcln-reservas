@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { render, screen } from '@testing-library/angular';
 import userEvent from '@testing-library/user-event';
-import { of } from 'rxjs';
+import { NEVER, of } from 'rxjs';
 import { ApiReservasEnMemoria } from '../../../testing/api-reservas-en-memoria';
 import { ApiSalasEnMemoria } from '../../../testing/api-salas-en-memoria';
 import { reserva, sala } from '../../../testing/datos-de-prueba';
@@ -9,6 +9,7 @@ import { filas } from '../../../testing/filas';
 import { Avisos } from '../../avisos/avisos';
 import { ApiSalas } from '../../salas/api-salas';
 import { ApiReservas } from '../api-reservas';
+import { EstadoReservas } from '../estado-reservas';
 import { ListaReservas } from './lista-reservas';
 
 describe('ListaReservas', () => {
@@ -116,6 +117,24 @@ describe('ListaReservas', () => {
     await fixture.whenStable();
 
     expect(TestBed.inject(Avisos).actual()).toBe('Cancelación tardía: quedan menos de dos horas');
+  });
+
+  it('al volver a la lista, enseña la reserva añadida mientras llega la carga', async () => {
+    const api = new ApiReservasEnMemoria([reserva(1, 2, '2027-03-05T10:00:00+01:00', 'confirmada')]);
+    const { fixture } = await render(ListaReservas, {
+      providers: [
+        { provide: ApiSalas, useValue: new ApiSalasEnMemoria([sala({ id: 1, nombre: 'Sala Norte' }), sala({ id: 2, nombre: 'Sala Sur' })]) },
+        { provide: ApiReservas, useValue: api },
+      ],
+    });
+    fixture.destroy();
+    TestBed.inject(EstadoReservas).anadir(reserva(2, 1, '2027-03-04T10:00:00+01:00', 'confirmada'));
+    vi.spyOn(api, 'deUnaPersona').mockReturnValue(NEVER);
+
+    const otraVez = TestBed.createComponent(ListaReservas);
+    await otraVez.whenStable();
+
+    expect(filas()).toEqual(['Sala Norte2027-03-04 10:0011:0060 min4ConfirmadaCancelar', 'Sala Sur2027-03-05 10:0011:0060 min4ConfirmadaCancelar']);
   });
 
   describe('con el reloj falso', () => {
