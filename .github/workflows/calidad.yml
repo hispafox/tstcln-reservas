@@ -1,0 +1,57 @@
+name: Calidad
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          coverage: pcov
+      - run: composer install --no-interaction --no-progress
+      - name: Formato
+        run: vendor/bin/php-cs-fixer check
+      - name: Análisis estático
+        run: vendor/bin/phpstan analyse --no-progress
+      - name: Capas
+        run: vendor/bin/deptrac analyse --config-file=deptrac.yaml
+      - name: Pruebas
+        run: |
+          php bin/console doctrine:schema:update --force --complete --env=test
+          vendor/bin/phpunit --exclude-group pendiente --coverage-text
+      - name: Pruebas de mutación del código que cambia
+        run: >-
+          vendor/bin/infection --git-diff-lines --git-diff-base=origin/main
+          --min-msi=80 --ignore-msi-with-no-mutations
+          --test-framework-options="--exclude-group=pendiente"
+
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - name: Formato
+        run: npx prettier --check .
+      - name: Análisis estático y límites
+        run: npx ng lint
+      - name: Pruebas
+        run: npx ng test --watch=false --coverage
