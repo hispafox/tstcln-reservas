@@ -1,25 +1,21 @@
-import { TestBed } from '@angular/core/testing';
-import { of } from 'rxjs';
+import { render, screen } from '@testing-library/angular';
+import userEvent from '@testing-library/user-event';
+import { ApiSalasEnMemoria } from '../../../testing/api-salas-en-memoria';
 import { sala } from '../../../testing/datos-de-prueba';
-import { CatalogoSalas } from '../catalogo-salas';
+import { ApiSalas } from '../api-salas';
 import { BuscadorSalas } from './buscador-salas';
 
 describe('BuscadorSalas', () => {
-  const salas = [
-    sala({ nombre: 'Norte', capacidadMaxima: 4 }),
-    sala({ nombre: 'Sur', capacidadMaxima: 10 }),
-    sala({ nombre: 'Este', capacidadMaxima: 20 }),
-  ];
+  it('enseña solo las salas donde caben los asistentes que se buscan', async () => {
+    const salas = [sala({ nombre: 'Norte', capacidadMaxima: 4 }), sala({ nombre: 'Sur', capacidadMaxima: 10 })];
+    const { fixture } = await render(BuscadorSalas, { providers: [{ provide: ApiSalas, useValue: new ApiSalasEnMemoria(salas) }] });
+    const usuario = userEvent.setup();
 
-  it('muestra las salas que encuentra el catálogo', async () => {
-    TestBed.configureTestingModule({
-      imports: [BuscadorSalas],
-      providers: [{ provide: CatalogoSalas, useValue: { disponibles: vi.fn(() => of(salas)) } }],
-    });
-
-    const fixture = TestBed.createComponent(BuscadorSalas);
+    await usuario.clear(screen.getByLabelText('Asistentes'));
+    await usuario.type(screen.getByLabelText('Asistentes'), '8');
+    await usuario.click(screen.getByRole('button', { name: 'Buscar' }));
     await fixture.whenStable();
 
-    expect(fixture.nativeElement.textContent).toContain('Sur');
+    expect(screen.getAllByRole('heading', { level: 2 }).map((titulo) => titulo.textContent)).toEqual(['Sur']);
   });
 });
