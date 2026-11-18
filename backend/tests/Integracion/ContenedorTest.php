@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace App\Tests\Integracion;
 
-use App\Reservas\Aplicacion\ServicioCancelacion;
+use App\Reservas\Aplicacion\CancelarReserva;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 final class ContenedorTest extends KernelTestCase
 {
-    public function test_el_contenedor_sabe_construir_el_servicio_de_cancelacion(): void
+    public function test_el_contenedor_sabe_construir_la_operacion_de_cancelar(): void
     {
         self::bootKernel();
 
-        $servicio = static::getContainer()->get(ServicioCancelacion::class);
+        $cancelar = static::getContainer()->get(CancelarReserva::class);
 
-        self::assertInstanceOf(ServicioCancelacion::class, $servicio);
+        self::assertInstanceOf(CancelarReserva::class, $cancelar);
     }
 }
