@@ -1,21 +1,15 @@
-import { Sala } from './sala';
+import { Sala, admite } from './sala';
 
 export interface CriterioBusqueda {
   asistentes: number;
   equipamiento: string[];
 }
 
-export function filtrarSalasDisponibles(
-  salas: Sala[],
-  criterio: CriterioBusqueda,
-): Sala[] {
+export function filtrarSalasDisponibles(salas: Sala[], criterio: CriterioBusqueda): Sala[] {
   return salas.filter(
     (sala) =>
-      criterio.asistentes >= (sala.capacidadMinima ?? 1) &&
-      criterio.asistentes <= sala.capacidadMaxima &&
-      criterio.equipamiento.every((elemento) =>
-        sala.equipamiento.includes(elemento),
-      ),
+      admite(sala, criterio.asistentes) &&
+      criterio.equipamiento.every((elemento) => sala.equipamiento.includes(elemento)),
   );
 }
 
