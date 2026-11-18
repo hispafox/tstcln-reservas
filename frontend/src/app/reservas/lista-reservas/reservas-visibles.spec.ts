@@ -15,11 +15,12 @@ describe('soloLasProximas', () => {
 });
 
 describe('ordenar', () => {
-  const reservas = () => [
-    { id: 1, inicio: '2027-03-05T10:00:00+01:00', nombreSala: 'Sala Sur', duracion: 60 },
-    { id: 2, inicio: '2027-03-04T10:00:00+01:00', nombreSala: 'Sala Norte', duracion: 30 },
-    { id: 3, inicio: '2027-03-04T12:00:00+01:00', nombreSala: 'Sala Grande', duracion: 90 },
-  ] as FilaReserva[];
+  const reservas = () =>
+    [
+      { id: 1, inicio: '2027-03-05T10:00:00+01:00', nombreSala: 'Sala Sur', duracion: 60 },
+      { id: 2, inicio: '2027-03-04T10:00:00+01:00', nombreSala: 'Sala Norte', duracion: 30 },
+      { id: 3, inicio: '2027-03-04T12:00:00+01:00', nombreSala: 'Sala Grande', duracion: 90 },
+    ] as FilaReserva[];
 
   it('por fecha, de la más próxima a la más lejana', () => {
     expect(ordenar(reservas(), 'fecha').map((reserva) => reserva.id)).toEqual([2, 3, 1]);

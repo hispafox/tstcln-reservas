@@ -25,8 +25,7 @@ final class CrearReservasRecurrentes
         private NotificadorReservas $notificador,
         private ReglaDePenalizacion $penalizacion,
         private ReglaDeCapacidad $capacidad = new ReglaDeCapacidad(),
-    ) {
-    }
+    ) {}
 
     public function ejecutar(PeticionReserva $peticion, \DateTimeImmutable $hasta): ResultadoSerie
     {
@@ -40,7 +39,7 @@ final class CrearReservasRecurrentes
             throw new ReservaNoAdmitida($sala, $peticion->asistentes);
         }
 
-        $ocupadas = array_map(fn (Reserva $reserva) => $reserva->franja(), $this->reservas->confirmadasDeLaSala($sala));
+        $ocupadas = array_map(fn(Reserva $reserva) => $reserva->franja(), $this->reservas->confirmadasDeLaSala($sala));
         $resultado = (new SerieSemanal($peticion->franja, $hasta))->repartir($ocupadas);
 
         if ($resultado->libres() === []) {

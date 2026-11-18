@@ -12,8 +12,7 @@ final class CatalogoSalasDoctrine implements CatalogoSalas
 {
     public function __construct(
         private EntityManagerInterface $em,
-    ) {
-    }
+    ) {}
 
     public function todas(): array
     {

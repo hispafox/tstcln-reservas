@@ -32,7 +32,11 @@ describe('ApiReservas', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [provideHttpClient(), provideHttpClientTesting(), { provide: ApiReservas, useClass: ApiReservasHttp }],
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        { provide: ApiReservas, useClass: ApiReservasHttp },
+      ],
     });
     api = TestBed.inject(ApiReservas);
     centralita = TestBed.inject(HttpTestingController);
@@ -59,9 +63,7 @@ describe('ApiReservas', () => {
   it('devuelve la reserva que responde la API', async () => {
     const respuesta = firstValueFrom(api.crear(peticion));
 
-    centralita
-      .expectOne('/reservas')
-      .flush(reservaCreada, { status: 201, statusText: 'Created' });
+    centralita.expectOne('/reservas').flush(reservaCreada, { status: 201, statusText: 'Created' });
 
     expect(await respuesta).toEqual(reservaCreada);
   });
@@ -77,9 +79,7 @@ describe('ApiReservas', () => {
       );
 
     await expect(respuesta).rejects.toThrow(ReservaRechazadaError);
-    await expect(respuesta).rejects.toThrow(
-      'La sala ya está reservada en esa franja',
-    );
+    await expect(respuesta).rejects.toThrow('La sala ya está reservada en esa franja');
   });
 
   it('convierte el 400 en un error de datos con el mensaje de la API', async () => {
@@ -93,9 +93,7 @@ describe('ApiReservas', () => {
       );
 
     await expect(respuesta).rejects.toThrow(DatosNoValidosError);
-    await expect(respuesta).rejects.toThrow(
-      'Una reserva necesita al menos un asistente',
-    );
+    await expect(respuesta).rejects.toThrow('Una reserva necesita al menos un asistente');
   });
 
   it('avisa de que no hay conexión cuando la petición no llega', async () => {
@@ -121,7 +119,10 @@ describe('ApiReservas', () => {
     const respuesta = firstValueFrom(api.deUnaPersona('Ana María'));
 
     centralita
-      .expectOne((peticion) => peticion.url === '/reservas' && peticion.params.get('persona') === 'Ana María')
+      .expectOne(
+        (peticion) =>
+          peticion.url === '/reservas' && peticion.params.get('persona') === 'Ana María',
+      )
       .flush([reservaCreada]);
 
     expect(await respuesta).toEqual([reservaCreada]);
@@ -130,7 +131,9 @@ describe('ApiReservas', () => {
   it('falla si la API devuelve un estado que el dominio no conoce', async () => {
     const respuesta = firstValueFrom(api.deUnaPersona('Ana'));
 
-    centralita.expectOne((peticion) => peticion.url === '/reservas').flush([{ ...reservaCreada, estado: 'pendiente_de_pago' }]);
+    centralita
+      .expectOne((peticion) => peticion.url === '/reservas')
+      .flush([{ ...reservaCreada, estado: 'pendiente_de_pago' }]);
 
     await expect(respuesta).rejects.toThrow('estado de reserva desconocido');
   });

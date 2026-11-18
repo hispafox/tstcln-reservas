@@ -16,8 +16,7 @@ final class CalcularOcupacion
         private CatalogoSalas $catalogo,
         private AgendaReservas $agenda,
         private CalculadoraOcupacion $calculadora,
-    ) {
-    }
+    ) {}
 
     /**
      * @return list<OcupacionSala>

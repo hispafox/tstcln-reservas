@@ -9,11 +9,7 @@ export class FormularioReservaHarness extends ComponentHarness {
   private readonly boton = this.locatorFor('button[type="submit"]');
   private readonly avisos = this.locatorForAll('[role="alert"]');
 
-  async rellenar(datos: {
-    persona: string;
-    inicio: string;
-    fin: string;
-  }): Promise<void> {
+  async rellenar(datos: { persona: string; inicio: string; fin: string }): Promise<void> {
     await escribir(await this.persona(), datos.persona);
     await escribir(await this.inicio(), datos.inicio);
     await escribir(await this.fin(), datos.fin);

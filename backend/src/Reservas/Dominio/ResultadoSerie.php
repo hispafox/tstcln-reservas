@@ -13,8 +13,7 @@ final class ResultadoSerie
     public function __construct(
         private array $libres,
         private array $descartadas,
-    ) {
-    }
+    ) {}
 
     /** @return FranjaHoraria[] */
     public function libres(): array

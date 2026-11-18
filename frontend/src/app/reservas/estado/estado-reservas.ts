@@ -33,9 +33,13 @@ export class EstadoReservas {
   }
 
   cancelar(id: number): Observable<Reserva> {
-    return this.api.cancelar(id).pipe(
-      tap((cancelada) => this.lista.update((lista) => lista.map((r) => (r.id === cancelada.id ? cancelada : r)))),
-    );
+    return this.api
+      .cancelar(id)
+      .pipe(
+        tap((cancelada) =>
+          this.lista.update((lista) => lista.map((r) => (r.id === cancelada.id ? cancelada : r))),
+        ),
+      );
   }
 
   anadir(reserva: Reserva): void {

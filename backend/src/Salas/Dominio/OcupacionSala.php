@@ -10,6 +10,5 @@ final readonly class OcupacionSala
         public int $sala,
         public string $nombre,
         public int $porcentaje,
-    ) {
-    }
+    ) {}
 }

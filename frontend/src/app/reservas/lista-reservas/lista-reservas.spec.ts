@@ -16,7 +16,13 @@ describe('ListaReservas', () => {
   it('enseña las próximas confirmadas de Ana, ordenadas por fecha', async () => {
     await render(ListaReservas, {
       providers: [
-        { provide: ApiSalas, useValue: new ApiSalasEnMemoria([sala({ id: 1, nombre: 'Sala Norte' }), sala({ id: 2, nombre: 'Sala Sur' })]) },
+        {
+          provide: ApiSalas,
+          useValue: new ApiSalasEnMemoria([
+            sala({ id: 1, nombre: 'Sala Norte' }),
+            sala({ id: 2, nombre: 'Sala Sur' }),
+          ]),
+        },
         {
           provide: ApiReservas,
           useValue: new ApiReservasEnMemoria([
@@ -28,13 +34,22 @@ describe('ListaReservas', () => {
       ],
     });
 
-    expect(filas()).toEqual(['Sala Norte2027-03-04 10:0011:0060 min4ConfirmadaCancelar', 'Sala Sur2027-03-05 10:0011:0060 min4ConfirmadaCancelar']);
+    expect(filas()).toEqual([
+      'Sala Norte2027-03-04 10:0011:0060 min4ConfirmadaCancelar',
+      'Sala Sur2027-03-05 10:0011:0060 min4ConfirmadaCancelar',
+    ]);
   });
 
   it('sin el filtro y ordenada por sala, enseña todas', async () => {
     const { fixture } = await render(ListaReservas, {
       providers: [
-        { provide: ApiSalas, useValue: new ApiSalasEnMemoria([sala({ id: 1, nombre: 'Sala Norte' }), sala({ id: 2, nombre: 'Sala Sur' })]) },
+        {
+          provide: ApiSalas,
+          useValue: new ApiSalasEnMemoria([
+            sala({ id: 1, nombre: 'Sala Norte' }),
+            sala({ id: 2, nombre: 'Sala Sur' }),
+          ]),
+        },
         {
           provide: ApiReservas,
           useValue: new ApiReservasEnMemoria([
@@ -60,7 +75,13 @@ describe('ListaReservas', () => {
   it('vuelve a ordenar la tabla al cambiar el orden sin el filtro', async () => {
     const { fixture } = await render(ListaReservas, {
       providers: [
-        { provide: ApiSalas, useValue: new ApiSalasEnMemoria([sala({ id: 1, nombre: 'Sala Norte' }), sala({ id: 2, nombre: 'Sala Sur' })]) },
+        {
+          provide: ApiSalas,
+          useValue: new ApiSalasEnMemoria([
+            sala({ id: 1, nombre: 'Sala Norte' }),
+            sala({ id: 2, nombre: 'Sala Sur' }),
+          ]),
+        },
         {
           provide: ApiReservas,
           useValue: new ApiReservasEnMemoria([
@@ -83,7 +104,13 @@ describe('ListaReservas', () => {
   it('después de cancelar, la reserva sale de las próximas confirmadas', async () => {
     const { fixture } = await render(ListaReservas, {
       providers: [
-        { provide: ApiSalas, useValue: new ApiSalasEnMemoria([sala({ id: 1, nombre: 'Sala Norte' }), sala({ id: 2, nombre: 'Sala Sur' })]) },
+        {
+          provide: ApiSalas,
+          useValue: new ApiSalasEnMemoria([
+            sala({ id: 1, nombre: 'Sala Norte' }),
+            sala({ id: 2, nombre: 'Sala Sur' }),
+          ]),
+        },
         {
           provide: ApiReservas,
           useValue: new ApiReservasEnMemoria([
@@ -106,7 +133,10 @@ describe('ListaReservas', () => {
     const api = new ApiReservasEnMemoria([confirmada]);
     const { fixture } = await render(ListaReservas, {
       providers: [
-        { provide: ApiSalas, useValue: new ApiSalasEnMemoria([sala({ id: 1, nombre: 'Sala Norte' })]) },
+        {
+          provide: ApiSalas,
+          useValue: new ApiSalasEnMemoria([sala({ id: 1, nombre: 'Sala Norte' })]),
+        },
         { provide: ApiReservas, useValue: api },
       ],
     });
@@ -120,10 +150,18 @@ describe('ListaReservas', () => {
   });
 
   it('al volver a la lista, enseña la reserva añadida mientras llega la carga', async () => {
-    const api = new ApiReservasEnMemoria([reserva(1, 2, '2027-03-05T10:00:00+01:00', 'confirmada')]);
+    const api = new ApiReservasEnMemoria([
+      reserva(1, 2, '2027-03-05T10:00:00+01:00', 'confirmada'),
+    ]);
     const { fixture } = await render(ListaReservas, {
       providers: [
-        { provide: ApiSalas, useValue: new ApiSalasEnMemoria([sala({ id: 1, nombre: 'Sala Norte' }), sala({ id: 2, nombre: 'Sala Sur' })]) },
+        {
+          provide: ApiSalas,
+          useValue: new ApiSalasEnMemoria([
+            sala({ id: 1, nombre: 'Sala Norte' }),
+            sala({ id: 2, nombre: 'Sala Sur' }),
+          ]),
+        },
         { provide: ApiReservas, useValue: api },
       ],
     });
@@ -134,7 +172,10 @@ describe('ListaReservas', () => {
     const otraVez = TestBed.createComponent(ListaReservas);
     await otraVez.whenStable();
 
-    expect(filas()).toEqual(['Sala Norte2027-03-04 10:0011:0060 min4ConfirmadaCancelar', 'Sala Sur2027-03-05 10:0011:0060 min4ConfirmadaCancelar']);
+    expect(filas()).toEqual([
+      'Sala Norte2027-03-04 10:0011:0060 min4ConfirmadaCancelar',
+      'Sala Sur2027-03-05 10:0011:0060 min4ConfirmadaCancelar',
+    ]);
   });
 
   describe('con el reloj falso', () => {
@@ -160,5 +201,8 @@ describe('ListaReservas', () => {
 });
 
 function salasEnLaTabla(): string[] {
-  return screen.getAllByRole('row').slice(1).map((fila) => fila.querySelector('td')!.textContent!.trim());
+  return screen
+    .getAllByRole('row')
+    .slice(1)
+    .map((fila) => fila.querySelector('td')!.textContent!.trim());
 }

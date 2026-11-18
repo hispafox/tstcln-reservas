@@ -12,8 +12,7 @@ final class RepositorioSalasDoctrine implements RepositorioSalas
 {
     public function __construct(
         private EntityManagerInterface $em,
-    ) {
-    }
+    ) {}
 
     public function conId(int $id): ?Sala
     {

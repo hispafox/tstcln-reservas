@@ -154,7 +154,7 @@ final class PenalizacionHeredadaTest extends WebTestCase
 
         $respuesta = self::cuerpo($cliente);
         unset($respuesta['id'], $respuesta['sala']);
-        self::assertJsonStringEqualsJsonFile(__DIR__.'/respuestas/reserva-creada.json', json_encode($respuesta));
+        self::assertJsonStringEqualsJsonFile(__DIR__ . '/respuestas/reserva-creada.json', json_encode($respuesta));
     }
 
     public function test_a_los_siete_dias_justos_de_la_tercera_tardia_ya_no_penaliza(): void
@@ -184,7 +184,7 @@ final class PenalizacionHeredadaTest extends WebTestCase
         $datos = $this->datos();
         $sala = $datos->sala('Sala Grande', capacidadMaxima: 20);
         foreach ($inicios as $inicio) {
-            $datos->reserva($sala, $inicio, $inicio.' +1 hour')->cancelarTarde();
+            $datos->reserva($sala, $inicio, $inicio . ' +1 hour')->cancelarTarde();
         }
         static::getContainer()->get(EntityManagerInterface::class)->flush();
 

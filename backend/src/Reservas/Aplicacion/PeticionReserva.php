@@ -14,6 +14,5 @@ final readonly class PeticionReserva
         public FranjaHoraria $franja,
         public string $persona,
         public Capacidad $asistentes,
-    ) {
-    }
+    ) {}
 }

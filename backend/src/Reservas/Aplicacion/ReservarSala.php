@@ -25,8 +25,7 @@ final class ReservarSala
         private NotificadorReservas $notificador,
         private ReglaDePenalizacion $penalizacion,
         private ReglaDeCapacidad $capacidad = new ReglaDeCapacidad(),
-    ) {
-    }
+    ) {}
 
     public function ejecutar(PeticionReserva $peticion): Reserva
     {

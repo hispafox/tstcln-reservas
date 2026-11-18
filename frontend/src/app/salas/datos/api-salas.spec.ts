@@ -12,7 +12,11 @@ describe('ApiSalas', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [provideHttpClient(), provideHttpClientTesting(), { provide: ApiSalas, useClass: ApiSalasHttp }],
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        { provide: ApiSalas, useClass: ApiSalasHttp },
+      ],
     });
     apiSalas = TestBed.inject(ApiSalas);
     centralita = TestBed.inject(HttpTestingController);

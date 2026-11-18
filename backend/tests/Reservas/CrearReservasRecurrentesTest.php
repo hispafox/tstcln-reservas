@@ -36,7 +36,7 @@ final class CrearReservasRecurrentesTest extends TestCase
         $notificador = $this->createMock(NotificadorReservas::class);
         $notificador->expects($this->once())
             ->method('serieConfirmada')
-            ->with($this->callback(fn (array $creadas) => count($creadas) === 3));
+            ->with($this->callback(fn(array $creadas) => count($creadas) === 3));
         $crear = new CrearReservasRecurrentes($this->salas, $reservas, $notificador, new ReglaDePenalizacion($reservas, new MockClock(new \DateTimeImmutable('2027-03-01 09:00'))));
 
         $resultado = $crear->ejecutar(

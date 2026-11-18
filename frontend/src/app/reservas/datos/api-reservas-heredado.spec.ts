@@ -22,7 +22,11 @@ describe('ApiReservas (heredada)', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [provideHttpClient(), provideHttpClientTesting(), { provide: ApiReservas, useClass: ApiReservasHttp }],
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        { provide: ApiReservas, useClass: ApiReservasHttp },
+      ],
     });
     api = TestBed.inject(ApiReservas);
     centralita = TestBed.inject(HttpTestingController);
@@ -40,10 +44,7 @@ describe('ApiReservas (heredada)', () => {
 
     centralita
       .expectOne('/reservas')
-      .flush(
-        { error: 'Ocupada' },
-        { status: 409, statusText: 'Conflict' },
-      );
+      .flush({ error: 'Ocupada' }, { status: 409, statusText: 'Conflict' });
   });
 
   // Segundo arreglo: la promesa, que no deja terminar la prueba sin comprobar.
@@ -52,10 +53,7 @@ describe('ApiReservas (heredada)', () => {
 
     centralita
       .expectOne('/reservas')
-      .flush(
-        { error: 'Ocupada' },
-        { status: 409, statusText: 'Conflict' },
-      );
+      .flush({ error: 'Ocupada' }, { status: 409, statusText: 'Conflict' });
 
     await expect(respuesta).rejects.toThrow(ReservaRechazadaError);
   });

@@ -18,7 +18,11 @@ export class ApiReservasEnMemoria implements ApiReservas {
   }
 
   deUnaPersona(persona: string): Observable<Reserva[]> {
-    return of(this.reservas.filter((r) => r.persona === persona).sort((a, b) => (a.inicio < b.inicio ? -1 : 1)));
+    return of(
+      this.reservas
+        .filter((r) => r.persona === persona)
+        .sort((a, b) => (a.inicio < b.inicio ? -1 : 1)),
+    );
   }
 
   cancelar(id: number): Observable<Reserva> {

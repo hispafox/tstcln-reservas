@@ -20,7 +20,7 @@ final class SalasController
     #[Route('/salas', methods: ['GET'])]
     public function listar(ListarSalas $listar): JsonResponse
     {
-        return new JsonResponse(array_map(fn (Sala $sala) => [
+        return new JsonResponse(array_map(fn(Sala $sala) => [
             'id' => $sala->id(),
             'nombre' => $sala->nombre(),
             'capacidadMaxima' => $sala->capacidadMaxima(),
@@ -40,7 +40,7 @@ final class SalasController
 
         $periodo = new FranjaHoraria($desde, $hasta->modify('+1 day'));
 
-        return new JsonResponse(array_map(fn (OcupacionSala $ocupacion) => [
+        return new JsonResponse(array_map(fn(OcupacionSala $ocupacion) => [
             'sala' => $ocupacion->sala,
             'nombre' => $ocupacion->nombre,
             'porcentaje' => $ocupacion->porcentaje,

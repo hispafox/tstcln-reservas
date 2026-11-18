@@ -14,8 +14,7 @@ final class CancelarReserva
     public function __construct(
         private RepositorioReservas $reservas,
         private ClockInterface $reloj,
-    ) {
-    }
+    ) {}
 
     public function ejecutar(int $id): Reserva
     {

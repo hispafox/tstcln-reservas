@@ -126,7 +126,9 @@ select {
   background: var(--color-superficie-suave);
   border: 2px solid var(--color-borde);
   border-radius: var(--radio-pequeno);
-  transition: border-color 0.15s, background-color 0.15s;
+  transition:
+    border-color 0.15s,
+    background-color 0.15s;
 }
 
 input:hover,
@@ -195,7 +197,9 @@ button {
   border: 0;
   border-radius: var(--radio-pequeno);
   cursor: pointer;
-  transition: background-color 0.15s, transform 0.05s;
+  transition:
+    background-color 0.15s,
+    transform 0.05s;
 }
 
 button:hover {

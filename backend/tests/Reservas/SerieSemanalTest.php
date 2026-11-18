@@ -29,7 +29,7 @@ final class SerieSemanalTest extends TestCase
     {
         $serie = new SerieSemanal(self::franja('2027-03-04 10:00', '2027-03-04 11:00'), new \DateTimeImmutable('2027-03-31'));
 
-        $inicios = array_map(fn (FranjaHoraria $franja) => $franja->inicio()->format('Y-m-d H:i'), $serie->franjas());
+        $inicios = array_map(fn(FranjaHoraria $franja) => $franja->inicio()->format('Y-m-d H:i'), $serie->franjas());
 
         self::assertSame(['2027-03-04 10:00', '2027-03-11 10:00', '2027-03-18 10:00', '2027-03-25 10:00'], $inicios);
     }
@@ -73,6 +73,6 @@ final class SerieSemanalTest extends TestCase
     /** @param FranjaHoraria[] $franjas */
     private static function dias(array $franjas): array
     {
-        return array_map(fn (FranjaHoraria $franja) => $franja->inicio()->format('Y-m-d'), $franjas);
+        return array_map(fn(FranjaHoraria $franja) => $franja->inicio()->format('Y-m-d'), $franjas);
     }
 }

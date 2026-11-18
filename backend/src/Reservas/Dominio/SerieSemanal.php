@@ -9,8 +9,7 @@ final class SerieSemanal
     public function __construct(
         private FranjaHoraria $primera,
         private \DateTimeImmutable $hasta,
-    ) {
-    }
+    ) {}
 
     /** @return FranjaHoraria[] */
     public function franjas(): array
@@ -36,7 +35,7 @@ final class SerieSemanal
         $descartadas = [];
 
         foreach ($this->franjas() as $franja) {
-            $choca = array_filter($ocupadas, fn (FranjaHoraria $ocupada) => $ocupada->seSolapaCon($franja));
+            $choca = array_filter($ocupadas, fn(FranjaHoraria $ocupada) => $ocupada->seSolapaCon($franja));
 
             if ($choca === []) {
                 $libres[] = $franja;

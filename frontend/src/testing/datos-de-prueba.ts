@@ -25,5 +25,13 @@ export function nombres(salas: Sala[]): string[] {
 
 /** Una reserva de Ana, de una hora, para cuatro personas. */
 export function reserva(id: number, sala: number, inicio: string, estado: EstadoReserva): Reserva {
-  return { id, sala, inicio, fin: inicio.replace('T10', 'T11').replace('T12', 'T13'), persona: 'Ana', asistentes: 4, estado };
+  return {
+    id,
+    sala,
+    inicio,
+    fin: inicio.replace('T10', 'T11').replace('T12', 'T13'),
+    persona: 'Ana',
+    asistentes: 4,
+    estado,
+  };
 }

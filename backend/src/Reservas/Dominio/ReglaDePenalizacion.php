@@ -11,8 +11,7 @@ final class ReglaDePenalizacion
     public function __construct(
         private RepositorioReservas $reservas,
         private ClockInterface $reloj,
-    ) {
-    }
+    ) {}
 
     public function penaliza(string $persona, Sala $sala): bool
     {

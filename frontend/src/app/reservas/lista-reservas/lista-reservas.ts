@@ -25,7 +25,9 @@ export class ListaReservas implements OnInit {
 
   persona = 'Ana';
 
-  protected readonly filas = computed(() => this.estado.reservas().map((reserva) => this.paraLaTabla(reserva)));
+  protected readonly filas = computed(() =>
+    this.estado.reservas().map((reserva) => this.paraLaTabla(reserva)),
+  );
   protected readonly soloConfirmadas = signal(true);
   protected readonly orden = signal('fecha');
 
@@ -40,7 +42,9 @@ export class ListaReservas implements OnInit {
   }
 
   private refrescarCadaMinuto() {
-    interval(60_000).pipe(takeUntilDestroyed(this.destruccion)).subscribe(() => this.cargar());
+    interval(60_000)
+      .pipe(takeUntilDestroyed(this.destruccion))
+      .subscribe(() => this.cargar());
   }
 
   cargar() {

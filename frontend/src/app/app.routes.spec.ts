@@ -13,7 +13,10 @@ describe('Las rutas de la aplicación', () => {
     TestBed.configureTestingModule({
       providers: [
         provideRouter(routes, withComponentInputBinding()),
-        { provide: ApiSalas, useValue: new ApiSalasEnMemoria([sala({ id: 3, nombre: 'Sala Este' })]) },
+        {
+          provide: ApiSalas,
+          useValue: new ApiSalasEnMemoria([sala({ id: 3, nombre: 'Sala Este' })]),
+        },
         { provide: ApiReservas, useValue: new ApiReservasEnMemoria() },
       ],
     });

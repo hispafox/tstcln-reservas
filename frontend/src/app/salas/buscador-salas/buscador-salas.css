@@ -18,7 +18,9 @@ li {
   border-radius: var(--radio);
   box-shadow: var(--sombra);
   overflow: hidden;
-  transition: transform 0.15s, box-shadow 0.15s;
+  transition:
+    transform 0.15s,
+    box-shadow 0.15s;
 }
 
 li::before {

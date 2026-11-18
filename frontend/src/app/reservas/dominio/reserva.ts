@@ -30,7 +30,10 @@ export interface Reserva {
 }
 
 export function estaPendiente(reserva: Reserva, ahora: Date): boolean {
-  return reserva.estado === 'confirmada' && !FranjaHoraria.desde(reserva.inicio, reserva.fin).haEmpezado(ahora);
+  return (
+    reserva.estado === 'confirmada' &&
+    !FranjaHoraria.desde(reserva.inicio, reserva.fin).haEmpezado(ahora)
+  );
 }
 
 export interface PeticionReserva {

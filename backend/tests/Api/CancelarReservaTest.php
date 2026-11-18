@@ -19,7 +19,7 @@ final class CancelarReservaTest extends WebTestCase
         $datos = new FabricaDeDatos(static::getContainer()->get(EntityManagerInterface::class));
         $reserva = $datos->reserva($datos->sala(), 'tomorrow 10:00', 'tomorrow 11:00');
 
-        $cliente->request('DELETE', '/reservas/'.$reserva->id());
+        $cliente->request('DELETE', '/reservas/' . $reserva->id());
 
         self::assertResponseIsSuccessful();
         $respuesta = json_decode($cliente->getResponse()->getContent(), true);
@@ -33,7 +33,7 @@ final class CancelarReservaTest extends WebTestCase
         $datos = new FabricaDeDatos(static::getContainer()->get(EntityManagerInterface::class));
         $reserva = $datos->reserva($datos->sala(), '2027-03-04 10:00', '2027-03-04 11:00');
 
-        $cliente->request('DELETE', '/reservas/'.$reserva->id());
+        $cliente->request('DELETE', '/reservas/' . $reserva->id());
 
         $respuesta = json_decode($cliente->getResponse()->getContent(), true);
         self::assertSame('cancelada_a_tiempo', $respuesta['estado']);
@@ -54,7 +54,7 @@ final class CancelarReservaTest extends WebTestCase
         $datos = new FabricaDeDatos(static::getContainer()->get(EntityManagerInterface::class));
         $reserva = $datos->reserva($datos->sala(), 'tomorrow 10:00', 'tomorrow 11:00');
 
-        $cliente->request('DELETE', '/reservas/'.$reserva->id());
+        $cliente->request('DELETE', '/reservas/' . $reserva->id());
 
         self::assertResponseHeaderSame('content-type', 'application/json');
     }

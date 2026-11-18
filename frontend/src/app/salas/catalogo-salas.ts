@@ -9,8 +9,6 @@ export class CatalogoSalas {
   private readonly api = inject(ApiSalas);
 
   disponibles(criterio: CriterioBusqueda): Observable<Sala[]> {
-    return this.api
-      .listar()
-      .pipe(map((salas) => filtrarSalasDisponibles(salas, criterio)));
+    return this.api.listar().pipe(map((salas) => filtrarSalasDisponibles(salas, criterio)));
   }
 }

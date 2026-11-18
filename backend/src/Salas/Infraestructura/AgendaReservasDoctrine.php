@@ -14,8 +14,7 @@ final class AgendaReservasDoctrine implements AgendaReservas
 {
     public function __construct(
         private EntityManagerInterface $em,
-    ) {
-    }
+    ) {}
 
     public function franjasConfirmadas(Sala $sala, FranjaHoraria $periodo): array
     {
@@ -33,6 +32,6 @@ final class AgendaReservasDoctrine implements AgendaReservas
             ->getQuery()
             ->getResult();
 
-        return array_map(fn (Reserva $reserva) => $reserva->franja(), $reservas);
+        return array_map(fn(Reserva $reserva) => $reserva->franja(), $reservas);
     }
 }

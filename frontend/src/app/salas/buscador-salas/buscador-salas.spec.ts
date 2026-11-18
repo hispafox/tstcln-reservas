@@ -7,8 +7,13 @@ import { BuscadorSalas } from './buscador-salas';
 
 describe('BuscadorSalas', () => {
   it('enseña solo las salas donde caben los asistentes que se buscan', async () => {
-    const salas = [sala({ nombre: 'Norte', capacidadMaxima: 4 }), sala({ nombre: 'Sur', capacidadMaxima: 10 })];
-    const { fixture } = await render(BuscadorSalas, { providers: [{ provide: ApiSalas, useValue: new ApiSalasEnMemoria(salas) }] });
+    const salas = [
+      sala({ nombre: 'Norte', capacidadMaxima: 4 }),
+      sala({ nombre: 'Sur', capacidadMaxima: 10 }),
+    ];
+    const { fixture } = await render(BuscadorSalas, {
+      providers: [{ provide: ApiSalas, useValue: new ApiSalasEnMemoria(salas) }],
+    });
     const usuario = userEvent.setup();
 
     await usuario.clear(screen.getByLabelText('Asistentes'));
@@ -16,6 +21,8 @@ describe('BuscadorSalas', () => {
     await usuario.click(screen.getByRole('button', { name: 'Buscar' }));
     await fixture.whenStable();
 
-    expect(screen.getAllByRole('heading', { level: 2 }).map((titulo) => titulo.textContent)).toEqual(['Sur']);
+    expect(
+      screen.getAllByRole('heading', { level: 2 }).map((titulo) => titulo.textContent),
+    ).toEqual(['Sur']);
   });
 });

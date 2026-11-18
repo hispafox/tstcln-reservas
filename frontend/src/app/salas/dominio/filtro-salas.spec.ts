@@ -8,29 +8,33 @@ describe('filtrarSalasDisponibles', () => {
   const salas = [norte, sur, auditorio];
 
   it('deja fuera las salas donde no entran los asistentes', () => {
-    expect(nombres(filtrarSalasDisponibles(
-      salas, { asistentes: 8, equipamiento: [] },
-    )))
-      .toEqual(['Sur']);
+    expect(nombres(filtrarSalasDisponibles(salas, { asistentes: 8, equipamiento: [] }))).toEqual([
+      'Sur',
+    ]);
   });
 
   it('deja fuera las salas que exigen más asistentes de los que vienen', () => {
-    expect(nombres(filtrarSalasDisponibles(salas, { asistentes: 10, equipamiento: [] })))
-      .toEqual(['Sur']);
+    expect(nombres(filtrarSalasDisponibles(salas, { asistentes: 10, equipamiento: [] }))).toEqual([
+      'Sur',
+    ]);
   });
 
   it('admite el número exacto de la capacidad máxima', () => {
-    expect(nombres(filtrarSalasDisponibles(salas, { asistentes: 4, equipamiento: [] })))
-      .toEqual(['Norte', 'Sur']);
+    expect(nombres(filtrarSalasDisponibles(salas, { asistentes: 4, equipamiento: [] }))).toEqual([
+      'Norte',
+      'Sur',
+    ]);
   });
 
   it('admite el número exacto de la capacidad mínima', () => {
-    expect(nombres(filtrarSalasDisponibles(salas, { asistentes: 12, equipamiento: [] })))
-      .toEqual(['Auditorio']);
+    expect(nombres(filtrarSalasDisponibles(salas, { asistentes: 12, equipamiento: [] }))).toEqual([
+      'Auditorio',
+    ]);
   });
 
   it('exige todo el equipamiento pedido', () => {
-    expect(nombres(filtrarSalasDisponibles(salas, { asistentes: 2, equipamiento: ['pantalla'] })))
-      .toEqual(['Sur']);
+    expect(
+      nombres(filtrarSalasDisponibles(salas, { asistentes: 2, equipamiento: ['pantalla'] })),
+    ).toEqual(['Sur']);
   });
 });

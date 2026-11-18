@@ -11,11 +11,7 @@ export class BusquedaDeSalas {
   readonly resultados = this.texto.pipe(
     debounceTime(300),
     distinctUntilChanged(),
-    switchMap((texto) =>
-      this.api.listar().pipe(
-        map((salas) => conNombre(salas, texto)),
-      ),
-    ),
+    switchMap((texto) => this.api.listar().pipe(map((salas) => conNombre(salas, texto)))),
   );
 
   escribir(texto: string): void {

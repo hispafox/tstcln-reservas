@@ -7,7 +7,8 @@ header {
   align-items: center;
   justify-content: space-between;
   gap: var(--espacio-4);
-  padding: var(--espacio-4) max(var(--espacio-5), calc((100% - var(--ancho-contenido)) / 2 + var(--espacio-5)));
+  padding: var(--espacio-4)
+    max(var(--espacio-5), calc((100% - var(--ancho-contenido)) / 2 + var(--espacio-5)));
   background: var(--color-marca-oscuro);
   box-shadow: 0 4px 16px rgb(27 35 51 / 20%);
 }
@@ -29,8 +30,7 @@ header {
   height: 1.6rem;
   border-radius: 6px;
   background:
-    linear-gradient(135deg, transparent 50%, rgb(255 255 255 / 35%) 50%),
-    var(--color-acento);
+    linear-gradient(135deg, transparent 50%, rgb(255 255 255 / 35%) 50%), var(--color-acento);
 }
 
 nav {
@@ -45,7 +45,9 @@ nav a {
   color: rgb(255 255 255 / 80%);
   text-decoration: none;
   border-radius: 999px;
-  transition: background-color 0.15s, color 0.15s;
+  transition:
+    background-color 0.15s,
+    color 0.15s;
 }
 
 nav a:hover {

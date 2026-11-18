@@ -27,9 +27,7 @@ describe('FormularioReserva', () => {
       providers: [{ provide: ApiReservas, useValue: { crear: vi.fn() } }],
     });
 
-    expect(
-      screen.getByRole('button', { name: 'Reservar' }),
-    ).toHaveProperty('disabled', true);
+    expect(screen.getByRole('button', { name: 'Reservar' })).toHaveProperty('disabled', true);
   });
 
   it('desactiva el botón mientras falten datos, montado con TestBed a mano', async () => {
@@ -45,24 +43,31 @@ describe('FormularioReserva', () => {
   });
 
   it('desactiva el botón si la hora de fin es anterior a la de inicio', async () => {
-    TestBed.configureTestingModule({ providers: [{ provide: ApiReservas, useValue: { crear: vi.fn() } }] });
+    TestBed.configureTestingModule({
+      providers: [{ provide: ApiReservas, useValue: { crear: vi.fn() } }],
+    });
     const fixture = TestBed.createComponent(FormularioReserva);
     fixture.componentRef.setInput('sala', salaNorte);
-    const formulario = await TestbedHarnessEnvironment.harnessForFixture(fixture, FormularioReservaHarness);
+    const formulario = await TestbedHarnessEnvironment.harnessForFixture(
+      fixture,
+      FormularioReservaHarness,
+    );
 
-    await formulario.rellenar({ persona: 'Ana', inicio: '2027-03-04T11:00', fin: '2027-03-04T10:00' });
+    await formulario.rellenar({
+      persona: 'Ana',
+      inicio: '2027-03-04T11:00',
+      fin: '2027-03-04T10:00',
+    });
 
     expect(await formulario.puedeReservar()).toBe(false);
-    expect(await formulario.mensajes()).toContain('La hora de fin tiene que ser posterior a la de inicio');
+    expect(await formulario.mensajes()).toContain(
+      'La hora de fin tiene que ser posterior a la de inicio',
+    );
   });
 
   it('enseña el motivo si la API rechaza la reserva', async () => {
     const crear = vi.fn(() =>
-      throwError(() =>
-        new ReservaRechazadaError(
-          'La sala ya está reservada en esa franja',
-        ),
-      ),
+      throwError(() => new ReservaRechazadaError('La sala ya está reservada en esa franja')),
     );
     await render(FormularioReserva, {
       inputs: { sala: salaNorte },
@@ -79,9 +84,7 @@ describe('FormularioReserva', () => {
     });
     await usuario.click(screen.getByRole('button', { name: 'Reservar' }));
 
-    expect(
-      await screen.findByText('La sala ya está reservada en esa franja'),
-    ).toBeTruthy();
+    expect(await screen.findByText('La sala ya está reservada en esa franja')).toBeTruthy();
   });
 
   it('enseña el mensaje general si la reserva falla por otro motivo', async () => {
@@ -93,8 +96,12 @@ describe('FormularioReserva', () => {
     const usuario = userEvent.setup();
 
     await usuario.type(screen.getByLabelText('Persona'), 'Ana');
-    fireEvent.input(screen.getByLabelText('Hora de inicio'), { target: { value: '2027-03-04T10:00' } });
-    fireEvent.input(screen.getByLabelText('Hora de fin'), { target: { value: '2027-03-04T11:00' } });
+    fireEvent.input(screen.getByLabelText('Hora de inicio'), {
+      target: { value: '2027-03-04T10:00' },
+    });
+    fireEvent.input(screen.getByLabelText('Hora de fin'), {
+      target: { value: '2027-03-04T11:00' },
+    });
     await usuario.click(screen.getByRole('button', { name: 'Reservar' }));
 
     expect(await screen.findByText('No se ha podido hacer la reserva')).toBeTruthy();
@@ -113,8 +120,12 @@ describe('FormularioReserva', () => {
     });
     const usuario = userEvent.setup();
     await usuario.type(screen.getByLabelText('Persona'), 'Ana');
-    fireEvent.input(screen.getByLabelText('Hora de inicio'), { target: { value: '2027-03-04T10:00' } });
-    fireEvent.input(screen.getByLabelText('Hora de fin'), { target: { value: '2027-03-04T11:00' } });
+    fireEvent.input(screen.getByLabelText('Hora de inicio'), {
+      target: { value: '2027-03-04T10:00' },
+    });
+    fireEvent.input(screen.getByLabelText('Hora de fin'), {
+      target: { value: '2027-03-04T11:00' },
+    });
     await usuario.click(screen.getByRole('button', { name: 'Reservar' }));
     await screen.findByText('La sala ya está reservada en esa franja');
 
@@ -130,14 +141,16 @@ describe('FormularioReserva', () => {
       providers: [{ provide: ApiReservas, useValue: { crear } }],
     });
     const emitidas: Reserva[] = [];
-    fixture.componentInstance.reservaCreada.subscribe((reserva) =>
-      emitidas.push(reserva),
-    );
+    fixture.componentInstance.reservaCreada.subscribe((reserva) => emitidas.push(reserva));
     const usuario = userEvent.setup();
 
     await usuario.type(screen.getByLabelText('Persona'), 'Ana');
-    fireEvent.input(screen.getByLabelText('Hora de inicio'), { target: { value: '2027-03-04T10:00' } });
-    fireEvent.input(screen.getByLabelText('Hora de fin'), { target: { value: '2027-03-04T11:00' } });
+    fireEvent.input(screen.getByLabelText('Hora de inicio'), {
+      target: { value: '2027-03-04T10:00' },
+    });
+    fireEvent.input(screen.getByLabelText('Hora de fin'), {
+      target: { value: '2027-03-04T11:00' },
+    });
     await usuario.click(screen.getByRole('button', { name: 'Reservar' }));
 
     expect(emitidas).toEqual([reservaCreada]);

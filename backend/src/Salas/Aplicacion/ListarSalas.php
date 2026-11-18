@@ -11,8 +11,7 @@ final class ListarSalas
 {
     public function __construct(
         private CatalogoSalas $catalogo,
-    ) {
-    }
+    ) {}
 
     /**
      * @return list<Sala>

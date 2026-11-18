@@ -66,8 +66,8 @@ final class ReservasController
         $resultado = $crear->ejecutar(self::peticionDe($cuerpo, $lector), $lector->leer($cuerpo['hasta']));
 
         return new JsonResponse([
-            'creadas' => array_map(fn (FranjaHoraria $franja) => $franja->inicio()->format('Y-m-d'), $resultado->libres()),
-            'descartadas' => array_map(fn (FranjaHoraria $franja) => $franja->inicio()->format('Y-m-d'), $resultado->descartadas()),
+            'creadas' => array_map(fn(FranjaHoraria $franja) => $franja->inicio()->format('Y-m-d'), $resultado->libres()),
+            'descartadas' => array_map(fn(FranjaHoraria $franja) => $franja->inicio()->format('Y-m-d'), $resultado->descartadas()),
         ], 201);
     }
 
@@ -87,7 +87,7 @@ final class ReservasController
             throw new DatoNoValido('La persona y las fechas tienen que ser textos');
         }
 
-        $fecha = fn (string $texto) => $lector?->leer($texto) ?? new \DateTimeImmutable($texto);
+        $fecha = fn(string $texto) => $lector?->leer($texto) ?? new \DateTimeImmutable($texto);
 
         return new PeticionReserva(
             $cuerpo['sala'],

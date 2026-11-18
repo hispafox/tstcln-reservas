@@ -37,77 +37,110 @@ module.exports = defineConfig([
   },
   {
     files: ['**/*.html'],
-    extends: [
-      angular.configs.templateRecommended,
-      angular.configs.templateAccessibility,
-    ],
+    extends: [angular.configs.templateRecommended, angular.configs.templateAccessibility],
     rules: {},
   },
   {
     files: ['src/app/salas/**/*.ts'],
     rules: {
-      'no-restricted-imports': ['error', {
-        patterns: [{
-          group: ['**/reservas/**', '**/ocupacion/**'],
-          message: 'Desde salas, de otra funcionalidad solo se importa su index.ts.',
-        }],
-      }],
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['**/reservas/**', '**/ocupacion/**'],
+              message: 'Desde salas, de otra funcionalidad solo se importa su index.ts.',
+            },
+          ],
+        },
+      ],
     },
   },
   {
     files: ['src/app/reservas/**/*.ts'],
     rules: {
-      'no-restricted-imports': ['error', {
-        patterns: [{
-          group: ['**/salas/**', '**/ocupacion/**'],
-          message: 'Desde reservas, de otra funcionalidad solo se importa su index.ts.',
-        }],
-      }],
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['**/salas/**', '**/ocupacion/**'],
+              message: 'Desde reservas, de otra funcionalidad solo se importa su index.ts.',
+            },
+          ],
+        },
+      ],
     },
   },
   {
     files: ['src/app/ocupacion/**/*.ts'],
     rules: {
-      'no-restricted-imports': ['error', {
-        patterns: [{
-          group: ['**/salas/**', '**/reservas/**'],
-          message: 'Desde ocupación, de otra funcionalidad solo se importa su index.ts.',
-        }],
-      }],
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['**/salas/**', '**/reservas/**'],
+              message: 'Desde ocupación, de otra funcionalidad solo se importa su index.ts.',
+            },
+          ],
+        },
+      ],
     },
   },
   {
     files: ['src/app/compartido/**/*.ts'],
     rules: {
-      'no-restricted-imports': ['error', {
-        patterns: [{
-          group: ['**/salas', '**/salas/**', '**/reservas', '**/reservas/**', '**/ocupacion', '**/ocupacion/**'],
-          message: 'Lo compartido no importa nada de ninguna funcionalidad.',
-        }],
-      }],
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: [
+                '**/salas',
+                '**/salas/**',
+                '**/reservas',
+                '**/reservas/**',
+                '**/ocupacion',
+                '**/ocupacion/**',
+              ],
+              message: 'Lo compartido no importa nada de ninguna funcionalidad.',
+            },
+          ],
+        },
+      ],
     },
   },
   {
     files: ['src/app/*/dominio/**/*.ts'],
     rules: {
-      'no-restricted-imports': ['error', {
-        patterns: [{
-          group: ['@angular/*', 'rxjs', 'rxjs/*'],
-          message: 'El dominio es TypeScript sin Angular: aquí no entran Angular ni RxJS.',
-        }],
-      }],
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['@angular/*', 'rxjs', 'rxjs/*'],
+              message: 'El dominio es TypeScript sin Angular: aquí no entran Angular ni RxJS.',
+            },
+          ],
+        },
+      ],
     },
   },
   {
     files: ['src/app/*/dominio/**/*.ts'],
     rules: {
-      'no-restricted-syntax': ['error', {
-        selector: "NewExpression[callee.name='Date'][arguments.length=0]",
-        message: 'El dominio no lee la hora: la recibe como parámetro.',
-      }, {
-        selector: "CallExpression[callee.object.name='Date'][callee.property.name='now']",
-        message: 'El dominio no lee la hora: la recibe como parámetro.',
-      }],
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: "NewExpression[callee.name='Date'][arguments.length=0]",
+          message: 'El dominio no lee la hora: la recibe como parámetro.',
+        },
+        {
+          selector: "CallExpression[callee.object.name='Date'][callee.property.name='now']",
+          message: 'El dominio no lee la hora: la recibe como parámetro.',
+        },
+      ],
     },
   },
   // Las reglas recomendadas que el código de hoy aún no cumple, de error a aviso.

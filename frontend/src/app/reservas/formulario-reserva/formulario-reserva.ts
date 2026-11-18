@@ -1,11 +1,6 @@
 import { Component, computed, inject, input, output, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import {
-  FormControl,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Sala, admite } from '../../salas';
 import { ApiReservas } from '../datos/api-reservas';
 import { duracionEnMinutos, textoDeDuracion } from '../dominio/duracion';
@@ -70,7 +65,11 @@ export class FormularioReserva {
     this.api.crear({ sala: this.sala().id, ...this.formulario.getRawValue() }).subscribe({
       next: (reserva) => this.reservaCreada.emit(reserva),
       error: (error) =>
-        this.error.set(error instanceof ReservaRechazadaError ? error.message : 'No se ha podido hacer la reserva'),
+        this.error.set(
+          error instanceof ReservaRechazadaError
+            ? error.message
+            : 'No se ha podido hacer la reserva',
+        ),
     });
   }
 }

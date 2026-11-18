@@ -14,8 +14,7 @@ final class FabricaDeDatos
 {
     public function __construct(
         private EntityManagerInterface $entityManager,
-    ) {
-    }
+    ) {}
 
     public function sala(string $nombre = 'Sala Norte', int $capacidadMaxima = 10): Sala
     {

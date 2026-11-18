@@ -16,8 +16,7 @@ final class NotificadorReservasPorCorreo implements NotificadorReservas
 
     public function __construct(
         private MailerInterface $correo,
-    ) {
-    }
+    ) {}
 
     public function reservaConfirmada(Reserva $reserva): void
     {
@@ -26,7 +25,7 @@ final class NotificadorReservasPorCorreo implements NotificadorReservas
         $this->correo->send((new Email())
             ->from(self::REMITENTE)
             ->to(self::DESTINATARIO)
-            ->subject('Reserva confirmada: '.$reserva->sala()->nombre())
+            ->subject('Reserva confirmada: ' . $reserva->sala()->nombre())
             ->text(sprintf(
                 "%s, de %s a %s, a nombre de %s, para %d asistentes.",
                 $reserva->sala()->nombre(),
@@ -42,14 +41,14 @@ final class NotificadorReservasPorCorreo implements NotificadorReservas
     {
         $primera = $reservas[0];
         $fechas = array_map(
-            fn (Reserva $reserva) => $reserva->franja()->inicio()->format('d/m/Y'),
+            fn(Reserva $reserva) => $reserva->franja()->inicio()->format('d/m/Y'),
             $reservas,
         );
 
         $this->correo->send((new Email())
             ->from(self::REMITENTE)
             ->to(self::DESTINATARIO)
-            ->subject('Reserva semanal confirmada: '.$primera->sala()->nombre())
+            ->subject('Reserva semanal confirmada: ' . $primera->sala()->nombre())
             ->text(sprintf(
                 "%s, de %s a %s, a nombre de %s, para %d asistentes, los días %s.",
                 $primera->sala()->nombre(),

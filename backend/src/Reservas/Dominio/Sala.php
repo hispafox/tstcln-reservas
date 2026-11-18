@@ -15,8 +15,7 @@ class Sala
         private int $capacidadMaxima,
         private ?int $capacidadMinima = null,
         private array $equipamiento = [],
-    ) {
-    }
+    ) {}
 
     public function id(): ?int
     {

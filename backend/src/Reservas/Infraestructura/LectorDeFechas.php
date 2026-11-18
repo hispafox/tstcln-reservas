@@ -8,8 +8,7 @@ final class LectorDeFechas
 {
     public function __construct(
         private \DateTimeZone $zona,
-    ) {
-    }
+    ) {}
 
     public function leer(string $texto): \DateTimeImmutable
     {

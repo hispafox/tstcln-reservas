@@ -24,10 +24,14 @@ describe('FranjaHoraria', () => {
   });
 
   it('se solapa con otra que empieza antes de que ella acabe', () => {
-    expect(deDiezAOnce.seSolapaCon(FranjaHoraria.desde('2027-03-04T10:59', '2027-03-04T12:00'))).toBe(true);
+    expect(
+      deDiezAOnce.seSolapaCon(FranjaHoraria.desde('2027-03-04T10:59', '2027-03-04T12:00')),
+    ).toBe(true);
   });
 
   it('no se solapa con otra que empieza justo cuando ella acaba', () => {
-    expect(deDiezAOnce.seSolapaCon(FranjaHoraria.desde('2027-03-04T11:00', '2027-03-04T12:00'))).toBe(false);
+    expect(
+      deDiezAOnce.seSolapaCon(FranjaHoraria.desde('2027-03-04T11:00', '2027-03-04T12:00')),
+    ).toBe(false);
   });
 });

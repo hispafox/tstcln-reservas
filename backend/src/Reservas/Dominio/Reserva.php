@@ -14,8 +14,7 @@ class Reserva
         private FranjaHoraria $franja,
         private string $persona,
         private Capacidad $asistentes,
-    ) {
-    }
+    ) {}
 
     public function id(): ?int
     {

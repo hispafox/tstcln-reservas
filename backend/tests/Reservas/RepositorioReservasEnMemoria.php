@@ -39,7 +39,7 @@ final class RepositorioReservasEnMemoria implements RepositorioReservas
     {
         return array_values(array_filter(
             $this->reservas,
-            fn (Reserva $reserva) => $reserva->sala() === $sala && $reserva->estado() === EstadoReserva::Confirmada,
+            fn(Reserva $reserva) => $reserva->sala() === $sala && $reserva->estado() === EstadoReserva::Confirmada,
         ));
     }
 
@@ -47,11 +47,11 @@ final class RepositorioReservasEnMemoria implements RepositorioReservas
     {
         $tardias = array_values(array_filter(
             $this->reservas,
-            fn (Reserva $reserva) => $reserva->persona() === $persona
+            fn(Reserva $reserva) => $reserva->persona() === $persona
                 && $reserva->estado() === EstadoReserva::CanceladaTarde
                 && $reserva->franja()->inicio() > $desde,
         ));
-        usort($tardias, fn (Reserva $una, Reserva $otra) => $otra->franja()->inicio() <=> $una->franja()->inicio());
+        usort($tardias, fn(Reserva $una, Reserva $otra) => $otra->franja()->inicio() <=> $una->franja()->inicio());
 
         return $tardias;
     }

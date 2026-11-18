@@ -75,7 +75,7 @@ final class ReglaDePenalizacionTest extends TestCase
         foreach ($inicios as $inicio) {
             $reserva = new Reserva(
                 $this->salaGrande,
-                new FranjaHoraria(new \DateTimeImmutable($inicio), new \DateTimeImmutable($inicio.' +1 hour')),
+                new FranjaHoraria(new \DateTimeImmutable($inicio), new \DateTimeImmutable($inicio . ' +1 hour')),
                 'Ana',
                 new Capacidad(4),
             );

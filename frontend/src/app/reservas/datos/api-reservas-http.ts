@@ -51,14 +51,10 @@ function aReserva(json: ReservaJson): Reserva {
 
 function traducir(error: HttpErrorResponse): unknown {
   if (error.status === 409) {
-    return new ReservaRechazadaError(
-      error.error?.error ?? 'La reserva no se ha podido hacer',
-    );
+    return new ReservaRechazadaError(error.error?.error ?? 'La reserva no se ha podido hacer');
   }
   if (error.status === 400) {
-    return new DatosNoValidosError(
-      error.error?.error ?? 'Los datos de la reserva no son válidos',
-    );
+    return new DatosNoValidosError(error.error?.error ?? 'Los datos de la reserva no son válidos');
   }
   if (error.status === 0) return new SinConexionError();
   return error;
