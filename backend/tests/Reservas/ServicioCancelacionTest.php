@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Tests\Reservas;
 
-use App\Reservas\Capacidad;
-use App\Reservas\FranjaHoraria;
-use App\Reservas\Reserva;
-use App\Reservas\Sala;
-use App\Reservas\ServicioCancelacion;
+use App\Reservas\Aplicacion\ServicioCancelacion;
+use App\Reservas\Dominio\Capacidad;
+use App\Reservas\Dominio\FranjaHoraria;
+use App\Reservas\Dominio\Reserva;
+use App\Reservas\Dominio\Sala;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Clock\MockClock;

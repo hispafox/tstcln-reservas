@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tests\Reservas;
 
-use App\Reservas\FranjaHoraria;
-use App\Reservas\LectorDeFechas;
-use App\Reservas\SerieSemanal;
+use App\Reservas\Dominio\FranjaHoraria;
+use App\Reservas\Dominio\SerieSemanal;
+use App\Reservas\Infraestructura\LectorDeFechas;
 use PHPUnit\Framework\TestCase;
 
 final class SerieSemanalTest extends TestCase

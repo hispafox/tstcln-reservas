@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Reservas;
 
-use App\Reservas\LectorDeFechas;
+use App\Reservas\Infraestructura\LectorDeFechas;
 use PHPUnit\Framework\TestCase;
 
 final class LectorDeFechasTest extends TestCase

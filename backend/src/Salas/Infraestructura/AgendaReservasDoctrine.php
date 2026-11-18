@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Salas\Infraestructura;
 
-use App\Reservas\FranjaHoraria;
-use App\Reservas\Reserva;
-use App\Reservas\Sala;
+use App\Reservas\Dominio\FranjaHoraria;
+use App\Reservas\Dominio\Reserva;
+use App\Reservas\Dominio\Sala;
 use App\Salas\Dominio\AgendaReservas;
 use Doctrine\ORM\EntityManagerInterface;
 

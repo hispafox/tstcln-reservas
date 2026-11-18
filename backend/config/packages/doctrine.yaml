@@ -2,7 +2,7 @@ doctrine:
     dbal:
         url: '%env(resolve:DATABASE_URL)%'
         types:
-            capacidad: App\Reservas\Doctrine\TipoCapacidad
+            capacidad: App\Reservas\Infraestructura\Doctrine\TipoCapacidad
         profiling_collect_backtrace: '%kernel.debug%'
     orm:
         validate_xml_mapping: true
@@ -13,7 +13,7 @@ doctrine:
                 type: xml
                 is_bundle: false
                 dir: '%kernel.project_dir%/config/doctrine'
-                prefix: 'App\Reservas'
+                prefix: 'App\Reservas\Dominio'
 
 when@prod:
     doctrine:

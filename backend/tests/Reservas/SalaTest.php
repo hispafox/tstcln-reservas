@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Reservas;
 
-use App\Reservas\Sala;
+use App\Reservas\Dominio\Sala;
 use PHPUnit\Framework\TestCase;
 
 final class SalaTest extends TestCase

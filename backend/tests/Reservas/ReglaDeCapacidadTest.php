@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Tests\Reservas;
 
-use App\Reservas\Capacidad;
-use App\Reservas\FranjaHoraria;
-use App\Reservas\ReglaDeCapacidad;
-use App\Reservas\Sala;
+use App\Reservas\Dominio\Capacidad;
+use App\Reservas\Dominio\FranjaHoraria;
+use App\Reservas\Dominio\ReglaDeCapacidad;
+use App\Reservas\Dominio\Sala;
 use PHPUnit\Framework\TestCase;
 
 final class ReglaDeCapacidadTest extends TestCase

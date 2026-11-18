@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Reservas;
 
-use App\Reservas\FranjaHoraria;
-use App\Reservas\HorarioLaborable;
+use App\Reservas\Dominio\FranjaHoraria;
+use App\Reservas\Dominio\HorarioLaborable;
 use PHPUnit\Framework\TestCase;
 
 final class HorarioLaborableTest extends TestCase

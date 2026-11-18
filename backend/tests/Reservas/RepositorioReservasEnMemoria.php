@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Tests\Reservas;
 
-use App\Reservas\EstadoReserva;
-use App\Reservas\RepositorioReservas;
-use App\Reservas\Reserva;
-use App\Reservas\Sala;
+use App\Reservas\Dominio\EstadoReserva;
+use App\Reservas\Dominio\RepositorioReservas;
+use App\Reservas\Dominio\Reserva;
+use App\Reservas\Dominio\Sala;
 
 final class RepositorioReservasEnMemoria implements RepositorioReservas
 {

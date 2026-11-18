@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Integracion;
 
-use App\Reservas\ServicioCancelacion;
+use App\Reservas\Aplicacion\ServicioCancelacion;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 final class ContenedorTest extends KernelTestCase

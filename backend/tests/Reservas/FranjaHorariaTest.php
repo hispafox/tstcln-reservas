@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Reservas;
 
-use App\Reservas\FranjaHoraria;
+use App\Reservas\Dominio\FranjaHoraria;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 

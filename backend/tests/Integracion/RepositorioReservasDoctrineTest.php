@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Integracion;
 
-use App\Reservas\RepositorioReservas;
+use App\Reservas\Dominio\RepositorioReservas;
 use App\Tests\FabricaDeDatos;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;

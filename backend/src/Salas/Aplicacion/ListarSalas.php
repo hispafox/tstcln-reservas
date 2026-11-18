@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Salas\Aplicacion;
 
-use App\Reservas\Sala;
+use App\Reservas\Dominio\Sala;
 use App\Salas\Dominio\CatalogoSalas;
 
 final class ListarSalas

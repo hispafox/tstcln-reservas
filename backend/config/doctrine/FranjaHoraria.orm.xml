@@ -2,7 +2,7 @@
 <doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                   xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
-    <embeddable name="App\Reservas\FranjaHoraria">
+    <embeddable name="App\Reservas\Dominio\FranjaHoraria">
         <field name="inicio" type="datetime_immutable"/>
         <field name="fin" type="datetime_immutable"/>
     </embeddable>

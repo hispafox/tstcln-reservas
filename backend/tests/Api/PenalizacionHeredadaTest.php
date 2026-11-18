@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Api;
 
-use App\Reservas\Sala;
+use App\Reservas\Dominio\Sala;
 use App\Tests\FabricaDeDatos;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;

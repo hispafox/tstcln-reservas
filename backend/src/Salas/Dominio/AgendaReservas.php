@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Salas\Dominio;
 
-use App\Reservas\FranjaHoraria;
-use App\Reservas\Sala;
+use App\Reservas\Dominio\FranjaHoraria;
+use App\Reservas\Dominio\Sala;
 
 interface AgendaReservas
 {

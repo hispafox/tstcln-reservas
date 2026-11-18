@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace App\Tests\Reservas;
 
-use App\Reservas\Capacidad;
-use App\Reservas\FranjaHoraria;
-use App\Reservas\NotificadorReservas;
-use App\Reservas\PeticionReserva;
-use App\Reservas\ReglaDePenalizacion;
-use App\Reservas\RepositorioReservas;
-use App\Reservas\Reserva;
-use App\Reservas\Sala;
-use App\Reservas\SalaNoDisponible;
-use App\Reservas\ServicioReservas;
+use App\Reservas\Aplicacion\PeticionReserva;
+use App\Reservas\Aplicacion\ServicioReservas;
+use App\Reservas\Dominio\Capacidad;
+use App\Reservas\Dominio\FranjaHoraria;
+use App\Reservas\Dominio\NotificadorReservas;
+use App\Reservas\Dominio\ReglaDePenalizacion;
+use App\Reservas\Dominio\RepositorioReservas;
+use App\Reservas\Dominio\Reserva;
+use App\Reservas\Dominio\Sala;
+use App\Reservas\Dominio\SalaNoDisponible;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Clock\MockClock;
 

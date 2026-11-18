@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Salas\Infraestructura;
 
-use App\Reservas\Sala;
+use App\Reservas\Dominio\Sala;
 use App\Salas\Dominio\CatalogoSalas;
 use Doctrine\ORM\EntityManagerInterface;
 

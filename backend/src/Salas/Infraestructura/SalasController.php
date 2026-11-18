@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Salas\Infraestructura;
 
-use App\Reservas\FranjaHoraria;
-use App\Reservas\Sala;
+use App\Reservas\Dominio\FranjaHoraria;
+use App\Reservas\Dominio\Sala;
 use App\Salas\Aplicacion\CalcularOcupacion;
 use App\Salas\Aplicacion\ListarSalas;
 use App\Salas\Dominio\OcupacionSala;

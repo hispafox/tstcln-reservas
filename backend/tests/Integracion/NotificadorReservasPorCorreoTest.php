@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Tests\Integracion;
 
-use App\Reservas\Capacidad;
-use App\Reservas\Correo\NotificadorReservasPorCorreo;
-use App\Reservas\FranjaHoraria;
-use App\Reservas\Reserva;
-use App\Reservas\Sala;
+use App\Reservas\Dominio\Capacidad;
+use App\Reservas\Dominio\FranjaHoraria;
+use App\Reservas\Dominio\Reserva;
+use App\Reservas\Dominio\Sala;
+use App\Reservas\Infraestructura\Correo\NotificadorReservasPorCorreo;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 final class NotificadorReservasPorCorreoTest extends KernelTestCase
