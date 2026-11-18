@@ -36,12 +36,9 @@
   <ul>
     @for (sala of resultados(); track sala.id) {
       <li>
-        <h2>{{ sala.nombre }}</h2>
-        <p>Hasta {{ sala.capacidadMaxima }} personas</p>
-        @if (sala.equipamiento.length > 0) {
-          <p class="equipamiento">{{ sala.equipamiento.join(' · ') }}</p>
-        }
-        <a href="/reservar/{{ sala.id }}">Reservar</a>
+        <app-tarjeta-sala [sala]="sala">
+          <a href="/reservar/{{ sala.id }}">Reservar</a>
+        </app-tarjeta-sala>
       </li>
     } @empty {
       <li class="vacio">Ninguna sala cumple el filtro.</li>

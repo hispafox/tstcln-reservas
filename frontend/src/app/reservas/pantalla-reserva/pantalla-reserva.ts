@@ -10,12 +10,13 @@ import {
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Avisos } from '../../avisos/avisos';
 import { ApiSalas } from '../../salas/api-salas';
+import { TarjetaSala } from '../../salas/tarjeta-sala/tarjeta-sala';
 import { FormularioReserva } from '../formulario-reserva/formulario-reserva';
 import { Reserva } from '../reserva';
 
 @Component({
   selector: 'app-pantalla-reserva',
-  imports: [FormularioReserva],
+  imports: [TarjetaSala, FormularioReserva],
   templateUrl: './pantalla-reserva.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -1,5 +1,6 @@
 @if (sala(); as sala) {
-  <h1>Reservar {{ sala.nombre }}</h1>
+  <h1>Reservar</h1>
+  <app-tarjeta-sala [sala]="sala" />
   <app-formulario-reserva [sala]="sala" (reservaCreada)="creada($event)" />
   @if (confirmada(); as reserva) {
     <p role="status">Reserva confirmada para {{ reserva.persona }}.</p>

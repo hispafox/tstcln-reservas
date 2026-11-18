@@ -1,0 +1,6 @@
+<h2>{{ sala().nombre }}</h2>
+<p>Hasta {{ sala().capacidadMaxima }} personas</p>
+@if (sala().equipamiento.length > 0) {
+  <p class="equipamiento">{{ sala().equipamiento.join(' · ') }}</p>
+}
+<ng-content />

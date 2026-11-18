@@ -1,0 +1,20 @@
+:host {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
+h2 {
+  margin-bottom: var(--espacio-2);
+}
+
+p {
+  color: var(--color-tinta-suave);
+}
+
+.equipamiento {
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-transform: capitalize;
+  color: var(--color-marca);
+}

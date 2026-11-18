@@ -2,9 +2,11 @@ import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/cor
 import { Capacidad } from '../capacidad';
 import { CatalogoSalas } from '../catalogo-salas';
 import { Sala } from '../sala';
+import { TarjetaSala } from '../tarjeta-sala/tarjeta-sala';
 
 @Component({
   selector: 'app-buscador-salas',
+  imports: [TarjetaSala],
   templateUrl: './buscador-salas.html',
   styleUrl: './buscador-salas.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
