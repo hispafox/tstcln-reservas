@@ -3,9 +3,9 @@ import { ordenar, soloLasProximas } from './reservas-visibles';
 describe('soloLasProximas', () => {
   it('deja las confirmadas que todavía no han empezado', () => {
     const reservas = [
-      { id: 1, estado: 'confirmada', yaHaEmpezado: false },
-      { id: 2, estado: 'confirmada', yaHaEmpezado: true },
-      { id: 3, estado: 'cancelada_tarde', yaHaEmpezado: false },
+      { id: 1, estado: 'confirmada', pendiente: true },
+      { id: 2, estado: 'confirmada', pendiente: false },
+      { id: 3, estado: 'cancelada_tarde', pendiente: false },
     ];
 
     expect(soloLasProximas(reservas).map((reserva) => reserva.id)).toEqual([1]);

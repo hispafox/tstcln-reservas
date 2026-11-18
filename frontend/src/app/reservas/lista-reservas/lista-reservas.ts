@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { interval } from 'rxjs';
 import { FiltrosReservas } from '../filtros-reservas/filtros-reservas';
 import { FranjaHoraria } from '../franja-horaria';
+import { estaPendiente } from '../reserva';
 import { TablaReservas } from '../tabla-reservas/tabla-reservas';
 import { ordenar, soloLasProximas } from './reservas-visibles';
 
@@ -76,14 +77,14 @@ export class ListaReservas implements OnInit {
       ...reserva,
       nombreSala: sala ? sala.nombre : '¿?',
       duracion: franja.minutos(),
-      yaHaEmpezado: franja.haEmpezado(new Date()),
+      pendiente: estaPendiente(reserva, new Date()),
     };
   }
 
   cancelar(reserva: any) {
     if (!confirm('¿Cancelar la reserva de ' + reserva.nombreSala + '?')) return;
     this.http.delete('/reservas/' + reserva.id).subscribe((res: any) => {
-      this.reservas.update((lista) => lista.map((r) => (r.id === reserva.id ? { ...r, estado: res.estado } : r)));
+      this.reservas.update((lista) => lista.map((r) => (r.id === reserva.id ? this.paraLaTabla({ ...r, estado: res.estado }) : r)));
       if (res.estado == 'cancelada_tarde') {
         this.aviso.set('Cancelación tardía: quedan menos de dos horas');
         setTimeout(() => this.aviso.set(''), 5000);

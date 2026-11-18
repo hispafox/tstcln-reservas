@@ -1,3 +1,5 @@
+import { FranjaHoraria } from './franja-horaria';
+
 export type EstadoReserva = 'confirmada' | 'cancelada_a_tiempo' | 'cancelada_tarde';
 
 export function textoDeEstado(estado: EstadoReserva): string {
@@ -19,6 +21,10 @@ export interface Reserva {
   persona: string;
   asistentes: number;
   estado: EstadoReserva;
+}
+
+export function estaPendiente(reserva: Reserva, ahora: Date): boolean {
+  return reserva.estado === 'confirmada' && !FranjaHoraria.desde(reserva.inicio, reserva.fin).haEmpezado(ahora);
 }
 
 export interface PeticionReserva {

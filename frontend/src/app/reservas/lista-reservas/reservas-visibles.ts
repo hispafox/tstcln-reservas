@@ -1,5 +1,5 @@
 export function soloLasProximas(reservas: any[]): any[] {
-  return reservas.filter((reserva) => reserva.estado == 'confirmada' && !reserva.yaHaEmpezado);
+  return reservas.filter((reserva) => reserva.pendiente);
 }
 
 export function ordenar(reservas: any[], orden: string): any[] {

@@ -10,8 +10,8 @@ describe('TablaReservas', () => {
     expect(filas()).toEqual(['Sala Norte2027-03-04 10:0011:0060 min4ConfirmadaCancelar']);
   });
 
-  it('no ofrece cancelar una reserva cancelada', async () => {
-    await render(TablaReservas, { inputs: { reservas: [fila({ estado: 'cancelada_tarde' })] } });
+  it('no ofrece cancelar una reserva que no está pendiente', async () => {
+    await render(TablaReservas, { inputs: { reservas: [fila({ pendiente: false })] } });
 
     expect(screen.queryByRole('button', { name: 'Cancelar' })).toBeNull();
   });
@@ -39,7 +39,7 @@ function fila(cambios: Record<string, unknown> = {}) {
     asistentes: 4,
     estado: 'confirmada',
     duracion: 60,
-    yaHaEmpezado: false,
+    pendiente: true,
     ...cambios,
   };
 }

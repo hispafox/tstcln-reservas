@@ -17,7 +17,7 @@
       <td>{{ reserva.asistentes }}</td>
       <td>{{ textoDelEstado(reserva.estado) }}</td>
       <td>
-        @if (reserva.estado == 'confirmada' && !reserva.yaHaEmpezado) {
+        @if (reserva.pendiente) {
           <button (click)="cancelacionPedida.emit(reserva)">Cancelar</button>
         }
       </td>
