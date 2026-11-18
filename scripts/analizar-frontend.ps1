@@ -1,6 +1,7 @@
-# Comprueba con ESLint los límites entre las funcionalidades del frontend
-# y que el dominio no use Angular ni RxJS. Solo comprueba: no cambia nada.
-# Cualquier argumento pasa tal cual a "ng lint".
+# Analiza el frontend con ESLint (frontend/eslint.config.js): los conjuntos
+# recomendados, los límites entre funcionalidades y las reglas del dominio.
+# Solo comprueba: no cambia nada. Cualquier argumento pasa tal cual a "ng lint":
+#   .\scripts\analizar-frontend.ps1 --max-warnings 0
 
 $ErrorActionPreference = 'Stop'
 
