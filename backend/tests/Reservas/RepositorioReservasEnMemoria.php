@@ -26,6 +26,19 @@ final class RepositorioReservasEnMemoria implements RepositorioReservas
         ));
     }
 
+    public function tardiasDeLaPersonaDesde(string $persona, \DateTimeImmutable $desde): array
+    {
+        $tardias = array_values(array_filter(
+            $this->reservas,
+            fn (Reserva $reserva) => $reserva->persona() === $persona
+                && $reserva->estado()->value === 'cancelada_tarde'
+                && $reserva->franja()->inicio() > $desde,
+        ));
+        usort($tardias, fn (Reserva $una, Reserva $otra) => $otra->franja()->inicio() <=> $una->franja()->inicio());
+
+        return $tardias;
+    }
+
     public function guardadas(): array
     {
         return $this->reservas;

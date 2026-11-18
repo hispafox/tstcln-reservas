@@ -9,6 +9,7 @@ use App\Reservas\CrearReservasRecurrentes;
 use App\Reservas\FranjaHoraria;
 use App\Reservas\LectorDeFechas;
 use App\Reservas\PeticionReserva;
+use App\Reservas\RepositorioReservas;
 use App\Reservas\Reserva;
 use App\Reservas\ReservaNoEncontrada;
 use App\Reservas\Sala;
@@ -30,13 +31,14 @@ final class ReservasController
         Request $peticion,
         EntityManagerInterface $em,
         ServicioReservas $servicio,
+        RepositorioReservas $reservas,
         ClockInterface $reloj,
     ): JsonResponse {
         $cuerpo = $peticion->toArray();
 
         $sala = $em->find(Sala::class, $cuerpo['sala']) ?? throw new SalaNoEncontrada($cuerpo['sala']);
 
-        if ($this->penaliza($cuerpo['persona'], $sala, $em, $reloj->now())) {
+        if ($this->penaliza($cuerpo['persona'], $sala, $reservas, $reloj->now())) {
             return new JsonResponse(['error' => 'Tienes una penalización por cancelaciones tardías'], 409);
         }
 
@@ -50,21 +52,10 @@ final class ReservasController
         return new JsonResponse(self::comoJson($reserva), 201);
     }
 
-    private function penaliza(string $persona, Sala $sala, EntityManagerInterface $em, \DateTimeImmutable $ahora): bool
+    private function penaliza(string $persona, Sala $sala, RepositorioReservas $reservas, \DateTimeImmutable $ahora): bool
     {
         if ($sala->esGrande()) {
-            $tardias = $em->createQueryBuilder()
-                ->select('r')
-                ->from(Reserva::class, 'r')
-                ->andWhere('r.persona = :persona')
-                ->andWhere('r.estado = :estado')
-                ->andWhere('r.franja.inicio > :haceUnMes')
-                ->orderBy('r.franja.inicio', 'DESC')
-                ->setParameter('persona', $persona)
-                ->setParameter('estado', 'cancelada_tarde')
-                ->setParameter('haceUnMes', $ahora->modify('-30 days'))
-                ->getQuery()
-                ->getResult();
+            $tardias = $reservas->tardiasDeLaPersonaDesde($persona, $ahora->modify('-30 days'));
 
             return count($tardias) >= 3 && $tardias[2]->franja()->inicio()->modify('+7 days') > $ahora;
         }

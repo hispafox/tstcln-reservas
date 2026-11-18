@@ -37,4 +37,18 @@ final class RepositorioReservasDoctrine extends ServiceEntityRepository implemen
             ->getQuery()
             ->getResult();
     }
+
+    public function tardiasDeLaPersonaDesde(string $persona, \DateTimeImmutable $desde): array
+    {
+        return $this->createQueryBuilder('r')
+            ->andWhere('r.persona = :persona')
+            ->andWhere('r.estado = :estado')
+            ->andWhere('r.franja.inicio > :desde')
+            ->orderBy('r.franja.inicio', 'DESC')
+            ->setParameter('persona', $persona)
+            ->setParameter('estado', 'cancelada_tarde')
+            ->setParameter('desde', $desde)
+            ->getQuery()
+            ->getResult();
+    }
 }
