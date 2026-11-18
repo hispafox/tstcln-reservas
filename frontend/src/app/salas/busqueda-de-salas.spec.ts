@@ -1,9 +1,9 @@
 import { TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 import { salaNorte, salaSur } from '../../testing/datos-de-prueba';
-import { ApiSalas } from './api-salas';
+import { ApiSalas } from './datos/api-salas';
 import { BusquedaDeSalas } from './busqueda-de-salas';
-import { Sala } from './sala';
+import { Sala } from './dominio/sala';
 
 describe('BusquedaDeSalas', () => {
   beforeEach(() => vi.useFakeTimers());

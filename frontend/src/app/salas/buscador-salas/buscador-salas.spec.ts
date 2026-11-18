@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/angular';
 import userEvent from '@testing-library/user-event';
 import { ApiSalasEnMemoria } from '../../../testing/api-salas-en-memoria';
 import { sala } from '../../../testing/datos-de-prueba';
-import { ApiSalas } from '../api-salas';
+import { ApiSalas } from '../datos/api-salas';
 import { BuscadorSalas } from './buscador-salas';
 
 describe('BuscadorSalas', () => {

@@ -3,11 +3,11 @@ import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { interval } from 'rxjs';
 import { Avisos } from '../../avisos/avisos';
-import { ApiSalas } from '../../salas/api-salas';
-import { EstadoReservas } from '../estado-reservas';
+import { ApiSalas } from '../../salas/datos/api-salas';
+import { EstadoReservas } from '../estado/estado-reservas';
 import { FiltrosReservas } from '../filtros-reservas/filtros-reservas';
-import { FranjaHoraria } from '../franja-horaria';
-import { Reserva, estaPendiente } from '../reserva';
+import { FranjaHoraria } from '../dominio/franja-horaria';
+import { Reserva, estaPendiente } from '../dominio/reserva';
 import { FilaReserva, TablaReservas } from '../tabla-reservas/tabla-reservas';
 import { ordenar, soloLasProximas } from './reservas-visibles';
 

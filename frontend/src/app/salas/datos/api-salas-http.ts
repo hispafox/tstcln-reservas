@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiSalas } from './api-salas';
-import { Sala } from './sala';
+import { Sala } from '../dominio/sala';
 
 @Injectable()
 export class ApiSalasHttp implements ApiSalas {

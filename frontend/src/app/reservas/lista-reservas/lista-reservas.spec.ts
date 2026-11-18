@@ -7,9 +7,9 @@ import { ApiSalasEnMemoria } from '../../../testing/api-salas-en-memoria';
 import { reserva, sala } from '../../../testing/datos-de-prueba';
 import { filas } from '../../../testing/filas';
 import { Avisos } from '../../avisos/avisos';
-import { ApiSalas } from '../../salas/api-salas';
-import { ApiReservas } from '../api-reservas';
-import { EstadoReservas } from '../estado-reservas';
+import { ApiSalas } from '../../salas/datos/api-salas';
+import { ApiReservas } from '../datos/api-reservas';
+import { EstadoReservas } from '../estado/estado-reservas';
 import { ListaReservas } from './lista-reservas';
 
 describe('ListaReservas', () => {

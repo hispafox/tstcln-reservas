@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs';
-import { PeticionReserva, Reserva } from './reserva';
+import { PeticionReserva, Reserva } from '../dominio/reserva';
 
 export abstract class ApiReservas {
   abstract crear(peticion: PeticionReserva): Observable<Reserva>;

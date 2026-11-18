@@ -1,8 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 import { firstValueFrom } from 'rxjs';
-import { ApiReservasEnMemoria } from '../../testing/api-reservas-en-memoria';
-import { reserva } from '../../testing/datos-de-prueba';
-import { ApiReservas } from './api-reservas';
+import { ApiReservasEnMemoria } from '../../../testing/api-reservas-en-memoria';
+import { reserva } from '../../../testing/datos-de-prueba';
+import { ApiReservas } from '../datos/api-reservas';
 import { EstadoReservas } from './estado-reservas';
 
 describe('EstadoReservas', () => {

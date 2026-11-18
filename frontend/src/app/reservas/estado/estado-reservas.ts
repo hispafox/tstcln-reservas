@@ -1,7 +1,7 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { Observable, tap } from 'rxjs';
-import { ApiReservas } from './api-reservas';
-import { Reserva } from './reserva';
+import { ApiReservas } from '../datos/api-reservas';
+import { Reserva } from '../dominio/reserva';
 
 @Injectable({ providedIn: 'root' })
 export class EstadoReservas {

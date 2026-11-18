@@ -1,5 +1,5 @@
-import { EstadoReserva, Reserva } from '../app/reservas/reserva';
-import { Sala } from '../app/salas/sala';
+import { EstadoReserva, Reserva } from '../app/reservas/dominio/reserva';
+import { Sala } from '../app/salas/dominio/sala';
 
 let siguienteId = 1;
 

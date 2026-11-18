@@ -1,6 +1,6 @@
 import { Observable, of } from 'rxjs';
-import { ApiSalas } from '../app/salas/api-salas';
-import { Sala } from '../app/salas/sala';
+import { ApiSalas } from '../app/salas/datos/api-salas';
+import { Sala } from '../app/salas/dominio/sala';
 
 export class ApiSalasEnMemoria implements ApiSalas {
   private readonly salas: Sala[];

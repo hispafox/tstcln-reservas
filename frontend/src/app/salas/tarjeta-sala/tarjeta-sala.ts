@@ -1,5 +1,5 @@
 import { Component, input } from '@angular/core';
-import { Sala } from '../sala';
+import { Sala } from '../dominio/sala';
 
 @Component({
   selector: 'app-tarjeta-sala',

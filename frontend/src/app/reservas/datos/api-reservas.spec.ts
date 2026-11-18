@@ -4,8 +4,8 @@ import { TestBed } from '@angular/core/testing';
 import { firstValueFrom } from 'rxjs';
 import { ApiReservas } from './api-reservas';
 import { ApiReservasHttp } from './api-reservas-http';
-import { DatosNoValidosError, ReservaRechazadaError, SinConexionError } from './errores';
-import { PeticionReserva, Reserva } from './reserva';
+import { DatosNoValidosError, ReservaRechazadaError, SinConexionError } from '../errores';
+import { PeticionReserva, Reserva } from '../dominio/reserva';
 
 // Copiadas de lo que lee y responde el controlador de reservas del backend.
 const peticion: PeticionReserva = {

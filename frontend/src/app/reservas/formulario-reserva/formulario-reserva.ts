@@ -6,12 +6,12 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Sala, admite } from '../../salas/sala';
-import { ApiReservas } from '../api-reservas';
-import { duracionEnMinutos, textoDeDuracion } from '../duracion';
+import { Sala, admite } from '../../salas/dominio/sala';
+import { ApiReservas } from '../datos/api-reservas';
+import { duracionEnMinutos, textoDeDuracion } from '../dominio/duracion';
 import { ReservaRechazadaError } from '../errores';
 import { finDespuesDeInicio } from '../fin-despues-de-inicio';
-import { Reserva } from '../reserva';
+import { Reserva } from '../dominio/reserva';
 
 @Component({
   selector: 'app-formulario-reserva',

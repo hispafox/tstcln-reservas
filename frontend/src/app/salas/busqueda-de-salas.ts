@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { Subject, debounceTime, distinctUntilChanged, map, switchMap } from 'rxjs';
-import { ApiSalas } from './api-salas';
-import { conNombre } from './filtro-salas';
+import { ApiSalas } from './datos/api-salas';
+import { conNombre } from './dominio/filtro-salas';
 
 @Injectable({ providedIn: 'root' })
 export class BusquedaDeSalas {

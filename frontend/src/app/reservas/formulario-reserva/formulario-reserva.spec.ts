@@ -4,9 +4,9 @@ import { fireEvent, render, screen } from '@testing-library/angular';
 import userEvent from '@testing-library/user-event';
 import { of, throwError } from 'rxjs';
 import { salaNorte } from '../../../testing/datos-de-prueba';
-import { ApiReservas } from '../api-reservas';
+import { ApiReservas } from '../datos/api-reservas';
 import { ReservaRechazadaError } from '../errores';
-import { Reserva } from '../reserva';
+import { Reserva } from '../dominio/reserva';
 import { FormularioReserva } from './formulario-reserva';
 import { FormularioReservaHarness } from './formulario-reserva.harness';
 

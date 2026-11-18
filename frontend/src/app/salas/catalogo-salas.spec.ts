@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { firstValueFrom, of } from 'rxjs';
 import { nombres, sala } from '../../testing/datos-de-prueba';
-import { ApiSalas } from './api-salas';
+import { ApiSalas } from './datos/api-salas';
 import { CatalogoSalas } from './catalogo-salas';
 
 describe('CatalogoSalas', () => {

@@ -2,8 +2,8 @@ import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http'
 import { Injectable, inject } from '@angular/core';
 import { Observable, catchError, map, throwError } from 'rxjs';
 import { ApiReservas } from './api-reservas';
-import { DatosNoValidosError, ReservaRechazadaError, SinConexionError } from './errores';
-import { PeticionReserva, Reserva, esEstadoReserva } from './reserva';
+import { DatosNoValidosError, ReservaRechazadaError, SinConexionError } from '../errores';
+import { PeticionReserva, Reserva, esEstadoReserva } from '../dominio/reserva';
 
 @Injectable()
 export class ApiReservasHttp implements ApiReservas {

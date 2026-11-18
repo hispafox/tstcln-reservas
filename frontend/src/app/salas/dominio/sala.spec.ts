@@ -1,4 +1,4 @@
-import { sala } from '../../testing/datos-de-prueba';
+import { sala } from '../../../testing/datos-de-prueba';
 import { admite } from './sala';
 
 describe('admite', () => {

@@ -1,4 +1,4 @@
-import { nombres, sala } from '../../testing/datos-de-prueba';
+import { nombres, sala } from '../../../testing/datos-de-prueba';
 import { filtrarSalasDisponibles } from './filtro-salas';
 
 describe('filtrarSalasDisponibles', () => {

@@ -1,5 +1,5 @@
 import { Component, input, output } from '@angular/core';
-import { EstadoReserva, Reserva, textoDeEstado } from '../reserva';
+import { EstadoReserva, Reserva, textoDeEstado } from '../dominio/reserva';
 
 export interface FilaReserva extends Reserva {
   nombreSala: string;

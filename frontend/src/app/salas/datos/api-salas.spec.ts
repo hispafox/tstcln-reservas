@@ -2,7 +2,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { firstValueFrom } from 'rxjs';
-import { salaNorte, salaSur } from '../../testing/datos-de-prueba';
+import { salaNorte, salaSur } from '../../../testing/datos-de-prueba';
 import { ApiSalas } from './api-salas';
 import { ApiSalasHttp } from './api-salas-http';
 

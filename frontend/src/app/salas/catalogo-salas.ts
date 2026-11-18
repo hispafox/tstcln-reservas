@@ -1,8 +1,8 @@
 import { Injectable, inject } from '@angular/core';
 import { Observable, map } from 'rxjs';
-import { ApiSalas } from './api-salas';
-import { CriterioBusqueda, filtrarSalasDisponibles } from './filtro-salas';
-import { Sala } from './sala';
+import { ApiSalas } from './datos/api-salas';
+import { CriterioBusqueda, filtrarSalasDisponibles } from './dominio/filtro-salas';
+import { Sala } from './dominio/sala';
 
 @Injectable({ providedIn: 'root' })
 export class CatalogoSalas {

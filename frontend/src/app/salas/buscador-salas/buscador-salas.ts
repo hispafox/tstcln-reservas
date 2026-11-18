@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { Capacidad } from '../capacidad';
+import { Capacidad } from '../dominio/capacidad';
 import { CatalogoSalas } from '../catalogo-salas';
-import { Sala } from '../sala';
+import { Sala } from '../dominio/sala';
 import { TarjetaSala } from '../tarjeta-sala/tarjeta-sala';
 
 @Component({

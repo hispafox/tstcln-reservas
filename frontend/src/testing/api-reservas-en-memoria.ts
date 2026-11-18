@@ -1,6 +1,6 @@
 import { Observable, of } from 'rxjs';
-import { ApiReservas } from '../app/reservas/api-reservas';
-import { PeticionReserva, Reserva } from '../app/reservas/reserva';
+import { ApiReservas } from '../app/reservas/datos/api-reservas';
+import { PeticionReserva, Reserva } from '../app/reservas/dominio/reserva';
 
 export class ApiReservasEnMemoria implements ApiReservas {
   private readonly reservas: Reserva[];

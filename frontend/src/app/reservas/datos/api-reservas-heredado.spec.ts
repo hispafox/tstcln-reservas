@@ -5,8 +5,8 @@ import { TestBed } from '@angular/core/testing';
 import { firstValueFrom } from 'rxjs';
 import { ApiReservas } from './api-reservas';
 import { ApiReservasHttp } from './api-reservas-http';
-import { ReservaRechazadaError } from './errores';
-import { PeticionReserva } from './reserva';
+import { ReservaRechazadaError } from '../errores';
+import { PeticionReserva } from '../dominio/reserva';
 
 const peticion: PeticionReserva = {
   sala: 3,
