@@ -4,15 +4,14 @@ declare(strict_types=1);
 
 namespace App\Reservas\Infraestructura;
 
+use App\Reservas\Aplicacion\CancelarReserva;
 use App\Reservas\Aplicacion\CrearReservasRecurrentes;
 use App\Reservas\Aplicacion\PeticionReserva;
 use App\Reservas\Aplicacion\ReservarSala;
-use App\Reservas\Aplicacion\ServicioCancelacion;
 use App\Reservas\Dominio\Capacidad;
 use App\Reservas\Dominio\DatoNoValido;
 use App\Reservas\Dominio\FranjaHoraria;
 use App\Reservas\Dominio\Reserva;
-use App\Reservas\Dominio\ReservaNoEncontrada;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -51,16 +50,9 @@ final class ReservasController
     }
 
     #[Route('/reservas/{id}', methods: ['DELETE'])]
-    public function cancelar(
-        int $id,
-        EntityManagerInterface $em,
-        ServicioCancelacion $servicio,
-    ): JsonResponse {
-        $reserva = $em->find(Reserva::class, $id) ?? throw new ReservaNoEncontrada($id);
-
-        $servicio->cancelar($reserva);
-
-        return new JsonResponse(self::comoJson($reserva));
+    public function cancelar(int $id, CancelarReserva $cancelar): JsonResponse
+    {
+        return new JsonResponse(self::comoJson($cancelar->ejecutar($id)));
     }
 
     #[Route('/reservas/recurrentes', methods: ['POST'])]
