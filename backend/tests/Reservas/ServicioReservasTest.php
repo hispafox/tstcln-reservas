@@ -8,12 +8,14 @@ use App\Reservas\Capacidad;
 use App\Reservas\FranjaHoraria;
 use App\Reservas\NotificadorReservas;
 use App\Reservas\PeticionReserva;
+use App\Reservas\ReglaDePenalizacion;
 use App\Reservas\RepositorioReservas;
 use App\Reservas\Reserva;
 use App\Reservas\Sala;
 use App\Reservas\SalaNoDisponible;
 use App\Reservas\ServicioReservas;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Clock\MockClock;
 
 final class ServicioReservasTest extends TestCase
 {
@@ -26,9 +28,11 @@ final class ServicioReservasTest extends TestCase
 
     public function test_reservar_una_sala_libre_devuelve_la_reserva(): void
     {
+        $reservas = $this->createStub(RepositorioReservas::class);
         $servicio = new ServicioReservas(
-            $this->createStub(RepositorioReservas::class),
+            $reservas,
             $this->createStub(NotificadorReservas::class),
+            new ReglaDePenalizacion($reservas, new MockClock(new \DateTimeImmutable())),
         );
 
         $reserva = $servicio->reservar(new PeticionReserva($this->salaNorte, self::franja('10:00', '11:00'), 'Ana', new Capacidad(4)));
@@ -43,7 +47,7 @@ final class ServicioReservasTest extends TestCase
         $notificador->expects($this->once())
             ->method('reservaConfirmada')
             ->with($this->callback(fn (Reserva $reserva) => $reserva->sala() === $this->salaNorte));
-        $servicio = new ServicioReservas($reservas, $notificador);
+        $servicio = new ServicioReservas($reservas, $notificador, new ReglaDePenalizacion($reservas, new MockClock(new \DateTimeImmutable())));
 
         $reserva = $servicio->reservar(new PeticionReserva($this->salaNorte, self::franja('10:00', '11:00'), 'Ana', new Capacidad(4)));
 
@@ -56,7 +60,7 @@ final class ServicioReservasTest extends TestCase
         $reservas->guardar(new Reserva($this->salaNorte, self::franja('10:00', '11:00'), 'Ana', new Capacidad(4)));
         $notificador = $this->createMock(NotificadorReservas::class);
         $notificador->expects($this->never())->method('reservaConfirmada');
-        $servicio = new ServicioReservas($reservas, $notificador);
+        $servicio = new ServicioReservas($reservas, $notificador, new ReglaDePenalizacion($reservas, new MockClock(new \DateTimeImmutable())));
 
         try {
             $servicio->reservar(new PeticionReserva($this->salaNorte, self::franja('10:30', '11:30'), 'Luis', new Capacidad(3)));
@@ -70,7 +74,7 @@ final class ServicioReservasTest extends TestCase
     public function test_no_permite_reservar_con_mas_asistentes_que_plazas_y_no_guarda_nada(): void
     {
         $reservas = new RepositorioReservasEnMemoria();
-        $servicio = new ServicioReservas($reservas, $this->createStub(NotificadorReservas::class));
+        $servicio = new ServicioReservas($reservas, $this->createStub(NotificadorReservas::class), new ReglaDePenalizacion($reservas, new MockClock(new \DateTimeImmutable())));
 
         try {
             $servicio->reservar(new PeticionReserva($this->salaNorte, self::franja('10:00', '11:00'), 'Ana', new Capacidad(11)));
@@ -86,7 +90,7 @@ final class ServicioReservasTest extends TestCase
         $reservaDeLasDiez = new Reserva($this->salaNorte, self::franja('10:00', '11:00'), 'Ana', new Capacidad(4));
         $reservas = $this->createStub(RepositorioReservas::class);
         $reservas->method('confirmadasDeLaSala')->willReturn([$reservaDeLasDiez]);
-        $servicio = new ServicioReservas($reservas, $this->createStub(NotificadorReservas::class));
+        $servicio = new ServicioReservas($reservas, $this->createStub(NotificadorReservas::class), new ReglaDePenalizacion($reservas, new MockClock(new \DateTimeImmutable())));
 
         $this->expectException(SalaNoDisponible::class);
 

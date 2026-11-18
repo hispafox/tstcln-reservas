@@ -9,12 +9,17 @@ final class ServicioReservas
     public function __construct(
         private RepositorioReservas $reservas,
         private NotificadorReservas $notificador,
+        private ReglaDePenalizacion $penalizacion,
         private ReglaDeCapacidad $capacidad = new ReglaDeCapacidad(),
     ) {
     }
 
     public function reservar(PeticionReserva $peticion): Reserva
     {
+        if ($this->penalizacion->penaliza($peticion->persona, $peticion->sala)) {
+            throw new PersonaPenalizada($peticion->persona);
+        }
+
         if (!$this->capacidad->admite($peticion->sala, $peticion->franja, $peticion->asistentes)) {
             throw new ReservaNoAdmitida($peticion->sala, $peticion->asistentes);
         }
