@@ -7,6 +7,7 @@ namespace App\Tests\Reservas;
 use App\Reservas\Capacidad;
 use App\Reservas\FranjaHoraria;
 use App\Reservas\NotificadorReservas;
+use App\Reservas\PeticionReserva;
 use App\Reservas\RepositorioReservas;
 use App\Reservas\Reserva;
 use App\Reservas\Sala;
@@ -30,7 +31,7 @@ final class ServicioReservasTest extends TestCase
             $this->createStub(NotificadorReservas::class),
         );
 
-        $reserva = $servicio->reservar($this->salaNorte, self::franja('10:00', '11:00'), 'Ana', new Capacidad(4));
+        $reserva = $servicio->reservar(new PeticionReserva($this->salaNorte, self::franja('10:00', '11:00'), 'Ana', new Capacidad(4)));
 
         self::assertSame($this->salaNorte, $reserva->sala());
     }
@@ -44,7 +45,7 @@ final class ServicioReservasTest extends TestCase
             ->with($this->callback(fn (Reserva $reserva) => $reserva->sala() === $this->salaNorte));
         $servicio = new ServicioReservas($reservas, $notificador);
 
-        $reserva = $servicio->reservar($this->salaNorte, self::franja('10:00', '11:00'), 'Ana', new Capacidad(4));
+        $reserva = $servicio->reservar(new PeticionReserva($this->salaNorte, self::franja('10:00', '11:00'), 'Ana', new Capacidad(4)));
 
         self::assertSame([$reserva], $reservas->guardadas());
     }
@@ -58,7 +59,7 @@ final class ServicioReservasTest extends TestCase
         $servicio = new ServicioReservas($reservas, $notificador);
 
         try {
-            $servicio->reservar($this->salaNorte, self::franja('10:30', '11:30'), 'Luis', new Capacidad(3));
+            $servicio->reservar(new PeticionReserva($this->salaNorte, self::franja('10:30', '11:30'), 'Luis', new Capacidad(3)));
             self::fail('Se esperaba que la segunda reserva se rechazara');
         } catch (\DomainException) {
         }
@@ -72,7 +73,7 @@ final class ServicioReservasTest extends TestCase
         $servicio = new ServicioReservas($reservas, $this->createStub(NotificadorReservas::class));
 
         try {
-            $servicio->reservar($this->salaNorte, self::franja('10:00', '11:00'), 'Ana', new Capacidad(11));
+            $servicio->reservar(new PeticionReserva($this->salaNorte, self::franja('10:00', '11:00'), 'Ana', new Capacidad(11)));
             self::fail('Se esperaba que la reserva se rechazara');
         } catch (\DomainException) {
         }
@@ -89,7 +90,7 @@ final class ServicioReservasTest extends TestCase
 
         $this->expectException(SalaNoDisponible::class);
 
-        $servicio->reservar($this->salaNorte, self::franja('10:30', '11:30'), 'Luis', new Capacidad(3));
+        $servicio->reservar(new PeticionReserva($this->salaNorte, self::franja('10:30', '11:30'), 'Luis', new Capacidad(3)));
     }
 
     private static function franja(string $inicio, string $fin): FranjaHoraria

@@ -8,6 +8,7 @@ use App\Reservas\Capacidad;
 use App\Reservas\CrearReservasRecurrentes;
 use App\Reservas\FranjaHoraria;
 use App\Reservas\LectorDeFechas;
+use App\Reservas\PeticionReserva;
 use App\Reservas\Reserva;
 use App\Reservas\ReservaNoEncontrada;
 use App\Reservas\Sala;
@@ -55,12 +56,12 @@ final class ReservasController
             }
         }
 
-        $reserva = $servicio->reservar(
+        $reserva = $servicio->reservar(new PeticionReserva(
             $sala,
             new FranjaHoraria(new \DateTimeImmutable($cuerpo['inicio']), new \DateTimeImmutable($cuerpo['fin'])),
             $cuerpo['persona'],
             new Capacidad($cuerpo['asistentes']),
-        );
+        ));
 
         return new JsonResponse(self::comoJson($reserva), 201);
     }

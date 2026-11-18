@@ -13,15 +13,15 @@ final class ServicioReservas
     ) {
     }
 
-    public function reservar(Sala $sala, FranjaHoraria $franja, string $persona, Capacidad $asistentes): Reserva
+    public function reservar(PeticionReserva $peticion): Reserva
     {
-        if (!$this->capacidad->admite($sala, $franja, $asistentes)) {
-            throw new ReservaNoAdmitida($sala, $asistentes);
+        if (!$this->capacidad->admite($peticion->sala, $peticion->franja, $peticion->asistentes)) {
+            throw new ReservaNoAdmitida($peticion->sala, $peticion->asistentes);
         }
 
-        $this->comprobarDisponibilidad($sala, $franja);
+        $this->comprobarDisponibilidad($peticion->sala, $peticion->franja);
 
-        $reserva = new Reserva($sala, $franja, $persona, $asistentes);
+        $reserva = new Reserva($peticion->sala, $peticion->franja, $peticion->persona, $peticion->asistentes);
         $this->reservas->guardar($reserva);
         $this->notificador->reservaConfirmada($reserva);
 
