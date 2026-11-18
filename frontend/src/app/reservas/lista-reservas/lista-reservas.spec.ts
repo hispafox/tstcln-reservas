@@ -76,6 +76,25 @@ describe('ListaReservas', () => {
 
     expect(http.expectOne({ method: 'DELETE', url: '/reservas/2' })).toBeTruthy();
   });
+
+  describe('con el reloj falso', () => {
+    beforeEach(() => vi.useFakeTimers());
+    afterEach(() => vi.useRealTimers());
+
+    it('al salir de la pantalla deja de pedir las reservas cada minuto', async () => {
+      const { fixture } = await render(ListaReservas, {
+        providers: [provideHttpClient(), provideHttpClientTesting()],
+      });
+      const http = TestBed.inject(HttpTestingController);
+      http.expectOne('/salas').flush([]);
+      http.expectOne('/reservas?persona=Ana').flush([]);
+
+      fixture.destroy();
+      vi.advanceTimersByTime(60_000);
+
+      http.expectNone('/salas');
+    });
+  });
 });
 
 function reserva(id: number, sala: number, inicio: string, estado: string) {

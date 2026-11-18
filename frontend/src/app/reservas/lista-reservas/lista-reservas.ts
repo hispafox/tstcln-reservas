@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
-import { Component, OnInit, computed, inject, signal } from '@angular/core';
+import { Component, DestroyRef, OnInit, computed, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { interval } from 'rxjs';
 import { FranjaHoraria } from '../franja-horaria';
@@ -14,6 +15,7 @@ import { ordenar, soloLasProximas } from './reservas-visibles';
 })
 export class ListaReservas implements OnInit {
   http = inject(HttpClient);
+  private readonly destruccion = inject(DestroyRef);
 
   persona = 'Ana';
   salas: any[] = [];
@@ -37,7 +39,7 @@ export class ListaReservas implements OnInit {
   }
 
   private refrescarCadaMinuto() {
-    interval(60_000).subscribe(() => this.cargar());
+    interval(60_000).pipe(takeUntilDestroyed(this.destruccion)).subscribe(() => this.cargar());
   }
 
   cargar() {
