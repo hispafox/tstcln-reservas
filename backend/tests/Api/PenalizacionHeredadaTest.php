@@ -113,6 +113,22 @@ final class PenalizacionHeredadaTest extends WebTestCase
         self::assertSame('Una franja tiene que terminar después de empezar', self::cuerpo($cliente)['error']);
     }
 
+    public function test_con_tres_tardias_y_una_franja_al_reves_responde_la_penalizacion(): void
+    {
+        $cliente = static::createClient();
+        $sala = $this->salaGrandeConTardias('-1 day 10:00', '-2 days 10:00', '-3 days 10:00');
+
+        $cliente->jsonRequest('POST', '/reservas', [
+            'sala' => $sala->id(),
+            'inicio' => '2027-03-15 11:00',
+            'fin' => '2027-03-15 10:00',
+            'persona' => 'Ana',
+            'asistentes' => 4,
+        ]);
+
+        self::assertResponseStatusCodeSame(409);
+    }
+
     public function test_una_fecha_mal_escrita_responde_500(): void
     {
         $cliente = static::createClient();
