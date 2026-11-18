@@ -31,7 +31,7 @@ final class RepositorioReservasEnMemoria implements RepositorioReservas
         $tardias = array_values(array_filter(
             $this->reservas,
             fn (Reserva $reserva) => $reserva->persona() === $persona
-                && $reserva->estado()->value === 'cancelada_tarde'
+                && $reserva->estado() === EstadoReserva::CanceladaTarde
                 && $reserva->franja()->inicio() > $desde,
         ));
         usort($tardias, fn (Reserva $una, Reserva $otra) => $otra->franja()->inicio() <=> $una->franja()->inicio());

@@ -46,7 +46,7 @@ final class RepositorioReservasDoctrine extends ServiceEntityRepository implemen
             ->andWhere('r.franja.inicio > :desde')
             ->orderBy('r.franja.inicio', 'DESC')
             ->setParameter('persona', $persona)
-            ->setParameter('estado', 'cancelada_tarde')
+            ->setParameter('estado', EstadoReserva::CanceladaTarde)
             ->setParameter('desde', $desde)
             ->getQuery()
             ->getResult();
