@@ -8,6 +8,7 @@ use App\Reservas\Capacidad;
 use App\Reservas\CrearReservasRecurrentes;
 use App\Reservas\FranjaHoraria;
 use App\Reservas\LectorDeFechas;
+use App\Reservas\PersonaPenalizada;
 use App\Reservas\PeticionReserva;
 use App\Reservas\ReglaDePenalizacion;
 use App\Reservas\Reserva;
@@ -37,7 +38,7 @@ final class ReservasController
         $sala = $em->find(Sala::class, $cuerpo['sala']) ?? throw new SalaNoEncontrada($cuerpo['sala']);
 
         if ($penalizacion->penaliza($cuerpo['persona'], $sala)) {
-            return new JsonResponse(['error' => 'Tienes una penalización por cancelaciones tardías'], 409);
+            throw new PersonaPenalizada($cuerpo['persona']);
         }
 
         $reserva = $servicio->reservar(new PeticionReserva(
