@@ -23,6 +23,7 @@
     },
     "require-dev": {
         "dama/doctrine-test-bundle": "^8.8",
+        "deptrac/deptrac": "^4.7",
         "infection/infection": "^0.35.12",
         "phpunit/phpunit": "^13.4.7",
         "rector/rector": "^2.8",

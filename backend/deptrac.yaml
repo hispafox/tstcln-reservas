@@ -1,0 +1,23 @@
+deptrac:
+  paths:
+    - ./src
+  layers:
+    - name: Dominio
+      collectors:
+        - type: classLike
+          value: '^App\\(Reservas|Salas)\\Dominio\\.*'
+    - name: Aplicacion
+      collectors:
+        - type: classLike
+          value: '^App\\(Reservas|Salas)\\Aplicacion\\.*'
+    - name: Infraestructura
+      collectors:
+        - type: classLike
+          value: '^App\\(Reservas|Salas)\\Infraestructura\\.*'
+  ruleset:
+    Dominio: ~
+    Aplicacion:
+      - Dominio
+    Infraestructura:
+      - Aplicacion
+      - Dominio
