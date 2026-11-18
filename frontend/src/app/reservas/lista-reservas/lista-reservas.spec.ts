@@ -57,6 +57,30 @@ describe('ListaReservas', () => {
     ]);
   });
 
+  it('vuelve a ordenar la tabla al cambiar el orden sin el filtro', async () => {
+    const { fixture } = await render(ListaReservas, {
+      providers: [provideHttpClient(), provideHttpClientTesting()],
+    });
+    const http = TestBed.inject(HttpTestingController);
+    http.expectOne('/salas').flush([
+      { id: 1, nombre: 'Sala Norte' },
+      { id: 2, nombre: 'Sala Sur' },
+    ]);
+    http.expectOne('/reservas?persona=Ana').flush([
+      reserva(1, 2, '2027-03-04T10:00:00+01:00', 'confirmada'),
+      reserva(2, 1, '2027-03-05T10:00:00+01:00', 'confirmada'),
+    ]);
+    await fixture.whenStable();
+    const usuario = userEvent.setup();
+
+    await usuario.click(screen.getByRole('checkbox'));
+    await fixture.whenStable();
+    await usuario.selectOptions(screen.getByRole('combobox'), 'sala');
+    await fixture.whenStable();
+
+    expect(salasEnLaTabla()).toEqual(['Sala Norte', 'Sala Sur']);
+  });
+
   it('al pulsar «Cancelar» pide el DELETE de esa reserva', async () => {
     const { fixture } = await render(ListaReservas, {
       providers: [provideHttpClient(), provideHttpClientTesting()],
@@ -100,4 +124,8 @@ describe('ListaReservas', () => {
 
 function reserva(id: number, sala: number, inicio: string, estado: string) {
   return { id, sala, inicio, fin: inicio.replace('T10', 'T11').replace('T12', 'T13'), persona: 'Ana', asistentes: 4, estado };
+}
+
+function salasEnLaTabla(): string[] {
+  return screen.getAllByRole('row').slice(1).map((fila) => fila.querySelector('td')!.textContent!.trim());
 }
