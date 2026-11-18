@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { ChangeDetectorRef, Component, OnInit, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { interval } from 'rxjs';
 import { FranjaHoraria } from '../franja-horaria';
@@ -17,14 +17,19 @@ export class ListaReservas implements OnInit {
   cdr = inject(ChangeDetectorRef);
 
   persona = 'Ana';
-  reservas: any[] = [];
-  reservasVisibles: any[] = [];
   salas: any[] = [];
-  soloConfirmadas = true;
-  orden = 'fecha';
   cargando = false;
   error = '';
   aviso = '';
+
+  protected readonly reservas = signal<any[]>([]);
+  protected readonly soloConfirmadas = signal(true);
+  protected readonly orden = signal('fecha');
+
+  protected readonly visibles = computed(() => {
+    const lista = this.soloConfirmadas() ? soloLasProximas(this.reservas()) : this.reservas();
+    return ordenar(lista, this.orden());
+  });
 
   ngOnInit() {
     this.cargar();
@@ -48,8 +53,7 @@ export class ListaReservas implements OnInit {
   }
 
   private mostrar(recibidas: any[]) {
-    this.reservas = recibidas.map((reserva) => this.paraLaTabla(reserva));
-    this.actualizarLista();
+    this.reservas.set(recibidas.map((reserva) => this.paraLaTabla(reserva)));
     this.terminarCarga();
   }
 
@@ -74,14 +78,6 @@ export class ListaReservas implements OnInit {
     };
   }
 
-  actualizarLista() {
-    let lista = this.reservas;
-    if (this.soloConfirmadas) {
-      lista = soloLasProximas(lista);
-    }
-    this.reservasVisibles = ordenar(lista, this.orden);
-  }
-
   protected textoDelEstado(estado: EstadoReserva) {
     return textoDeEstado(estado);
   }
@@ -97,7 +93,7 @@ export class ListaReservas implements OnInit {
           this.cdr.detectChanges();
         }, 5000);
       }
-      this.actualizarLista();
+      this.reservas.update((lista) => [...lista]);
       this.cdr.detectChanges();
     });
   }
