@@ -98,6 +98,18 @@ module.exports = defineConfig([
       }],
     },
   },
+  {
+    files: ['src/app/*/dominio/**/*.ts'],
+    rules: {
+      'no-restricted-syntax': ['error', {
+        selector: "NewExpression[callee.name='Date'][arguments.length=0]",
+        message: 'El dominio no lee la hora: la recibe como parámetro.',
+      }, {
+        selector: "CallExpression[callee.object.name='Date'][callee.property.name='now']",
+        message: 'El dominio no lee la hora: la recibe como parámetro.',
+      }],
+    },
+  },
   // Las reglas recomendadas que el código de hoy aún no cumple, de error a aviso.
   // Va el último porque, cuando dos bloques dan valor a la misma regla, manda el último.
   // Cuando una regla deja de dar avisos, sale de aquí y vuelve a ser un error.
