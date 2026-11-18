@@ -30,7 +30,28 @@ final class ReservasController
         ServicioReservas $servicio,
     ): JsonResponse {
         $cuerpo = $peticion->toArray();
+
         $sala = $em->find(Sala::class, $cuerpo['sala']) ?? throw new SalaNoEncontrada($cuerpo['sala']);
+
+        $ahora = new \DateTimeImmutable();
+        if ($sala->esGrande()) {
+            $tardias = $em->createQueryBuilder()
+                ->select('r')
+                ->from(Reserva::class, 'r')
+                ->andWhere('r.persona = :persona')
+                ->andWhere('r.estado = :estado')
+                ->andWhere('r.franja.inicio > :haceUnMes')
+                ->orderBy('r.franja.inicio', 'DESC')
+                ->setParameter('persona', $cuerpo['persona'])
+                ->setParameter('estado', 'cancelada_tarde')
+                ->setParameter('haceUnMes', $ahora->modify('-30 days'))
+                ->getQuery()
+                ->getResult();
+
+            if (count($tardias) >= 3 && $tardias[2]->franja()->inicio()->modify('+7 days') > $ahora) {
+                return new JsonResponse(['error' => 'Tienes una penalización por cancelaciones tardías'], 409);
+            }
+        }
 
         $reserva = $servicio->reservar(
             $sala,
