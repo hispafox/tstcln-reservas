@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { ChangeDetectorRef, Component, OnInit, computed, inject, signal } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { interval } from 'rxjs';
 import { FranjaHoraria } from '../franja-horaria';
@@ -14,13 +14,9 @@ import { ordenar, soloLasProximas } from './reservas-visibles';
 })
 export class ListaReservas implements OnInit {
   http = inject(HttpClient);
-  cdr = inject(ChangeDetectorRef);
 
   persona = 'Ana';
   salas: any[] = [];
-  cargando = false;
-  error = '';
-  aviso = '';
 
   protected readonly reservas = signal<any[]>([]);
   protected readonly soloConfirmadas = signal(true);
@@ -30,6 +26,10 @@ export class ListaReservas implements OnInit {
     const lista = this.soloConfirmadas() ? soloLasProximas(this.reservas()) : this.reservas();
     return ordenar(lista, this.orden());
   });
+
+  protected readonly cargando = signal(false);
+  protected readonly error = signal('');
+  protected readonly aviso = signal('');
 
   ngOnInit() {
     this.cargar();
@@ -41,8 +41,8 @@ export class ListaReservas implements OnInit {
   }
 
   cargar() {
-    this.cargando = true;
-    this.error = '';
+    this.cargando.set(true);
+    this.error.set('');
     this.http.get<any[]>('/salas').subscribe((salas) => {
       this.salas = salas;
       this.http.get<any[]>('/reservas?persona=' + this.persona).subscribe(
@@ -58,13 +58,12 @@ export class ListaReservas implements OnInit {
   }
 
   private mostrarError() {
-    this.error = 'Error al cargar las reservas';
+    this.error.set('Error al cargar las reservas');
     this.terminarCarga();
   }
 
   private terminarCarga() {
-    this.cargando = false;
-    this.cdr.detectChanges();
+    this.cargando.set(false);
   }
 
   private paraLaTabla(reserva: any) {
@@ -87,14 +86,10 @@ export class ListaReservas implements OnInit {
     this.http.delete('/reservas/' + reserva.id).subscribe((res: any) => {
       reserva.estado = res.estado;
       if (res.estado == 'cancelada_tarde') {
-        this.aviso = 'Cancelación tardía: quedan menos de dos horas';
-        setTimeout(() => {
-          this.aviso = '';
-          this.cdr.detectChanges();
-        }, 5000);
+        this.aviso.set('Cancelación tardía: quedan menos de dos horas');
+        setTimeout(() => this.aviso.set(''), 5000);
       }
       this.reservas.update((lista) => [...lista]);
-      this.cdr.detectChanges();
     });
   }
 }

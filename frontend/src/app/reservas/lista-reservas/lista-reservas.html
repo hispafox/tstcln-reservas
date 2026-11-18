@@ -11,14 +11,14 @@
   </select>
 </div>
 
-@if (aviso) {
-  <div class="aviso">{{ aviso }}</div>
+@if (aviso()) {
+  <div class="aviso">{{ aviso() }}</div>
 }
-@if (cargando) {
+@if (cargando()) {
   <div>Cargando...</div>
 }
-@if (error) {
-  <div class="error">{{ error }}</div>
+@if (error()) {
+  <div class="error">{{ error() }}</div>
 }
 
 <table>
