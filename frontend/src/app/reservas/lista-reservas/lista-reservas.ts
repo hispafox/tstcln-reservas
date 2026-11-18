@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { interval } from 'rxjs';
 import { FranjaHoraria } from '../franja-horaria';
 import { EstadoReserva, textoDeEstado } from '../reserva';
+import { ordenar, soloLasProximas } from './reservas-visibles';
 
 @Component({
   selector: 'app-lista-reservas',
@@ -76,24 +77,9 @@ export class ListaReservas implements OnInit {
   actualizarLista() {
     let lista = this.reservas;
     if (this.soloConfirmadas) {
-      lista = this.soloLasProximas(lista);
+      lista = soloLasProximas(lista);
     }
-    this.reservasVisibles = this.ordenar(lista);
-  }
-
-  private soloLasProximas(reservas: any[]): any[] {
-    return reservas.filter((reserva) => reserva.estado == 'confirmada' && !reserva.yaHaEmpezado);
-  }
-
-  private ordenar(reservas: any[]): any[] {
-    if (this.orden == 'fecha') {
-      return reservas.sort((a, b) => (a.inicio < b.inicio ? -1 : 1));
-    } else if (this.orden == 'sala') {
-      return reservas.sort((a, b) => a.nombreSala.localeCompare(b.nombreSala));
-    } else if (this.orden == 'duracion') {
-      return reservas.sort((a, b) => b.duracion - a.duracion);
-    }
-    return reservas;
+    this.reservasVisibles = ordenar(lista, this.orden);
   }
 
   protected textoDelEstado(estado: EstadoReserva) {
