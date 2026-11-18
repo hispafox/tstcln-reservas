@@ -1,6 +1,12 @@
 import { FranjaHoraria } from './franja-horaria';
 
-export type EstadoReserva = 'confirmada' | 'cancelada_a_tiempo' | 'cancelada_tarde';
+export const ESTADOS_RESERVA = ['confirmada', 'cancelada_a_tiempo', 'cancelada_tarde'] as const;
+
+export type EstadoReserva = (typeof ESTADOS_RESERVA)[number];
+
+export function esEstadoReserva(texto: string): texto is EstadoReserva {
+  return (ESTADOS_RESERVA as readonly string[]).includes(texto);
+}
 
 export function textoDeEstado(estado: EstadoReserva): string {
   switch (estado) {

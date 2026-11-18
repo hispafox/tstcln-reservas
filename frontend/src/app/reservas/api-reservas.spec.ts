@@ -3,6 +3,7 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { TestBed } from '@angular/core/testing';
 import { firstValueFrom } from 'rxjs';
 import { ApiReservas } from './api-reservas';
+import { ApiReservasHttp } from './api-reservas-http';
 import { DatosNoValidosError, ReservaRechazadaError, SinConexionError } from './errores';
 import { PeticionReserva, Reserva } from './reserva';
 
@@ -31,7 +32,7 @@ describe('ApiReservas', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [provideHttpClient(), provideHttpClientTesting()],
+      providers: [provideHttpClient(), provideHttpClientTesting(), { provide: ApiReservas, useClass: ApiReservasHttp }],
     });
     api = TestBed.inject(ApiReservas);
     centralita = TestBed.inject(HttpTestingController);
@@ -114,5 +115,32 @@ describe('ApiReservas', () => {
 
     await expect(respuesta).rejects.toBeInstanceOf(HttpErrorResponse);
     await expect(respuesta).rejects.toHaveProperty('status', 500);
+  });
+
+  it('pide las reservas de una persona con su nombre como parámetro', async () => {
+    const respuesta = firstValueFrom(api.deUnaPersona('Ana María'));
+
+    centralita
+      .expectOne((peticion) => peticion.url === '/reservas' && peticion.params.get('persona') === 'Ana María')
+      .flush([reservaCreada]);
+
+    expect(await respuesta).toEqual([reservaCreada]);
+  });
+
+  it('falla si la API devuelve un estado que el dominio no conoce', async () => {
+    const respuesta = firstValueFrom(api.deUnaPersona('Ana'));
+
+    centralita.expectOne((peticion) => peticion.url === '/reservas').flush([{ ...reservaCreada, estado: 'pendiente_de_pago' }]);
+
+    await expect(respuesta).rejects.toThrow('estado de reserva desconocido');
+  });
+
+  it('cancela con DELETE /reservas/{id} y devuelve la reserva cancelada', async () => {
+    const cancelada: Reserva = { ...reservaCreada, estado: 'cancelada_a_tiempo' };
+    const respuesta = firstValueFrom(api.cancelar(7));
+
+    centralita.expectOne({ method: 'DELETE', url: '/reservas/7' }).flush(cancelada);
+
+    expect(await respuesta).toEqual(cancelada);
   });
 });

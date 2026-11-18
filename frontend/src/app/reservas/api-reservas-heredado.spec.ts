@@ -4,6 +4,7 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { TestBed } from '@angular/core/testing';
 import { firstValueFrom } from 'rxjs';
 import { ApiReservas } from './api-reservas';
+import { ApiReservasHttp } from './api-reservas-http';
 import { ReservaRechazadaError } from './errores';
 import { PeticionReserva } from './reserva';
 
@@ -21,7 +22,7 @@ describe('ApiReservas (heredada)', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [provideHttpClient(), provideHttpClientTesting()],
+      providers: [provideHttpClient(), provideHttpClientTesting(), { provide: ApiReservas, useClass: ApiReservasHttp }],
     });
     api = TestBed.inject(ApiReservas);
     centralita = TestBed.inject(HttpTestingController);
