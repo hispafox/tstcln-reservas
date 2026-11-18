@@ -3,12 +3,12 @@ import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { interval } from 'rxjs';
 import { FranjaHoraria } from '../franja-horaria';
-import { EstadoReserva, textoDeEstado } from '../reserva';
+import { TablaReservas } from '../tabla-reservas/tabla-reservas';
 import { ordenar, soloLasProximas } from './reservas-visibles';
 
 @Component({
   selector: 'app-lista-reservas',
-  imports: [FormsModule],
+  imports: [FormsModule, TablaReservas],
   templateUrl: './lista-reservas.html',
   styleUrl: './lista-reservas.css',
 })
@@ -75,10 +75,6 @@ export class ListaReservas implements OnInit {
       duracion: franja.minutos(),
       yaHaEmpezado: franja.haEmpezado(new Date()),
     };
-  }
-
-  protected textoDelEstado(estado: EstadoReserva) {
-    return textoDeEstado(estado);
   }
 
   cancelar(reserva: any) {

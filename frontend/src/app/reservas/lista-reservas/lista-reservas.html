@@ -21,29 +21,4 @@
   <div class="error">{{ error() }}</div>
 }
 
-<table>
-  <tr>
-    <th>Sala</th>
-    <th>Inicio</th>
-    <th>Fin</th>
-    <th>Duración</th>
-    <th>Asistentes</th>
-    <th>Estado</th>
-    <th></th>
-  </tr>
-  @for (reserva of visibles(); track reserva.id) {
-    <tr>
-      <td>{{ reserva.nombreSala }}</td>
-      <td>{{ reserva.inicio.substring(0, 16).replace('T', ' ') }}</td>
-      <td>{{ reserva.fin.substring(11, 16) }}</td>
-      <td>{{ reserva.duracion }} min</td>
-      <td>{{ reserva.asistentes }}</td>
-      <td>{{ textoDelEstado(reserva.estado) }}</td>
-      <td>
-        @if (reserva.estado == 'confirmada' && !reserva.yaHaEmpezado) {
-          <button (click)="cancelar(reserva)">Cancelar</button>
-        }
-      </td>
-    </tr>
-  }
-</table>
+<app-tabla-reservas [reservas]="visibles()" (cancelacionPedida)="cancelar($event)" />
