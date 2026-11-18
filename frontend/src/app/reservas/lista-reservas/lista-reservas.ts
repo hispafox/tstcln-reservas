@@ -1,8 +1,8 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, DestroyRef, OnInit, computed, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { interval } from 'rxjs';
+import { ApiSalas } from '../../salas/api-salas';
 import { Sala } from '../../salas/sala';
 import { ApiReservas } from '../api-reservas';
 import { FiltrosReservas } from '../filtros-reservas/filtros-reservas';
@@ -18,7 +18,7 @@ import { ordenar, soloLasProximas } from './reservas-visibles';
   styleUrl: './lista-reservas.css',
 })
 export class ListaReservas implements OnInit {
-  http = inject(HttpClient);
+  private readonly salasApi = inject(ApiSalas);
   private readonly reservasApi = inject(ApiReservas);
   private readonly destruccion = inject(DestroyRef);
 
@@ -50,7 +50,7 @@ export class ListaReservas implements OnInit {
   cargar() {
     this.cargando.set(true);
     this.error.set('');
-    this.http.get<Sala[]>('/salas').subscribe((salas) => {
+    this.salasApi.listar().subscribe((salas) => {
       this.salas = salas;
       this.reservasApi.deUnaPersona(this.persona).subscribe({
         next: (recibidas) => this.mostrar(recibidas),
