@@ -1,8 +1,10 @@
-export function soloLasProximas(reservas: any[]): any[] {
+import { FilaReserva } from '../tabla-reservas/tabla-reservas';
+
+export function soloLasProximas(reservas: FilaReserva[]): FilaReserva[] {
   return reservas.filter((reserva) => reserva.pendiente);
 }
 
-export function ordenar(reservas: any[], orden: string): any[] {
+export function ordenar(reservas: FilaReserva[], orden: string): FilaReserva[] {
   if (orden == 'fecha') {
     return [...reservas].sort((a, b) => (a.inicio < b.inicio ? -1 : 1));
   } else if (orden == 'sala') {

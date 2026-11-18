@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/angular';
 import userEvent from '@testing-library/user-event';
 import { filas } from '../../../testing/filas';
-import { TablaReservas } from './tabla-reservas';
+import { FilaReserva, TablaReservas } from './tabla-reservas';
 
 describe('TablaReservas', () => {
   it('enseña cada reserva con su sala, su hora, su duración y su estado', async () => {
@@ -28,7 +28,7 @@ describe('TablaReservas', () => {
   });
 });
 
-function fila(cambios: Record<string, unknown> = {}) {
+function fila(cambios: Partial<FilaReserva> = {}): FilaReserva {
   return {
     id: 1,
     sala: 1,

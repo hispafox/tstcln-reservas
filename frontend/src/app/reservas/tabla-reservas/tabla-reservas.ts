@@ -1,5 +1,11 @@
 import { Component, input, output } from '@angular/core';
-import { EstadoReserva, textoDeEstado } from '../reserva';
+import { EstadoReserva, Reserva, textoDeEstado } from '../reserva';
+
+export interface FilaReserva extends Reserva {
+  nombreSala: string;
+  duracion: number;
+  pendiente: boolean;
+}
 
 @Component({
   selector: 'app-tabla-reservas',
@@ -7,8 +13,8 @@ import { EstadoReserva, textoDeEstado } from '../reserva';
   styleUrl: './tabla-reservas.css',
 })
 export class TablaReservas {
-  readonly reservas = input.required<any[]>();
-  readonly cancelacionPedida = output<any>();
+  readonly reservas = input.required<FilaReserva[]>();
+  readonly cancelacionPedida = output<FilaReserva>();
 
   protected textoDelEstado(estado: EstadoReserva) {
     return textoDeEstado(estado);

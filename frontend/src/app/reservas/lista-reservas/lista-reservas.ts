@@ -3,10 +3,12 @@ import { Component, DestroyRef, OnInit, computed, inject, signal } from '@angula
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { interval } from 'rxjs';
+import { Sala } from '../../salas/sala';
+import { ApiReservas } from '../api-reservas';
 import { FiltrosReservas } from '../filtros-reservas/filtros-reservas';
 import { FranjaHoraria } from '../franja-horaria';
-import { estaPendiente } from '../reserva';
-import { TablaReservas } from '../tabla-reservas/tabla-reservas';
+import { Reserva, estaPendiente } from '../reserva';
+import { FilaReserva, TablaReservas } from '../tabla-reservas/tabla-reservas';
 import { ordenar, soloLasProximas } from './reservas-visibles';
 
 @Component({
@@ -17,12 +19,13 @@ import { ordenar, soloLasProximas } from './reservas-visibles';
 })
 export class ListaReservas implements OnInit {
   http = inject(HttpClient);
+  private readonly reservasApi = inject(ApiReservas);
   private readonly destruccion = inject(DestroyRef);
 
   persona = 'Ana';
-  salas: any[] = [];
+  salas: Sala[] = [];
 
-  protected readonly reservas = signal<any[]>([]);
+  protected readonly reservas = signal<FilaReserva[]>([]);
   protected readonly soloConfirmadas = signal(true);
   protected readonly orden = signal('fecha');
 
@@ -47,16 +50,16 @@ export class ListaReservas implements OnInit {
   cargar() {
     this.cargando.set(true);
     this.error.set('');
-    this.http.get<any[]>('/salas').subscribe((salas) => {
+    this.http.get<Sala[]>('/salas').subscribe((salas) => {
       this.salas = salas;
-      this.http.get<any[]>('/reservas?persona=' + this.persona).subscribe(
-        (recibidas) => this.mostrar(recibidas),
-        () => this.mostrarError(),
-      );
+      this.reservasApi.deUnaPersona(this.persona).subscribe({
+        next: (recibidas) => this.mostrar(recibidas),
+        error: () => this.mostrarError(),
+      });
     });
   }
 
-  private mostrar(recibidas: any[]) {
+  private mostrar(recibidas: Reserva[]) {
     this.reservas.set(recibidas.map((reserva) => this.paraLaTabla(reserva)));
     this.terminarCarga();
   }
@@ -70,7 +73,7 @@ export class ListaReservas implements OnInit {
     this.cargando.set(false);
   }
 
-  private paraLaTabla(reserva: any) {
+  private paraLaTabla(reserva: Reserva): FilaReserva {
     const sala = this.salas.find((s) => s.id == reserva.sala);
     const franja = FranjaHoraria.desde(reserva.inicio, reserva.fin);
     return {
@@ -81,11 +84,11 @@ export class ListaReservas implements OnInit {
     };
   }
 
-  cancelar(reserva: any) {
+  cancelar(reserva: FilaReserva) {
     if (!confirm('¿Cancelar la reserva de ' + reserva.nombreSala + '?')) return;
-    this.http.delete('/reservas/' + reserva.id).subscribe((res: any) => {
-      this.reservas.update((lista) => lista.map((r) => (r.id === reserva.id ? this.paraLaTabla({ ...r, estado: res.estado }) : r)));
-      if (res.estado == 'cancelada_tarde') {
+    this.reservasApi.cancelar(reserva.id).subscribe((cancelada) => {
+      this.reservas.update((lista) => lista.map((r) => (r.id === cancelada.id ? this.paraLaTabla(cancelada) : r)));
+      if (cancelada.estado == 'cancelada_tarde') {
         this.aviso.set('Cancelación tardía: quedan menos de dos horas');
         setTimeout(() => this.aviso.set(''), 5000);
       }
