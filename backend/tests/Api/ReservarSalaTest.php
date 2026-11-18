@@ -48,4 +48,20 @@ final class ReservarSalaTest extends WebTestCase
 
         self::assertResponseStatusCodeSame(201);
     }
+
+    public function test_reservar_sin_asistentes_responde_400(): void
+    {
+        $cliente = static::createClient();
+        $datos = new FabricaDeDatos(static::getContainer()->get(EntityManagerInterface::class));
+        $sala = $datos->sala();
+
+        $cliente->jsonRequest('POST', '/reservas', [
+            'sala' => $sala->id(),
+            'inicio' => (new \DateTimeImmutable('tomorrow 10:00'))->format(\DATE_ATOM),
+            'fin' => (new \DateTimeImmutable('tomorrow 11:00'))->format(\DATE_ATOM),
+            'persona' => 'Ana',
+        ]);
+
+        self::assertResponseStatusCodeSame(400);
+    }
 }

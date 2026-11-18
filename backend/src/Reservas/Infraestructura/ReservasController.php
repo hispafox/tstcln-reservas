@@ -9,6 +9,7 @@ use App\Reservas\Aplicacion\PeticionReserva;
 use App\Reservas\Aplicacion\ReservarSala;
 use App\Reservas\Aplicacion\ServicioCancelacion;
 use App\Reservas\Dominio\Capacidad;
+use App\Reservas\Dominio\DatoNoValido;
 use App\Reservas\Dominio\FranjaHoraria;
 use App\Reservas\Dominio\Reserva;
 use App\Reservas\Dominio\ReservaNoEncontrada;
@@ -22,18 +23,9 @@ use Symfony\Component\Routing\Attribute\Route;
 final class ReservasController
 {
     #[Route('/reservas', methods: ['POST'])]
-    public function reservar(
-        Request $peticion,
-        ReservarSala $reservar,
-    ): JsonResponse {
-        $cuerpo = $peticion->toArray();
-
-        $reserva = $reservar->ejecutar(new PeticionReserva(
-            $cuerpo['sala'],
-            new FranjaHoraria(new \DateTimeImmutable($cuerpo['inicio']), new \DateTimeImmutable($cuerpo['fin'])),
-            $cuerpo['persona'],
-            new Capacidad($cuerpo['asistentes']),
-        ));
+    public function reservar(Request $peticion, ReservarSala $reservar): JsonResponse
+    {
+        $reserva = $reservar->ejecutar(self::peticionDe($peticion->toArray()));
 
         return new JsonResponse(self::comoJson($reserva), 201);
     }
@@ -79,20 +71,38 @@ final class ReservasController
     ): JsonResponse {
         $cuerpo = $peticion->toArray();
 
-        $resultado = $crear->ejecutar(
-            new PeticionReserva(
-                $cuerpo['sala'],
-                new FranjaHoraria($lector->leer($cuerpo['inicio']), $lector->leer($cuerpo['fin'])),
-                $cuerpo['persona'],
-                new Capacidad($cuerpo['asistentes']),
-            ),
-            $lector->leer($cuerpo['hasta']),
-        );
+        $resultado = $crear->ejecutar(self::peticionDe($cuerpo, $lector), $lector->leer($cuerpo['hasta']));
 
         return new JsonResponse([
             'creadas' => array_map(fn (FranjaHoraria $franja) => $franja->inicio()->format('Y-m-d'), $resultado->libres()),
             'descartadas' => array_map(fn (FranjaHoraria $franja) => $franja->inicio()->format('Y-m-d'), $resultado->descartadas()),
         ], 201);
+    }
+
+    private static function peticionDe(array $cuerpo, ?LectorDeFechas $lector = null): PeticionReserva
+    {
+        foreach (['sala', 'inicio', 'fin', 'persona', 'asistentes'] as $campo) {
+            if (!isset($cuerpo[$campo])) {
+                throw new DatoNoValido(sprintf('Falta el campo %s', $campo));
+            }
+        }
+
+        if (!is_int($cuerpo['sala']) || !is_int($cuerpo['asistentes'])) {
+            throw new DatoNoValido('La sala y los asistentes tienen que ser números enteros');
+        }
+
+        if (!is_string($cuerpo['persona']) || !is_string($cuerpo['inicio']) || !is_string($cuerpo['fin'])) {
+            throw new DatoNoValido('La persona y las fechas tienen que ser textos');
+        }
+
+        $fecha = fn (string $texto) => $lector?->leer($texto) ?? new \DateTimeImmutable($texto);
+
+        return new PeticionReserva(
+            $cuerpo['sala'],
+            new FranjaHoraria($fecha($cuerpo['inicio']), $fecha($cuerpo['fin'])),
+            $cuerpo['persona'],
+            new Capacidad($cuerpo['asistentes']),
+        );
     }
 
     private static function comoJson(Reserva $reserva): array
