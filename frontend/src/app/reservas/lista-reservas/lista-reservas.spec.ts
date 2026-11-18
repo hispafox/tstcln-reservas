@@ -102,6 +102,29 @@ describe('ListaReservas', () => {
     expect(http.expectOne({ method: 'DELETE', url: '/reservas/2' })).toBeTruthy();
   });
 
+  it('después de cancelar, la reserva sale de las próximas confirmadas', async () => {
+    const { fixture } = await render(ListaReservas, {
+      providers: [provideHttpClient(), provideHttpClientTesting()],
+    });
+    const http = TestBed.inject(HttpTestingController);
+    http.expectOne('/salas').flush([
+      { id: 1, nombre: 'Sala Norte' },
+      { id: 2, nombre: 'Sala Sur' },
+    ]);
+    http.expectOne('/reservas?persona=Ana').flush([
+      reserva(1, 2, '2027-03-05T10:00:00+01:00', 'confirmada'),
+      reserva(2, 1, '2027-03-04T10:00:00+01:00', 'confirmada'),
+    ]);
+    await fixture.whenStable();
+    vi.spyOn(window, 'confirm').mockReturnValue(true);
+
+    await userEvent.click(screen.getAllByRole('button', { name: 'Cancelar' })[0]);
+    http.expectOne({ method: 'DELETE', url: '/reservas/2' }).flush({ estado: 'cancelada' });
+    await fixture.whenStable();
+
+    expect(filas()).toEqual(['Sala Sur2027-03-05 10:0011:0060 min4ConfirmadaCancelar']);
+  });
+
   describe('con el reloj falso', () => {
     beforeEach(() => vi.useFakeTimers());
     afterEach(() => vi.useRealTimers());

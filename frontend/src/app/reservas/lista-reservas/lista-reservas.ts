@@ -83,12 +83,11 @@ export class ListaReservas implements OnInit {
   cancelar(reserva: any) {
     if (!confirm('¿Cancelar la reserva de ' + reserva.nombreSala + '?')) return;
     this.http.delete('/reservas/' + reserva.id).subscribe((res: any) => {
-      reserva.estado = res.estado;
+      this.reservas.update((lista) => lista.map((r) => (r.id === reserva.id ? { ...r, estado: res.estado } : r)));
       if (res.estado == 'cancelada_tarde') {
         this.aviso.set('Cancelación tardía: quedan menos de dos horas');
         setTimeout(() => this.aviso.set(''), 5000);
       }
-      this.reservas.update((lista) => [...lista]);
     });
   }
 }
