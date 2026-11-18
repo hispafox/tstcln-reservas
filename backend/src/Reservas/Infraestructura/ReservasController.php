@@ -12,8 +12,6 @@ use App\Reservas\Dominio\Capacidad;
 use App\Reservas\Dominio\FranjaHoraria;
 use App\Reservas\Dominio\Reserva;
 use App\Reservas\Dominio\ReservaNoEncontrada;
-use App\Reservas\Dominio\Sala;
-use App\Reservas\Dominio\SalaNoEncontrada;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,15 +24,12 @@ final class ReservasController
     #[Route('/reservas', methods: ['POST'])]
     public function reservar(
         Request $peticion,
-        EntityManagerInterface $em,
         ReservarSala $reservar,
     ): JsonResponse {
         $cuerpo = $peticion->toArray();
 
-        $sala = $em->find(Sala::class, $cuerpo['sala']) ?? throw new SalaNoEncontrada($cuerpo['sala']);
-
         $reserva = $reservar->ejecutar(new PeticionReserva(
-            $sala,
+            $cuerpo['sala'],
             new FranjaHoraria(new \DateTimeImmutable($cuerpo['inicio']), new \DateTimeImmutable($cuerpo['fin'])),
             $cuerpo['persona'],
             new Capacidad($cuerpo['asistentes']),
@@ -79,19 +74,19 @@ final class ReservasController
     #[Route('/reservas/recurrentes', methods: ['POST'])]
     public function crearRecurrentes(
         Request $peticion,
-        EntityManagerInterface $em,
         CrearReservasRecurrentes $crear,
         LectorDeFechas $lector,
     ): JsonResponse {
         $cuerpo = $peticion->toArray();
-        $sala = $em->find(Sala::class, $cuerpo['sala']) ?? throw new SalaNoEncontrada($cuerpo['sala']);
 
         $resultado = $crear->ejecutar(
-            $sala,
-            new FranjaHoraria($lector->leer($cuerpo['inicio']), $lector->leer($cuerpo['fin'])),
+            new PeticionReserva(
+                $cuerpo['sala'],
+                new FranjaHoraria($lector->leer($cuerpo['inicio']), $lector->leer($cuerpo['fin'])),
+                $cuerpo['persona'],
+                new Capacidad($cuerpo['asistentes']),
+            ),
             $lector->leer($cuerpo['hasta']),
-            $cuerpo['persona'],
-            new Capacidad($cuerpo['asistentes']),
         );
 
         return new JsonResponse([

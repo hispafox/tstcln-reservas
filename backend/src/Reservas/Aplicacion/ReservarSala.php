@@ -10,14 +10,17 @@ use App\Reservas\Dominio\PersonaPenalizada;
 use App\Reservas\Dominio\ReglaDeCapacidad;
 use App\Reservas\Dominio\ReglaDePenalizacion;
 use App\Reservas\Dominio\RepositorioReservas;
+use App\Reservas\Dominio\RepositorioSalas;
 use App\Reservas\Dominio\Reserva;
 use App\Reservas\Dominio\ReservaNoAdmitida;
 use App\Reservas\Dominio\Sala;
 use App\Reservas\Dominio\SalaNoDisponible;
+use App\Reservas\Dominio\SalaNoEncontrada;
 
 final class ReservarSala
 {
     public function __construct(
+        private RepositorioSalas $salas,
         private RepositorioReservas $reservas,
         private NotificadorReservas $notificador,
         private ReglaDePenalizacion $penalizacion,
@@ -27,17 +30,19 @@ final class ReservarSala
 
     public function ejecutar(PeticionReserva $peticion): Reserva
     {
-        if ($this->penalizacion->penaliza($peticion->persona, $peticion->sala)) {
+        $sala = $this->salas->conId($peticion->sala) ?? throw new SalaNoEncontrada($peticion->sala);
+
+        if ($this->penalizacion->penaliza($peticion->persona, $sala)) {
             throw new PersonaPenalizada($peticion->persona);
         }
 
-        if (!$this->capacidad->admite($peticion->sala, $peticion->franja, $peticion->asistentes)) {
-            throw new ReservaNoAdmitida($peticion->sala, $peticion->asistentes);
+        if (!$this->capacidad->admite($sala, $peticion->franja, $peticion->asistentes)) {
+            throw new ReservaNoAdmitida($sala, $peticion->asistentes);
         }
 
-        $this->comprobarDisponibilidad($peticion->sala, $peticion->franja);
+        $this->comprobarDisponibilidad($sala, $peticion->franja);
 
-        $reserva = new Reserva($peticion->sala, $peticion->franja, $peticion->persona, $peticion->asistentes);
+        $reserva = new Reserva($sala, $peticion->franja, $peticion->persona, $peticion->asistentes);
         $this->reservas->guardar($reserva);
         $this->notificador->reservaConfirmada($reserva);
 
