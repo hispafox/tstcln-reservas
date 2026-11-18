@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Reservas;
 
-use Symfony\Component\Clock\ClockInterface;
+use Psr\Clock\ClockInterface;
 
 final class ServicioCancelacion
 {
