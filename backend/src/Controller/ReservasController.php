@@ -9,7 +9,7 @@ use App\Reservas\CrearReservasRecurrentes;
 use App\Reservas\FranjaHoraria;
 use App\Reservas\LectorDeFechas;
 use App\Reservas\PeticionReserva;
-use App\Reservas\RepositorioReservas;
+use App\Reservas\ReglaDePenalizacion;
 use App\Reservas\Reserva;
 use App\Reservas\ReservaNoEncontrada;
 use App\Reservas\Sala;
@@ -17,7 +17,6 @@ use App\Reservas\SalaNoEncontrada;
 use App\Reservas\ServicioCancelacion;
 use App\Reservas\ServicioReservas;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Clock\ClockInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\AsController;
@@ -31,14 +30,13 @@ final class ReservasController
         Request $peticion,
         EntityManagerInterface $em,
         ServicioReservas $servicio,
-        RepositorioReservas $reservas,
-        ClockInterface $reloj,
+        ReglaDePenalizacion $penalizacion,
     ): JsonResponse {
         $cuerpo = $peticion->toArray();
 
         $sala = $em->find(Sala::class, $cuerpo['sala']) ?? throw new SalaNoEncontrada($cuerpo['sala']);
 
-        if ($this->penaliza($cuerpo['persona'], $sala, $reservas, $reloj->now())) {
+        if ($penalizacion->penaliza($cuerpo['persona'], $sala)) {
             return new JsonResponse(['error' => 'Tienes una penalización por cancelaciones tardías'], 409);
         }
 
@@ -50,17 +48,6 @@ final class ReservasController
         ));
 
         return new JsonResponse(self::comoJson($reserva), 201);
-    }
-
-    private function penaliza(string $persona, Sala $sala, RepositorioReservas $reservas, \DateTimeImmutable $ahora): bool
-    {
-        if ($sala->esGrande()) {
-            $tardias = $reservas->tardiasDeLaPersonaDesde($persona, $ahora->modify('-30 days'));
-
-            return count($tardias) >= 3 && $tardias[2]->franja()->inicio()->modify('+7 days') > $ahora;
-        }
-
-        return false;
     }
 
     #[Route('/reservas', methods: ['GET'])]
