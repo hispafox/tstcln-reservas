@@ -4,6 +4,7 @@ import { PeticionReserva, Reserva } from '../app/reservas/dominio/reserva';
 
 export class ApiReservasEnMemoria implements ApiReservas {
   private readonly reservas: Reserva[];
+  private readonly enEspera: PeticionReserva[] = [];
   private siguienteId: number;
 
   constructor(iniciales: Reserva[] = []) {
@@ -30,5 +31,14 @@ export class ApiReservasEnMemoria implements ApiReservas {
     const cancelada: Reserva = { ...this.reservas[indice], estado: 'cancelada_a_tiempo' };
     this.reservas[indice] = cancelada;
     return of(cancelada);
+  }
+
+  apuntarEnEspera(peticion: PeticionReserva): Observable<number> {
+    this.enEspera.push(peticion);
+    return of(
+      this.enEspera.filter(
+        (p) => p.sala === peticion.sala && p.inicio === peticion.inicio && p.fin === peticion.fin,
+      ).length,
+    );
   }
 }

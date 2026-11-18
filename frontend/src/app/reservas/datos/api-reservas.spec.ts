@@ -146,4 +146,27 @@ describe('ApiReservas', () => {
 
     expect(await respuesta).toEqual(cancelada);
   });
+
+  it('apunta en la lista de espera con POST /lista-espera y devuelve el puesto', async () => {
+    const respuesta = firstValueFrom(api.apuntarEnEspera(peticion));
+
+    const req = centralita.expectOne({ method: 'POST', url: '/lista-espera' });
+    expect(req.request.body).toEqual(peticion);
+    req.flush({ posicion: 2 }, { status: 201, statusText: 'Created' });
+
+    expect(await respuesta).toBe(2);
+  });
+
+  it('el error de un 409 lleva el código del rechazo', async () => {
+    const respuesta = firstValueFrom(api.crear(peticion));
+
+    centralita
+      .expectOne('/reservas')
+      .flush(
+        { error: 'La sala ya está reservada en esa franja', codigo: 'sala_no_disponible' },
+        { status: 409, statusText: 'Conflict' },
+      );
+
+    await expect(respuesta).rejects.toMatchObject({ codigo: 'sala_no_disponible' });
+  });
 });

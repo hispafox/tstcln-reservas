@@ -6,7 +6,13 @@ import { ApiReservas } from '../datos/api-reservas';
 import { duracionEnMinutos, textoDeDuracion } from '../dominio/duracion';
 import { ReservaRechazadaError } from '../errores';
 import { finDespuesDeInicio } from '../fin-despues-de-inicio';
-import { Reserva } from '../dominio/reserva';
+import { PeticionReserva, Reserva } from '../dominio/reserva';
+
+/** La petición que la API ha rechazado, con el código del rechazo (por ejemplo, sala_no_disponible). */
+export interface RechazoDeReserva {
+  peticion: PeticionReserva;
+  codigo: string | undefined;
+}
 
 @Component({
   selector: 'app-formulario-reserva',
@@ -17,6 +23,7 @@ import { Reserva } from '../dominio/reserva';
 export class FormularioReserva {
   readonly sala = input.required<Sala>();
   readonly reservaCreada = output<Reserva>();
+  readonly reservaRechazada = output<RechazoDeReserva>();
 
   private readonly api = inject(ApiReservas);
   protected readonly error = signal<string | null>(null);
@@ -62,14 +69,17 @@ export class FormularioReserva {
 
   protected reservar(): void {
     this.error.set(null);
-    this.api.crear({ sala: this.sala().id, ...this.formulario.getRawValue() }).subscribe({
+    const peticion: PeticionReserva = { sala: this.sala().id, ...this.formulario.getRawValue() };
+    this.api.crear(peticion).subscribe({
       next: (reserva) => this.reservaCreada.emit(reserva),
-      error: (error) =>
-        this.error.set(
-          error instanceof ReservaRechazadaError
-            ? error.message
-            : 'No se ha podido hacer la reserva',
-        ),
+      error: (error) => {
+        if (error instanceof ReservaRechazadaError) {
+          this.error.set(error.message);
+          this.reservaRechazada.emit({ peticion, codigo: error.codigo });
+        } else {
+          this.error.set('No se ha podido hacer la reserva');
+        }
+      },
     });
   }
 }

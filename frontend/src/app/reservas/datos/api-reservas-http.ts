@@ -30,6 +30,13 @@ export class ApiReservasHttp implements ApiReservas {
       map(aReserva),
     );
   }
+
+  apuntarEnEspera(peticion: PeticionReserva): Observable<number> {
+    return this.http.post<{ posicion: number }>('/lista-espera', peticion).pipe(
+      catchError((error: HttpErrorResponse) => throwError(() => traducir(error))),
+      map((respuesta) => respuesta.posicion),
+    );
+  }
 }
 
 interface ReservaJson {
@@ -51,7 +58,10 @@ function aReserva(json: ReservaJson): Reserva {
 
 function traducir(error: HttpErrorResponse): unknown {
   if (error.status === 409) {
-    return new ReservaRechazadaError(error.error?.error ?? 'La reserva no se ha podido hacer');
+    return new ReservaRechazadaError(
+      error.error?.error ?? 'La reserva no se ha podido hacer',
+      error.error?.codigo,
+    );
   }
   if (error.status === 400) {
     return new DatosNoValidosError(error.error?.error ?? 'Los datos de la reserva no son válidos');

@@ -2,7 +2,9 @@ import { TestBed } from '@angular/core/testing';
 import { firstValueFrom } from 'rxjs';
 import { ApiReservasEnMemoria } from '../../../testing/api-reservas-en-memoria';
 import { reserva } from '../../../testing/datos-de-prueba';
+import { Avisos } from '../../compartido';
 import { ApiReservas } from '../datos/api-reservas';
+import { PeticionReserva } from '../dominio/reserva';
 import { EstadoReservas } from './estado-reservas';
 
 describe('EstadoReservas', () => {
@@ -51,5 +53,22 @@ describe('EstadoReservas', () => {
     estado.anadir({ ...reserva(3, 1, '2027-03-06T10:00:00+01:00', 'confirmada'), persona: 'Luis' });
 
     expect(estado.reservas()).toHaveLength(2);
+  });
+
+  it('al apuntarse en la lista de espera, guarda la petición y el aviso enseña el puesto', () => {
+    const peticion: PeticionReserva = {
+      sala: 1,
+      inicio: '2027-03-04T10:00',
+      fin: '2027-03-04T11:00',
+      persona: 'Luis',
+      asistentes: 3,
+    };
+
+    estado.apuntarEnEspera(peticion);
+
+    expect(estado.enEspera()).toEqual([peticion]);
+    expect(TestBed.inject(Avisos).actual()).toBe(
+      'Te has apuntado a la lista de espera: vas en el puesto 1',
+    );
   });
 });

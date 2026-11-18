@@ -1,7 +1,14 @@
 @if (sala(); as sala) {
   <h1>Reservar</h1>
   <app-tarjeta-sala [sala]="sala" />
-  <app-formulario-reserva [sala]="sala" (reservaCreada)="creada($event)" />
+  <app-formulario-reserva
+    [sala]="sala"
+    (reservaCreada)="creada($event)"
+    (reservaRechazada)="rechazada($event)"
+  />
+  @if (ofertaDeEspera(); as peticion) {
+    <app-oferta-lista-de-espera [franja]="peticion" (apuntarme)="apuntarme(peticion)" />
+  }
   @if (confirmada(); as reserva) {
     <p role="status">Reserva confirmada para {{ reserva.persona }}.</p>
   }

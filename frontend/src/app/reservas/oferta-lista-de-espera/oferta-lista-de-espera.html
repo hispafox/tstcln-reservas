@@ -1,0 +1,5 @@
+<p>
+  La sala está ocupada el {{ franja().inicio.substring(0, 16).replace('T', ' ') }} hasta las
+  {{ franja().fin.substring(11, 16) }}. Si esa reserva se cancela, puede ser para ti.
+</p>
+<button type="button" (click)="apuntarme.emit()">Apuntarme a la lista de espera</button>
