@@ -17,8 +17,11 @@
   @if (error(); as mensaje) {
     <p role="alert">{{ mensaje }}</p>
   }
+  @if (fueraDeCapacidad()) {
+    <p role="alert">Esta sala admite de {{ sala().capacidadMinima ?? 1 }} a {{ sala().capacidadMaxima }} personas</p>
+  }
 
-  <button type="submit" [disabled]="formulario.invalid">Reservar</button>
+  <button type="submit" [disabled]="formulario.invalid || fueraDeCapacidad()">Reservar</button>
 
   @if (inicio() && fin() && !formulario.hasError('finAntesDeInicio')) {
     <div class="duracion">Duración: {{ duracion() }}</div>

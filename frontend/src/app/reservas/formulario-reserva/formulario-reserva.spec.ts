@@ -145,4 +145,18 @@ describe('FormularioReserva', () => {
       expect.objectContaining({ sala: salaNorte.id, persona: 'Ana' }),
     );
   });
+
+  it('avisa cuando los asistentes no caben en la sala', async () => {
+    await render(FormularioReserva, {
+      inputs: { sala: salaNorte },
+      providers: [{ provide: ApiReservas, useValue: { crear: vi.fn() } }],
+    });
+    const usuario = userEvent.setup();
+    const campo = screen.getByLabelText('Asistentes');
+
+    await usuario.clear(campo);
+    await usuario.type(campo, '5');
+
+    expect((await screen.findByRole('alert')).textContent).toContain('de 1 a 4 personas');
+  });
 });

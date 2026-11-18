@@ -6,7 +6,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Sala } from '../../salas/sala';
+import { Sala, admite } from '../../salas/sala';
 import { ApiReservas } from '../api-reservas';
 import { duracionEnMinutos, textoDeDuracion } from '../duracion';
 import { ReservaRechazadaError } from '../errores';
@@ -58,6 +58,12 @@ export class FormularioReserva {
   protected readonly duracion = computed(() =>
     textoDeDuracion(duracionEnMinutos(this.inicio(), this.fin())),
   );
+
+  protected readonly asistentes = toSignal(this.formulario.controls.asistentes.valueChanges, {
+    initialValue: 1,
+  });
+
+  protected readonly fueraDeCapacidad = computed(() => !admite(this.sala(), this.asistentes()));
 
   protected reservar(): void {
     this.error.set(null);
