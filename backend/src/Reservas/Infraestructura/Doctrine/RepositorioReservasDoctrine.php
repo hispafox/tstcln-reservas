@@ -27,6 +27,11 @@ final class RepositorioReservasDoctrine extends ServiceEntityRepository implemen
         $this->getEntityManager()->flush();
     }
 
+    public function conId(int $id): ?Reserva
+    {
+        return $this->find($id);
+    }
+
     public function confirmadasDeLaSala(Sala $sala): array
     {
         return $this->createQueryBuilder('r')

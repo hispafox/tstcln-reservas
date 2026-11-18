@@ -15,7 +15,24 @@ final class RepositorioReservasEnMemoria implements RepositorioReservas
 
     public function guardar(Reserva $reserva): void
     {
-        $this->reservas[] = $reserva;
+        if (!in_array($reserva, $this->reservas, true)) {
+            $this->reservas[] = $reserva;
+        }
+    }
+
+    public function conId(int $id): ?Reserva
+    {
+        return $this->reservas[$id - 1] ?? null;
+    }
+
+    public function idDe(Reserva $reserva): int
+    {
+        $posicion = array_search($reserva, $this->reservas, true);
+        if ($posicion === false) {
+            throw new \LogicException('La reserva no esta guardada en el adaptador');
+        }
+
+        return $posicion + 1;
     }
 
     public function confirmadasDeLaSala(Sala $sala): array

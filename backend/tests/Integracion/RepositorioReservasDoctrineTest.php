@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Integracion;
 
 use App\Reservas\Dominio\RepositorioReservas;
+use App\Reservas\Dominio\Reserva;
 use App\Reservas\Dominio\Sala;
 use App\Tests\Contrato\ContratoRepositorioReservas;
 use App\Tests\FabricaDeDatos;
@@ -25,6 +26,11 @@ final class RepositorioReservasDoctrineTest extends ContratoRepositorioReservas
         $em->flush();
 
         return $sala;
+    }
+
+    protected function idDe(Reserva $reserva): int
+    {
+        return $reserva->id();
     }
 
     public function test_las_reservas_de_otra_sala_no_cuentan_como_confirmadas_de_esta(): void

@@ -8,6 +8,8 @@ interface RepositorioReservas
 {
     public function guardar(Reserva $reserva): void;
 
+    public function conId(int $id): ?Reserva;
+
     /**
      * @return list<Reserva>
      */

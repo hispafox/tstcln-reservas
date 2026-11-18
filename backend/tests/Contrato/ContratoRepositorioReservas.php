@@ -17,6 +17,8 @@ abstract class ContratoRepositorioReservas extends KernelTestCase
 
     abstract protected function salaGuardada(string $nombre, int $capacidadMaxima): Sala;
 
+    abstract protected function idDe(Reserva $reserva): int;
+
     public function test_las_confirmadas_de_una_sala_no_incluyen_las_canceladas(): void
     {
         $repositorio = $this->repositorio();
@@ -52,6 +54,27 @@ abstract class ContratoRepositorioReservas extends KernelTestCase
         $repositorio->guardar($nueva);
 
         self::assertSame([$nueva], $repositorio->tardiasDeLaPersonaDesde('Ana', new \DateTimeImmutable('2027-02-01')));
+    }
+
+    public function test_con_id_devuelve_la_reserva_guardada(): void
+    {
+        $repositorio = $this->repositorio();
+        $sala = $this->salaGuardada('Sala Norte', 10);
+        $reserva = self::reserva($sala, 'Ana', '2027-03-04 10:00');
+        $repositorio->guardar($reserva);
+
+        self::assertSame($reserva, $repositorio->conId($this->idDe($reserva)));
+    }
+
+    public function test_guardar_dos_veces_la_misma_reserva_no_la_duplica(): void
+    {
+        $repositorio = $this->repositorio();
+        $sala = $this->salaGuardada('Auditorio', 40);
+        $tardia = self::tardia($sala, 'Ana', '2027-03-10 10:00');
+        $repositorio->guardar($tardia);
+        $repositorio->guardar($tardia);
+
+        self::assertSame([$tardia], $repositorio->tardiasDeLaPersonaDesde('Ana', new \DateTimeImmutable('2027-02-01')));
     }
 
     private static function reserva(Sala $sala, string $persona, string $inicio): Reserva
