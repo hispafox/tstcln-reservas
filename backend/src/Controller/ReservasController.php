@@ -15,6 +15,7 @@ use App\Reservas\SalaNoEncontrada;
 use App\Reservas\ServicioCancelacion;
 use App\Reservas\ServicioReservas;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Clock\ClockInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\AsController;
@@ -28,12 +29,13 @@ final class ReservasController
         Request $peticion,
         EntityManagerInterface $em,
         ServicioReservas $servicio,
+        ClockInterface $reloj,
     ): JsonResponse {
         $cuerpo = $peticion->toArray();
 
         $sala = $em->find(Sala::class, $cuerpo['sala']) ?? throw new SalaNoEncontrada($cuerpo['sala']);
 
-        $ahora = new \DateTimeImmutable();
+        $ahora = $reloj->now();
         if ($sala->esGrande()) {
             $tardias = $em->createQueryBuilder()
                 ->select('r')
