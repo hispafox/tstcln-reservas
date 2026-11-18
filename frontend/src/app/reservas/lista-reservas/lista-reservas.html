@@ -5,9 +5,6 @@
   <app-filtros-reservas [(soloConfirmadas)]="soloConfirmadas" [(orden)]="orden" />
 </div>
 
-@if (aviso()) {
-  <div class="aviso">{{ aviso() }}</div>
-}
 @if (cargando()) {
   <div>Cargando...</div>
 }

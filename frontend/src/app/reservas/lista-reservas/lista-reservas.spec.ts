@@ -1,9 +1,12 @@
+import { TestBed } from '@angular/core/testing';
 import { render, screen } from '@testing-library/angular';
 import userEvent from '@testing-library/user-event';
+import { of } from 'rxjs';
 import { ApiReservasEnMemoria } from '../../../testing/api-reservas-en-memoria';
 import { ApiSalasEnMemoria } from '../../../testing/api-salas-en-memoria';
 import { sala } from '../../../testing/datos-de-prueba';
 import { filas } from '../../../testing/filas';
+import { Avisos } from '../../avisos/avisos';
 import { ApiSalas } from '../../salas/api-salas';
 import { ApiReservas } from '../api-reservas';
 import { EstadoReserva, Reserva } from '../reserva';
@@ -96,6 +99,24 @@ describe('ListaReservas', () => {
     await fixture.whenStable();
 
     expect(filas()).toEqual(['Sala Sur2027-03-05 10:0011:0060 min4ConfirmadaCancelar']);
+  });
+
+  it('avisa de la cancelación tardía en la barra de avisos', async () => {
+    const confirmada = reserva(1, 1, '2027-03-04T10:00:00+01:00', 'confirmada');
+    const api = new ApiReservasEnMemoria([confirmada]);
+    const { fixture } = await render(ListaReservas, {
+      providers: [
+        { provide: ApiSalas, useValue: new ApiSalasEnMemoria([sala({ id: 1, nombre: 'Sala Norte' })]) },
+        { provide: ApiReservas, useValue: api },
+      ],
+    });
+    vi.spyOn(api, 'cancelar').mockReturnValue(of({ ...confirmada, estado: 'cancelada_tarde' }));
+    vi.spyOn(window, 'confirm').mockReturnValue(true);
+
+    await userEvent.click(screen.getByRole('button', { name: 'Cancelar' }));
+    await fixture.whenStable();
+
+    expect(TestBed.inject(Avisos).actual()).toBe('Cancelación tardía: quedan menos de dos horas');
   });
 
   describe('con el reloj falso', () => {

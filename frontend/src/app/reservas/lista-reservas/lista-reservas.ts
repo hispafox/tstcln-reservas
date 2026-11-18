@@ -2,6 +2,7 @@ import { Component, DestroyRef, OnInit, computed, inject, signal } from '@angula
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { interval } from 'rxjs';
+import { Avisos } from '../../avisos/avisos';
 import { ApiSalas } from '../../salas/api-salas';
 import { Sala } from '../../salas/sala';
 import { ApiReservas } from '../api-reservas';
@@ -20,6 +21,7 @@ import { ordenar, soloLasProximas } from './reservas-visibles';
 export class ListaReservas implements OnInit {
   private readonly salasApi = inject(ApiSalas);
   private readonly reservasApi = inject(ApiReservas);
+  private readonly avisos = inject(Avisos);
   private readonly destruccion = inject(DestroyRef);
 
   persona = 'Ana';
@@ -36,7 +38,6 @@ export class ListaReservas implements OnInit {
 
   protected readonly cargando = signal(false);
   protected readonly error = signal('');
-  protected readonly aviso = signal('');
 
   ngOnInit() {
     this.cargar();
@@ -89,8 +90,7 @@ export class ListaReservas implements OnInit {
     this.reservasApi.cancelar(reserva.id).subscribe((cancelada) => {
       this.reservas.update((lista) => lista.map((r) => (r.id === cancelada.id ? this.paraLaTabla(cancelada) : r)));
       if (cancelada.estado == 'cancelada_tarde') {
-        this.aviso.set('Cancelación tardía: quedan menos de dos horas');
-        setTimeout(() => this.aviso.set(''), 5000);
+        this.avisos.mostrar('Cancelación tardía: quedan menos de dos horas');
       }
     });
   }

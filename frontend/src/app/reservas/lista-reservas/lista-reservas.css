@@ -13,9 +13,8 @@ h1 + div {
   box-shadow: var(--sombra);
 }
 
-.aviso,
 .error,
-h1 + div ~ div:not(.aviso, .error) {
+h1 + div ~ div:not(.error) {
   margin-bottom: var(--espacio-4);
   padding: var(--espacio-3) var(--espacio-5);
   font-weight: 600;
@@ -23,17 +22,12 @@ h1 + div ~ div:not(.aviso, .error) {
   border-left: 6px solid;
 }
 
-.aviso {
-  color: var(--color-aviso);
-  background: var(--color-aviso-fondo);
-}
-
 .error {
   color: var(--color-error);
   background: var(--color-error-fondo);
 }
 
-h1 + div ~ div:not(.aviso, .error) {
+h1 + div ~ div:not(.error) {
   color: var(--color-tinta-suave);
   background: var(--color-superficie-suave);
 }
