@@ -1,6 +1,11 @@
 {
     "source": {
-        "directories": ["src"]
+        "directories": [
+            "src/Reservas/Dominio",
+            "src/Reservas/Aplicacion",
+            "src/Salas/Dominio",
+            "src/Salas/Aplicacion"
+        ]
     },
     "mutators": {
         "@default": true
