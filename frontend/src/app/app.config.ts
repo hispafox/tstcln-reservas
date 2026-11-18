@@ -4,6 +4,8 @@ import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { routes } from './app.routes';
 import { ApiReservas } from './reservas/api-reservas';
 import { ApiReservasHttp } from './reservas/api-reservas-http';
+import { ApiSalas } from './salas/api-salas';
+import { ApiSalasHttp } from './salas/api-salas-http';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -11,5 +13,6 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes, withComponentInputBinding()),
     provideHttpClient(),
     { provide: ApiReservas, useClass: ApiReservasHttp },
+    { provide: ApiSalas, useClass: ApiSalasHttp },
   ],
 };

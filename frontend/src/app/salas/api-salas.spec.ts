@@ -4,6 +4,7 @@ import { TestBed } from '@angular/core/testing';
 import { firstValueFrom } from 'rxjs';
 import { salaNorte, salaSur } from '../../testing/datos-de-prueba';
 import { ApiSalas } from './api-salas';
+import { ApiSalasHttp } from './api-salas-http';
 
 describe('ApiSalas', () => {
   let apiSalas: ApiSalas;
@@ -11,7 +12,7 @@ describe('ApiSalas', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [provideHttpClient(), provideHttpClientTesting()],
+      providers: [provideHttpClient(), provideHttpClientTesting(), { provide: ApiSalas, useClass: ApiSalasHttp }],
     });
     apiSalas = TestBed.inject(ApiSalas);
     centralita = TestBed.inject(HttpTestingController);
