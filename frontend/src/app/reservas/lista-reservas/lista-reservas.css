@@ -13,12 +13,6 @@ h1 + div {
   box-shadow: var(--sombra);
 }
 
-h1 + div label {
-  flex-direction: row;
-  align-items: center;
-  gap: var(--espacio-2);
-}
-
 .aviso,
 .error,
 h1 + div ~ div:not(.aviso, .error) {

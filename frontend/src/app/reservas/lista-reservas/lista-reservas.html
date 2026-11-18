@@ -2,13 +2,7 @@
 
 <div>
   Persona: <input [(ngModel)]="persona" (change)="cargar()" />
-  <label><input type="checkbox" [ngModel]="soloConfirmadas()" (ngModelChange)="soloConfirmadas.set($event)" /> Solo las próximas confirmadas</label>
-  Ordenar por:
-  <select [ngModel]="orden()" (ngModelChange)="orden.set($event)">
-    <option value="fecha">fecha</option>
-    <option value="sala">sala</option>
-    <option value="duracion">duración</option>
-  </select>
+  <app-filtros-reservas [(soloConfirmadas)]="soloConfirmadas" [(orden)]="orden" />
 </div>
 
 @if (aviso()) {

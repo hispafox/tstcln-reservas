@@ -3,13 +3,14 @@ import { Component, DestroyRef, OnInit, computed, inject, signal } from '@angula
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { interval } from 'rxjs';
+import { FiltrosReservas } from '../filtros-reservas/filtros-reservas';
 import { FranjaHoraria } from '../franja-horaria';
 import { TablaReservas } from '../tabla-reservas/tabla-reservas';
 import { ordenar, soloLasProximas } from './reservas-visibles';
 
 @Component({
   selector: 'app-lista-reservas',
-  imports: [FormsModule, TablaReservas],
+  imports: [FormsModule, FiltrosReservas, TablaReservas],
   templateUrl: './lista-reservas.html',
   styleUrl: './lista-reservas.css',
 })
