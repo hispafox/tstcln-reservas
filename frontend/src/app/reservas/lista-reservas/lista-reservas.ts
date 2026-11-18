@@ -2,8 +2,8 @@ import { Component, DestroyRef, OnInit, computed, inject, signal } from '@angula
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { interval } from 'rxjs';
-import { Avisos } from '../../avisos/avisos';
-import { ApiSalas } from '../../salas/datos/api-salas';
+import { Avisos } from '../../compartido';
+import { ApiSalas } from '../../salas';
 import { EstadoReservas } from '../estado/estado-reservas';
 import { FiltrosReservas } from '../filtros-reservas/filtros-reservas';
 import { FranjaHoraria } from '../dominio/franja-horaria';

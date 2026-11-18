@@ -8,9 +8,8 @@ import {
   signal,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { Avisos } from '../../avisos/avisos';
-import { ApiSalas } from '../../salas/datos/api-salas';
-import { TarjetaSala } from '../../salas/tarjeta-sala/tarjeta-sala';
+import { Avisos } from '../../compartido';
+import { ApiSalas, TarjetaSala } from '../../salas';
 import { EstadoReservas } from '../estado/estado-reservas';
 import { FormularioReserva } from '../formulario-reserva/formulario-reserva';
 import { Reserva } from '../dominio/reserva';

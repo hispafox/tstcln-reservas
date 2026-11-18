@@ -6,7 +6,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Sala, admite } from '../../salas/dominio/sala';
+import { Sala, admite } from '../../salas';
 import { ApiReservas } from '../datos/api-reservas';
 import { duracionEnMinutos, textoDeDuracion } from '../dominio/duracion';
 import { ReservaRechazadaError } from '../errores';
