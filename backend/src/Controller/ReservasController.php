@@ -36,24 +36,8 @@ final class ReservasController
 
         $sala = $em->find(Sala::class, $cuerpo['sala']) ?? throw new SalaNoEncontrada($cuerpo['sala']);
 
-        $ahora = $reloj->now();
-        if ($sala->esGrande()) {
-            $tardias = $em->createQueryBuilder()
-                ->select('r')
-                ->from(Reserva::class, 'r')
-                ->andWhere('r.persona = :persona')
-                ->andWhere('r.estado = :estado')
-                ->andWhere('r.franja.inicio > :haceUnMes')
-                ->orderBy('r.franja.inicio', 'DESC')
-                ->setParameter('persona', $cuerpo['persona'])
-                ->setParameter('estado', 'cancelada_tarde')
-                ->setParameter('haceUnMes', $ahora->modify('-30 days'))
-                ->getQuery()
-                ->getResult();
-
-            if (count($tardias) >= 3 && $tardias[2]->franja()->inicio()->modify('+7 days') > $ahora) {
-                return new JsonResponse(['error' => 'Tienes una penalización por cancelaciones tardías'], 409);
-            }
+        if ($this->penaliza($cuerpo['persona'], $sala, $em, $reloj->now())) {
+            return new JsonResponse(['error' => 'Tienes una penalización por cancelaciones tardías'], 409);
         }
 
         $reserva = $servicio->reservar(new PeticionReserva(
@@ -64,6 +48,28 @@ final class ReservasController
         ));
 
         return new JsonResponse(self::comoJson($reserva), 201);
+    }
+
+    private function penaliza(string $persona, Sala $sala, EntityManagerInterface $em, \DateTimeImmutable $ahora): bool
+    {
+        if ($sala->esGrande()) {
+            $tardias = $em->createQueryBuilder()
+                ->select('r')
+                ->from(Reserva::class, 'r')
+                ->andWhere('r.persona = :persona')
+                ->andWhere('r.estado = :estado')
+                ->andWhere('r.franja.inicio > :haceUnMes')
+                ->orderBy('r.franja.inicio', 'DESC')
+                ->setParameter('persona', $persona)
+                ->setParameter('estado', 'cancelada_tarde')
+                ->setParameter('haceUnMes', $ahora->modify('-30 days'))
+                ->getQuery()
+                ->getResult();
+
+            return count($tardias) >= 3 && $tardias[2]->franja()->inicio()->modify('+7 days') > $ahora;
+        }
+
+        return false;
     }
 
     #[Route('/reservas', methods: ['GET'])]
