@@ -14,6 +14,11 @@ doctrine:
                 is_bundle: false
                 dir: '%kernel.project_dir%/config/doctrine'
                 prefix: 'App\Reservas\Dominio'
+            ListasDeEspera:
+                type: xml
+                is_bundle: false
+                dir: '%kernel.project_dir%/config/doctrine-infraestructura'
+                prefix: 'App\Reservas\Infraestructura\Doctrine'
 
 when@prod:
     doctrine:
